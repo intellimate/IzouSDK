@@ -5,8 +5,9 @@ import intellimate.izou.addon.AddOn;
 import intellimate.izou.events.EventsController;
 import intellimate.izou.output.OutputExtension;
 import intellimate.izou.output.OutputPlugin;
-import intellimate.izouSDK.Context;
-import intellimate.izouSDK.contentgenerator.ContentGenerator;
+import intellimate.izou.sdk.Context;
+import intellimate.izou.sdk.contentgenerator.ContentGenerator;
+import intellimate.izou.threadpool.ExceptionCallback;
 import ro.fortsoft.pf4j.PluginWrapper;
 
 /**
@@ -16,7 +17,7 @@ import ro.fortsoft.pf4j.PluginWrapper;
  * This class has method for a properties-file named addOnID.properties (AddOnsID in the form: package.class)
  */
 @SuppressWarnings("UnusedDeclaration")
-public abstract class AddOnImpl implements AddOn {
+public abstract class AddOnImpl implements AddOn, ExceptionCallback {
     @SuppressWarnings("FieldCanBeLocal")
     private final String addOnID;
     private Context context;
@@ -109,12 +110,11 @@ public abstract class AddOnImpl implements AddOn {
     /**
      * this method gets called when the task submitted to the ThreadPool crashes
      *
-     * @deprecated since version 0.9.9.9 - use {@link intellimate.izou.system.context.ContextImplementation.Properties#getPropertiesContainer}
      * @param e the exception catched
      */
     @Override
     public void exceptionThrown(Exception e) {
-        context.logger.getLogger().fatal("Addon: " + getID() + " crashed", e);
+        context.getLogger().fatal("Addon: " + getID() + " crashed", e);
     }
 
     /**
@@ -131,6 +131,7 @@ public abstract class AddOnImpl implements AddOn {
      * @return the new path to the <i>defaultProperties.txt</i> location, or null if nothing should be changed
      * (in which case you should ignore this method)
      */
+    @Deprecated
     public String setUnusualDefaultPropertiesPath() {
         return null;
     }

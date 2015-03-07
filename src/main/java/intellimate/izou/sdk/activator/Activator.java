@@ -1,11 +1,11 @@
-package intellimate.izou.sdk;
+package intellimate.izou.sdk.activator;
 
 import intellimate.izou.events.Event;
 import intellimate.izou.events.EventCallable;
 import intellimate.izou.events.MultipleEventsException;
 import intellimate.izou.identification.IdentificationManager;
+import intellimate.izou.sdk.Context;
 import intellimate.izou.threadpool.ExceptionCallback;
-import intellimate.izouSDK.Context;
 
 /**
  * The Task of an Activator is to listen for whatever you choose to implement and fires events to notify a change.
