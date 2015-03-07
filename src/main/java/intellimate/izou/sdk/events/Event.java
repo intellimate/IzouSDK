@@ -1,8 +1,6 @@
 package intellimate.izou.sdk.events;
 
 import intellimate.izou.events.EventBehaviourController;
-import intellimate.izou.events.EventCallable;
-import intellimate.izou.events.MultipleEventsException;
 import intellimate.izou.identification.Identification;
 import intellimate.izou.resource.ListResourceProvider;
 import intellimate.izou.resource.Resource;
@@ -13,15 +11,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * This class represents an Event.
  * This class is immutable! for every change it will return an new instance!
  */
-public class Event implements intellimate.izou.events.Event {
+public class Event implements intellimate.izou.events.Event<Event> {
     /**
      * Use this type when other AddOns should react to this Event.
      */
@@ -60,7 +55,7 @@ public class Event implements intellimate.izou.events.Event {
     private final String type;
     private final Identification source;
     private final List<String> descriptors;
-    private final ListResourceProvider listResourceContainer = new intellimate.izouSDK.resource.ListResourceProvider();
+    private final ListResourceProvider listResourceContainer = new intellimate.izou.sdk.resource.ListResourceProvider();
     private final EventBehaviourController eventBehaviourController = new EventBehaviourControllerImpl(this);
     private final Logger fileLogger = LogManager.getLogger(this.getClass());
 
@@ -81,7 +76,7 @@ public class Event implements intellimate.izou.events.Event {
      * @param source the source of the Event, most likely a this reference.
      * @return an Optional, that may be empty if type is null or empty or source is null
      */
-    public static Optional<intellimate.izou.events.Event> createEvent(String type, Identification source) {
+    public static Optional<Event> createEvent(String type, Identification source) {
         if(type == null || type.isEmpty()) return Optional.empty();
         if(source == null) return Optional.empty();
         return Optional.of(new Event(type, source, new ArrayList<String>()));
@@ -93,7 +88,7 @@ public class Event implements intellimate.izou.events.Event {
      * @param source the source of the Event, most likely a this reference.
      * @return an Optional, that may be empty if type is null or empty or source is null
      */
-    public static Optional<intellimate.izou.events.Event> createEvent(String type, Identification source, List<String> descriptors) {
+    public static Optional<Event> createEvent(String type, Identification source, List<String> descriptors) {
         if(type == null || type.isEmpty()) return Optional.empty();
         if(source == null) return Optional.empty();
         return Optional.of(new Event(type, source, descriptors));
@@ -143,7 +138,7 @@ public class Event implements intellimate.izou.events.Event {
      * @return the resulting Event (which is the same instance)
      */
     @Override
-    public intellimate.izou.events.Event addResource(Resource resource) {
+    public Event addResource(Resource resource) {
         listResourceContainer.addResource(resource);
         return this;
     }
@@ -153,7 +148,7 @@ public class Event implements intellimate.izou.events.Event {
      * @param resources a list containing all the resources
      */
     @Override
-    public intellimate.izou.events.Event addResources(List<Resource> resources) {
+    public Event addResources(List<Resource> resources) {
         listResourceContainer.addResource(resources);
         return this;
     }
@@ -187,7 +182,7 @@ public class Event implements intellimate.izou.events.Event {
      * @param descriptors a List containing all the Descriptors
      * @return the resulting Event (which is the same instance)
      */
-    public intellimate.izou.events.Event setDescriptors(List<String> descriptors) {
+    public Event setDescriptors(List<String> descriptors) {
         return new Event(getType(), getSource(), descriptors);
     }
 
@@ -196,7 +191,7 @@ public class Event implements intellimate.izou.events.Event {
      * @param descriptor a String describing the Event.
      * @return the resulting Event (which is the same instance)
      */
-    public intellimate.izou.events.Event addDescriptor(String descriptor) {
+    public Event addDescriptor(String descriptor) {
         List<String> newDescriptors = new ArrayList<>();
         newDescriptors.addAll(descriptors);
         newDescriptors.add(descriptor);
@@ -208,7 +203,7 @@ public class Event implements intellimate.izou.events.Event {
      * @param descriptors a list containing the Descriptors.
      * @return the resulting Event (which is the same instance)
      */
-    public intellimate.izou.events.Event replaceDescriptors(List<String> descriptors) {
+    public Event replaceDescriptors(List<String> descriptors) {
         return new Event(getType(), getSource(), descriptors);
     }
 
@@ -230,173 +225,5 @@ public class Event implements intellimate.izou.events.Event {
     @Override
     public EventBehaviourController getEventBehaviourController() {
         return eventBehaviourController;
-    }
-
-    /**
-     * applies the consumer to the Event
-     * <p>
-     * can be used for logging.
-     * </p>
-     * @param consumer the consumer
-     * @return this Event
-     */
-    public intellimate.izou.events.Event peek (Consumer<intellimate.izou.events.Event> consumer) {
-        consumer.accept(this);
-        return this;
-    }
-
-    /**
-     * maps this event to T
-     * @param function the function to map
-     * @param <T> the return type
-     * @return T
-     */
-    public <T> T map (Function<intellimate.izou.events.Event, T> function) {
-        return function.apply(this);
-    }
-
-    /**
-     * Tries to fire the Event.
-     * <p>
-     * if calling failed, it will call onError. If onError returns true, it will wait 100 milli-seconds an retries
-     * firing. OnError will be called with the parameters: this Event and a counter which increments for every try.
-     * If onError returns false, the MultipleEventsException will be thrown.
-     * </p>
-     * @param eventCallable the EventCaller used to fire
-     * @param onError this method will be called when an error occurred
-     * @deprecated use {@link #fire(intellimate.izou.events.EventCallable, java.util.function.BiFunction)} instead
-     * @throws intellimate.izou.events.MultipleEventsException when the method fails to fire the event and onError
-     *                              returns false
-     */
-    @Deprecated
-    public void tryFire (EventCallable eventCallable, BiFunction<intellimate.izou.events.Event, Integer, Boolean> onError)
-            throws MultipleEventsException {
-        tryFire(eventCallable, onError, null);
-    }
-
-    /**
-     * tries to fire the Event.
-     * <p>
-     * if calling failed, it will call onError. If onError returns true, it will wait 100 milli-seconds an retries
-     * firing. OnError will be called with the parameters: this Event and a counter which increments for every try.
-     * If onError returns false, the MultipleEventsException will be thrown.
-     * if calling succeeded, it will call onSuccess.
-     * </p>
-     * @param eventCallable the EventCaller used to fire
-     * @param onError this method will be called when an error occurred
-     * @param onSuccess this method will be called when firing succeeded
-     * @deprecated use {@link #fire(EventCallable, java.util.function.BiFunction, java.util.function.Consumer, java.util.function.Consumer)}
-     *              instead
-     * @throws intellimate.izou.events.MultipleEventsException when the method fails to fire the event and onError
-     *                              returns false
-     */
-    @Deprecated
-    public void tryFire (EventCallable eventCallable, BiFunction<intellimate.izou.events.Event, Integer, Boolean> onError,
-                                                        Consumer<intellimate.izou.events.Event> onSuccess) throws MultipleEventsException {
-        boolean success = false;
-        int count = 0;
-        while (!success) {
-            try {
-                eventCallable.fire(this);
-                success = true;
-            } catch (MultipleEventsException e) {
-                count++;
-                boolean retry = onError.apply(this, count);
-                if (!retry)
-                    throw e;
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e1) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
-        onSuccess.accept(this);
-    }
-
-    /**
-     * tries to fire the Event.
-     * <p>
-     * if calling failed, it will call onError. If onError returns true, it will wait 100 milli-seconds an retries
-     * firing. OnError will be called with the parameters: this Event and a counter which increments for every try.
-     * If onError returns false, the method will return.
-     * if calling failed (onError returns false), it will call onFailure.
-     * </p>
-     * @param eventCallable the EventCaller used to fire
-     * @param onError this method will be called when an error occurred
-     * @param onFailure this method will be called when onError returned false
-     */
-    public void fire (EventCallable eventCallable, BiFunction<intellimate.izou.events.Event, Integer, Boolean> onError,
-                      Consumer<intellimate.izou.events.Event> onFailure) {
-        fire(eventCallable, onError, onFailure, null);
-    }
-
-    /**
-     * tries to fire the Event.
-     * <p>
-     * if calling failed, it will call onError. If onError returns true, it will wait 100 milli-seconds an retries
-     * firing. OnError will be called with the parameters: this Event and a counter which increments for every try.
-     * If onError returns false, the method will return.
-     * if calling succeeded, it will call onSuccess.
-     * </p>
-     * @param eventCallable the EventCaller used to fire
-     * @param onError this method will be called when an error occurred
-     * @param onFailure this method will be called when onError returned false
-     * @param onSuccess this method will be called when firing succeeded
-     */
-    public void fire (EventCallable eventCallable, BiFunction<intellimate.izou.events.Event, Integer, Boolean> onError,
-                      Consumer<intellimate.izou.events.Event> onFailure, Consumer<intellimate.izou.events.Event> onSuccess) {
-        boolean success = false;
-        int count = 0;
-        while (!success) {
-            try {
-                eventCallable.fire(this);
-                success = true;
-            } catch (MultipleEventsException e) {
-                count++;
-                boolean retry = false;
-                if (onError != null)
-                    retry = onError.apply(this, count);
-                if (!retry) {
-                    if (onFailure != null)
-                        onFailure.accept(this);
-                    return;
-                }
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e1) {
-                    fileLogger.error("interrupted while trying to fire event", e);
-                }
-            }
-        }
-        if (onSuccess != null)
-            onSuccess.accept(this);
-    }
-
-    /**
-     * tries to fire the Event.
-     * <p>
-     * if calling failed, it will call onError. If onError returns true, it will wait 100 milli-seconds an retries
-     * firing. OnError will be called with the parameters: this Event and a counter which increments for every try.
-     * If onError returns false, the method will return.
-     * if calling succeeded, it will call onSuccess.
-     * </p>
-     * @param eventCallable the EventCaller used to fire
-     * @param onError this method will be called when an error occurred
-     */
-    public void fire (EventCallable eventCallable, BiFunction<intellimate.izou.events.Event, Integer, Boolean> onError) {
-        fire(eventCallable, onError, null, null);
-    }
-
-    /**
-     * tries to fire the Event.
-     * <p>
-     * if calling failed, it will call onError.
-     * </p>
-     * @param eventCallable the EventCaller used to fire
-     * @param onFailure this method will be called when an error occurred
-     */
-    public void fire (EventCallable eventCallable, Consumer<intellimate.izou.events.Event> onFailure) {
-        fire(eventCallable, null, onFailure, null);
     }
 }
