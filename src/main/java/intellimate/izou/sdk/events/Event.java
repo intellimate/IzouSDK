@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -167,10 +166,8 @@ public class Event implements intellimate.izou.events.Event<Event> {
      * @return a List containing the Descriptors
      */
     @Override
-    public List<String> getAllIformations() {
-        List<String> information = new LinkedList<>(descriptors);
-        information.add(type);
-        return information;
+    public List<String> getAllInformations() {
+        return null;
     }
 
     /**
