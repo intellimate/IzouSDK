@@ -1,6 +1,5 @@
 package intellimate.izou.sdk.events;
 
-import intellimate.izou.events.Event;
 import intellimate.izou.events.EventBehaviourController;
 import intellimate.izou.events.EventCallable;
 import intellimate.izou.events.MultipleEventsException;
@@ -22,15 +21,15 @@ import java.util.function.Function;
  * This class represents an Event.
  * This class is immutable! for every change it will return an new instance!
  */
-public class EventImpl implements Event {
+public class Event implements intellimate.izou.events.Event {
     /**
      * Use this type when other AddOns should react to this Event.
      */
-    public static final String RESPONSE = EventImpl.class.getCanonicalName() + "Response";
+    public static final String RESPONSE = Event.class.getCanonicalName() + "Response";
     /**
      * Use this type when other AddOns should just notice (they needn't).
      */
-    public static final String NOTIFICATION = EventImpl.class.getCanonicalName() + "Notification";
+    public static final String NOTIFICATION = Event.class.getCanonicalName() + "Notification";
     //common Events-Descriptors:
     /**
      * Event for a Welcome with maximum response.
@@ -70,7 +69,7 @@ public class EventImpl implements Event {
      * @param type the Type of the Event, try to use the predefined Event types
      * @param source the source of the Event, most likely a this reference.
      */
-    private EventImpl(String type, Identification source, List<String> descriptors) {
+    private Event(String type, Identification source, List<String> descriptors) {
         this.type = type;
         this.source = source;
         this.descriptors = descriptors;
@@ -82,10 +81,22 @@ public class EventImpl implements Event {
      * @param source the source of the Event, most likely a this reference.
      * @return an Optional, that may be empty if type is null or empty or source is null
      */
-    public static Optional<Event> createEvent(String type, Identification source) {
+    public static Optional<intellimate.izou.events.Event> createEvent(String type, Identification source) {
         if(type == null || type.isEmpty()) return Optional.empty();
         if(source == null) return Optional.empty();
-        return Optional.of(new EventImpl(type, source, new ArrayList<String>()));
+        return Optional.of(new Event(type, source, new ArrayList<String>()));
+    }
+
+    /**
+     * Creates a new Event Object
+     * @param type the Type of the Event, try to use the predefined Event types
+     * @param source the source of the Event, most likely a this reference.
+     * @return an Optional, that may be empty if type is null or empty or source is null
+     */
+    public static Optional<intellimate.izou.events.Event> createEvent(String type, Identification source, List<String> descriptors) {
+        if(type == null || type.isEmpty()) return Optional.empty();
+        if(source == null) return Optional.empty();
+        return Optional.of(new Event(type, source, descriptors));
     }
 
     /**
@@ -132,7 +143,7 @@ public class EventImpl implements Event {
      * @return the resulting Event (which is the same instance)
      */
     @Override
-    public Event addResource(Resource resource) {
+    public intellimate.izou.events.Event addResource(Resource resource) {
         listResourceContainer.addResource(resource);
         return this;
     }
@@ -142,7 +153,7 @@ public class EventImpl implements Event {
      * @param resources a list containing all the resources
      */
     @Override
-    public Event addResources(List<Resource> resources) {
+    public intellimate.izou.events.Event addResources(List<Resource> resources) {
         listResourceContainer.addResource(resources);
         return this;
     }
@@ -176,8 +187,8 @@ public class EventImpl implements Event {
      * @param descriptors a List containing all the Descriptors
      * @return the resulting Event (which is the same instance)
      */
-    public Event setDescriptors(List<String> descriptors) {
-        return new EventImpl(getType(), getSource(), descriptors);
+    public intellimate.izou.events.Event setDescriptors(List<String> descriptors) {
+        return new Event(getType(), getSource(), descriptors);
     }
 
     /**
@@ -185,11 +196,11 @@ public class EventImpl implements Event {
      * @param descriptor a String describing the Event.
      * @return the resulting Event (which is the same instance)
      */
-    public Event addDescriptor(String descriptor) {
+    public intellimate.izou.events.Event addDescriptor(String descriptor) {
         List<String> newDescriptors = new ArrayList<>();
         newDescriptors.addAll(descriptors);
         newDescriptors.add(descriptor);
-        return new EventImpl(getType(), getSource(), newDescriptors);
+        return new Event(getType(), getSource(), newDescriptors);
     }
 
     /**
@@ -197,8 +208,8 @@ public class EventImpl implements Event {
      * @param descriptors a list containing the Descriptors.
      * @return the resulting Event (which is the same instance)
      */
-    public Event replaceDescriptors(List<String> descriptors) {
-        return new EventImpl(getType(), getSource(), descriptors);
+    public intellimate.izou.events.Event replaceDescriptors(List<String> descriptors) {
+        return new Event(getType(), getSource(), descriptors);
     }
 
     /**
@@ -229,7 +240,7 @@ public class EventImpl implements Event {
      * @param consumer the consumer
      * @return this Event
      */
-    public Event peek (Consumer<Event> consumer) {
+    public intellimate.izou.events.Event peek (Consumer<intellimate.izou.events.Event> consumer) {
         consumer.accept(this);
         return this;
     }
@@ -240,7 +251,7 @@ public class EventImpl implements Event {
      * @param <T> the return type
      * @return T
      */
-    public <T> T map (Function<Event, T> function) {
+    public <T> T map (Function<intellimate.izou.events.Event, T> function) {
         return function.apply(this);
     }
 
@@ -258,7 +269,7 @@ public class EventImpl implements Event {
      *                              returns false
      */
     @Deprecated
-    public void tryFire (EventCallable eventCallable, BiFunction<Event, Integer, Boolean> onError)
+    public void tryFire (EventCallable eventCallable, BiFunction<intellimate.izou.events.Event, Integer, Boolean> onError)
             throws MultipleEventsException {
         tryFire(eventCallable, onError, null);
     }
@@ -280,8 +291,8 @@ public class EventImpl implements Event {
      *                              returns false
      */
     @Deprecated
-    public void tryFire (EventCallable eventCallable, BiFunction<Event, Integer, Boolean> onError,
-                                                        Consumer<Event> onSuccess) throws MultipleEventsException {
+    public void tryFire (EventCallable eventCallable, BiFunction<intellimate.izou.events.Event, Integer, Boolean> onError,
+                                                        Consumer<intellimate.izou.events.Event> onSuccess) throws MultipleEventsException {
         boolean success = false;
         int count = 0;
         while (!success) {
@@ -315,8 +326,8 @@ public class EventImpl implements Event {
      * @param onError this method will be called when an error occurred
      * @param onFailure this method will be called when onError returned false
      */
-    public void fire (EventCallable eventCallable, BiFunction<Event, Integer, Boolean> onError,
-                      Consumer<Event> onFailure) {
+    public void fire (EventCallable eventCallable, BiFunction<intellimate.izou.events.Event, Integer, Boolean> onError,
+                      Consumer<intellimate.izou.events.Event> onFailure) {
         fire(eventCallable, onError, onFailure, null);
     }
 
@@ -333,8 +344,8 @@ public class EventImpl implements Event {
      * @param onFailure this method will be called when onError returned false
      * @param onSuccess this method will be called when firing succeeded
      */
-    public void fire (EventCallable eventCallable, BiFunction<Event, Integer, Boolean> onError,
-                      Consumer<Event> onFailure, Consumer<Event> onSuccess) {
+    public void fire (EventCallable eventCallable, BiFunction<intellimate.izou.events.Event, Integer, Boolean> onError,
+                      Consumer<intellimate.izou.events.Event> onFailure, Consumer<intellimate.izou.events.Event> onSuccess) {
         boolean success = false;
         int count = 0;
         while (!success) {
@@ -373,7 +384,7 @@ public class EventImpl implements Event {
      * @param eventCallable the EventCaller used to fire
      * @param onError this method will be called when an error occurred
      */
-    public void fire (EventCallable eventCallable, BiFunction<Event, Integer, Boolean> onError) {
+    public void fire (EventCallable eventCallable, BiFunction<intellimate.izou.events.Event, Integer, Boolean> onError) {
         fire(eventCallable, onError, null, null);
     }
 
@@ -385,7 +396,7 @@ public class EventImpl implements Event {
      * @param eventCallable the EventCaller used to fire
      * @param onFailure this method will be called when an error occurred
      */
-    public void fire (EventCallable eventCallable, Consumer<Event> onFailure) {
+    public void fire (EventCallable eventCallable, Consumer<intellimate.izou.events.Event> onFailure) {
         fire(eventCallable, null, onFailure, null);
     }
 }

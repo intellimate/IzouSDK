@@ -2,8 +2,6 @@ package intellimate.izou.sdk;
 
 import intellimate.izou.addon.AddOn;
 import intellimate.izou.system.context.*;
-import intellimate.izouSDK.properties.PropertiesAssistant;
-import intellimate.izouSDK.properties.PropertiesContainer;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 
 /**

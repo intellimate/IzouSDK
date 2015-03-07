@@ -1,5 +1,7 @@
 package intellimate.izou.sdk.util;
 
+import intellimate.izou.identification.Identifiable;
+import intellimate.izou.identification.IdentificationManager;
 import intellimate.izou.sdk.Context;
 
 /**
@@ -7,11 +9,21 @@ import intellimate.izou.sdk.Context;
  * @author Leander Kurscheidt
  * @version 1.0
  */
-public abstract class AddOnModule implements ContextProvider {
-    private Context context;
+public abstract class AddOnModule implements ContextProvider, Loggable, LoggedExceptionCallback, Identifiable {
+    private final Context context;
+    private final String ID;
 
-    public AddOnModule(Context context) {
+    /**
+     * initializes the Module
+     * @param context the current Context
+     * @param ID the ID
+     */
+    public AddOnModule(Context context, String ID) {
         this.context = context;
+        this.ID = ID;
+        if(!IdentificationManager.getInstance().registerIdentification(this)) {
+            context.getLogger().fatal("Failed to register with identification manager" + getID());
+        }
     }
 
     /**
@@ -22,5 +34,10 @@ public abstract class AddOnModule implements ContextProvider {
     @Override
     public Context getContext() {
         return context;
+    }
+
+    @Override
+    public String getID() {
+        return ID;
     }
 }
