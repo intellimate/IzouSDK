@@ -1,8 +1,14 @@
 package intellimate.izou.sdk;
 
 import intellimate.izou.addon.AddOn;
+import intellimate.izou.identification.Identifiable;
+import intellimate.izou.identification.IllegalIDException;
+import intellimate.izou.sdk.properties.PropertiesContainer;
+import intellimate.izou.sdk.specification.context.ThreadPool;
 import intellimate.izou.system.context.*;
 import org.apache.logging.log4j.spi.ExtendedLogger;
+
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author Leander Kurscheidt
@@ -11,11 +17,13 @@ import org.apache.logging.log4j.spi.ExtendedLogger;
 public class Context implements intellimate.izou.system.Context {
     private intellimate.izou.system.Context context;
     private final Properties properties;
+    private final ThreadPool threadPool;
     /**
      */
     public Context(intellimate.izou.system.Context context) {
         this.context = context;
         properties = new Properties(new PropertiesAssistant(this, getAddOn().getID()));
+        threadPool = new ThreadPoolImpl();
     }
 
     /**
@@ -72,7 +80,7 @@ public class Context implements intellimate.izou.system.Context {
      */
     @Override
     public ThreadPool getThreadPool() {
-        return context.getThreadPool();
+        return threadPool;
     }
 
     /**
@@ -131,7 +139,7 @@ public class Context implements intellimate.izou.system.Context {
 
 
 
-    public class Properties {
+    private static class Properties {
         private PropertiesAssistant propertiesManager;
 
         /**
@@ -233,6 +241,42 @@ public class Context implements intellimate.izou.system.Context {
          */
         public String getDefaultPropertiesPath() {
             return propertiesManager.getDefaultPropertiesPath();
+        }
+    }
+
+    private class ThreadPoolImpl implements ThreadPool {
+        private ExecutorService executorService = null;
+
+        /**
+         * returns a ThreadPool associated with the AddOn
+         *
+         * @return an instance of ExecutorService or Null if there is a problem with the Identifier
+         */
+        @Override
+        public ExecutorService getThreadPool() {
+            if (executorService != null) {
+                return executorService;
+            } else {
+                try {
+                    executorService = getThreadPool(getAddOn());
+                } catch (IllegalIDException e) {
+                    getLogger().error("Unable to obtain ExecutorService", e);
+                    return null;
+                }
+                return executorService;
+            }
+        }
+
+        /**
+         * returns a NEW ThreadPool where all the IzouPlugins are running
+         *
+         * @param identifiable the Identifiable to set each created Task as the Source
+         * @return an instance of ExecutorService
+         * @throws intellimate.izou.identification.IllegalIDException not implemented yet
+         */
+        @Override
+        public ExecutorService getThreadPool(Identifiable identifiable) throws IllegalIDException {
+            return context.getThreadPool().getThreadPool(identifiable);
         }
     }
 }
