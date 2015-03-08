@@ -2,6 +2,7 @@ package intellimate.izou.sdk;
 
 import intellimate.izou.addon.AddOn;
 import intellimate.izou.identification.Identifiable;
+import intellimate.izou.identification.Identification;
 import intellimate.izou.identification.IllegalIDException;
 import intellimate.izou.sdk.properties.PropertiesContainer;
 import intellimate.izou.sdk.specification.context.ThreadPool;
@@ -277,6 +278,14 @@ public class Context implements intellimate.izou.system.Context {
         @Override
         public ExecutorService getThreadPool(Identifiable identifiable) throws IllegalIDException {
             return context.getThreadPool().getThreadPool(identifiable);
+        }
+
+        /**
+         * returns the ID of the Manager
+         */
+        @Override
+        public Identification getManagerIdentification() {
+            return context.getThreadPool().getManagerIdentification();
         }
     }
 }
