@@ -5,5 +5,5 @@ package intellimate.izou.sdk.util;
  * @version 1.0
  */
 public interface ResourceGenerator extends ContextProvider {
-
+    //TODO: helper methods!
 }

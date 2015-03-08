@@ -1,10 +1,6 @@
 package intellimate.izou.sdk.events;
 
-import intellimate.izou.events.Event;
-import intellimate.izou.events.EventBehaviourController;
 import intellimate.izou.identification.Identification;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,13 +9,8 @@ import java.util.function.Function;
 /**
  * This class can control the Behaviour of the the Event, like which Output-Plugin should get the Event first.
  */
-public class EventBehaviourControllerImpl implements EventBehaviourController {
-    private final Event event;
+public class EventBehaviourController implements intellimate.izou.events.EventBehaviourController {
     private Function<List<Identification>, HashMap<Integer, List<Identification>>> outputPluginBehaviour;
-    protected EventBehaviourControllerImpl(Event event) {
-        this.event = event;
-    }
-    private final Logger fileLogger = LogManager.getLogger(this.getClass());
 
     /**
      * this method sets the controls for the Output-Plugin Behaviour.
@@ -48,9 +39,5 @@ public class EventBehaviourControllerImpl implements EventBehaviourController {
     public HashMap<Integer, List<Identification>> getOutputPluginBehaviour(List<Identification> identifications) {
         if(outputPluginBehaviour == null) return new HashMap<>();
         return outputPluginBehaviour.apply(identifications);
-    }
-
-    public Event getEvent() {
-        return event;
     }
 }

@@ -1,11 +1,8 @@
 package intellimate.izou.sdk.events;
 
-import intellimate.izou.events.EventBehaviourController;
 import intellimate.izou.identification.Identification;
 import intellimate.izou.resource.ListResourceProvider;
 import intellimate.izou.resource.Resource;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +52,7 @@ public class Event implements intellimate.izou.events.Event<Event> {
     private final Identification source;
     private final List<String> descriptors;
     private final ListResourceProvider listResourceContainer = new intellimate.izou.sdk.resource.ListResourceProvider();
-    private final EventBehaviourController eventBehaviourController = new EventBehaviourControllerImpl(this);
-    private final Logger fileLogger = LogManager.getLogger(this.getClass());
+    private final EventBehaviourController eventBehaviourController = new EventBehaviourController(this);
 
     /**
      * Creates a new Event Object
@@ -220,7 +216,7 @@ public class Event implements intellimate.izou.events.Event<Event> {
      * @return an instance of EventBehaviourController
      */
     @Override
-    public EventBehaviourController getEventBehaviourController() {
+    public intellimate.izou.events.EventBehaviourController getEventBehaviourController() {
         return eventBehaviourController;
     }
 }

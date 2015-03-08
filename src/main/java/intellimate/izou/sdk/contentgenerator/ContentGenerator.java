@@ -4,6 +4,7 @@ import intellimate.izou.events.Event;
 import intellimate.izou.sdk.Context;
 import intellimate.izou.sdk.resource.Resource;
 import intellimate.izou.sdk.util.AddOnModule;
+import intellimate.izou.sdk.util.ResourceGenerator;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,8 @@ import java.util.stream.Collectors;
  *     of it in a ThreadPool and generate(String eventID) will be called.
  * </p>
  */
-public abstract class ContentGenerator extends AddOnModule implements intellimate.izou.sdk.specification.ContentGenerator {
+public abstract class ContentGenerator extends AddOnModule implements intellimate.izou.sdk.specification.ContentGenerator,
+                                                                        ResourceGenerator {
 
     /**
      * Creates a new content generator.
