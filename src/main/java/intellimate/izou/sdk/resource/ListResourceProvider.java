@@ -1,9 +1,6 @@
 package intellimate.izou.sdk.resource;
 
-import intellimate.izou.resource.ListResourceProvider;
 import intellimate.izou.resource.Resource;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +12,6 @@ import java.util.stream.Collectors;
  */
 public class ListResourceProvider implements intellimate.izou.resource.ListResourceProvider {
     List<Resource> resources = new ArrayList<>();
-    private final Logger fileLogger = LogManager.getLogger(this.getClass());
 
     /**
      * adds a Resource to the Container

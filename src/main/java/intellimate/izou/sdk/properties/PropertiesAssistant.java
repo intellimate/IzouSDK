@@ -13,6 +13,7 @@ import java.util.Properties;
  *
  * <p>Unlike most manager classes in Izou, the PropertiesManager is included in every {@code AddOn} instance</p>
  */
+//TODO: how to solve the problem with the ID? combine with the ID of the addOn class? it's accessible from the context
 public class PropertiesAssistant implements ReloadableFile {
     private Context context;
     private String addOnID;

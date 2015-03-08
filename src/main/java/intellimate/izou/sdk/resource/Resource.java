@@ -1,8 +1,6 @@
 package intellimate.izou.sdk.resource;
 
 import intellimate.izou.identification.Identification;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +15,6 @@ public class Resource<T> implements intellimate.izou.resource.Resource<T, Resour
     private final Identification provider;
     private final Identification consumer;
     private final T resource;
-    private final Logger fileLogger = LogManager.getLogger(this.getClass());
 
     /**
      * creates a new Resource.
