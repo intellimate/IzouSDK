@@ -1,14 +1,17 @@
 package intellimate.izou.sdk;
 
 import intellimate.izou.addon.AddOn;
+import intellimate.izou.events.Event;
 import intellimate.izou.identification.Identifiable;
 import intellimate.izou.identification.Identification;
 import intellimate.izou.identification.IllegalIDException;
 import intellimate.izou.sdk.properties.PropertiesContainer;
+import intellimate.izou.sdk.specification.context.ContentGenerator;
 import intellimate.izou.sdk.specification.context.ThreadPool;
 import intellimate.izou.system.context.*;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -19,12 +22,14 @@ public class Context implements intellimate.izou.system.Context {
     private intellimate.izou.system.Context context;
     private final Properties properties;
     private final ThreadPool threadPool;
+    private final ContentGenerator contentGenerator;
     /**
      */
     public Context(intellimate.izou.system.Context context) {
         this.context = context;
         properties = new Properties(new PropertiesAssistant(this, getAddOn().getID()));
         threadPool = new ThreadPoolImpl();
+        contentGenerator = new ContentGeneratorImpl();
     }
 
     /**
@@ -105,6 +110,14 @@ public class Context implements intellimate.izou.system.Context {
     }
 
     /**
+     * returns the API used to manage the ContentGenerators
+     * @return ContentGenerator
+     */
+    public intellimate.izou.sdk.specification.context.ContentGenerator getContentGenerator() {
+        return contentGenerator;
+    }
+
+    /**
      * gets addOn
      *
      * @return the addOn
@@ -114,7 +127,6 @@ public class Context implements intellimate.izou.system.Context {
         return context.getAddOn();
     }
 
-    //TODO: add this to Events
     /**
      * Adds the event ID of {@code value} to the PopularEvents.properties file with a key of {@code key}
      *
@@ -122,6 +134,7 @@ public class Context implements intellimate.izou.system.Context {
      * @param key the key with which to store the event ID, should not be null
      * @param value the complete event ID, should not be null
      */
+    //TODO: move
     @Override
     public void addEventIDToPropertiesFile(String description, String key, String value) {
         main.getEventPropertiesManager().registerEventID(description, key, value);
@@ -133,12 +146,35 @@ public class Context implements intellimate.izou.system.Context {
      * @param key the key of the full event ID
      * @return the complete the event ID, or null if none is found
      */
+    //TODO: move
     @Override
     public String getEventsID(String key) {
         return main.getEventPropertiesManager().getEventID(key);
     }
 
+    private class ContentGeneratorImpl implements intellimate.izou.sdk.specification.context.ContentGenerator {
+        /**
+         * register an ContentGenerator
+         * @param contentGenerator the contentGenerator to register
+         * @throws IllegalIDException not implemented yet
+         */
+        @Override
+        public void registerContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator)
+                                                                                            throws IllegalIDException {
+            List<? extends Event<?>> commonEvents = contentGenerator.announceEvents();
+            //TODO: automatically register common events here! See contentgenerator.EventListener
+            getResources().registerResourceBuilder(contentGenerator);
+        }
 
+        /**
+         * unregisters an ContentGenerator
+         * @param contentGenerator the ContentGenerator to unregister
+         */
+        @Override
+        public void unregisterContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator) {
+            getResources().unregisterResourceBuilder(contentGenerator);
+        }
+    }
 
     private static class Properties {
         private PropertiesAssistant propertiesManager;
