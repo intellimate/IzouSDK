@@ -1,10 +1,10 @@
 package intellimate.izou.sdk.util;
 
-import intellimate.izou.events.Event;
 import intellimate.izou.events.MultipleEventsException;
 import intellimate.izou.identification.Identifiable;
 import intellimate.izou.identification.IdentificationManager;
 import intellimate.izou.identification.IllegalIDException;
+import intellimate.izou.sdk.events.Event;
 
 import java.util.List;
 import java.util.Optional;

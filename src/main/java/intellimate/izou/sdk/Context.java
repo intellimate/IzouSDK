@@ -131,7 +131,7 @@ public class Context implements intellimate.izou.system.Context {
         return context.getAddOn();
     }
 
-    /**
+    /*
      * Adds the event ID of {@code value} to the PopularEvents.properties file with a key of {@code key}
      *
      * @param description a short description of what the event ID is for, should not be null
@@ -139,22 +139,22 @@ public class Context implements intellimate.izou.system.Context {
      * @param value the complete event ID, should not be null
      */
     //TODO: move
-    @Override
-    public void addEventIDToPropertiesFile(String description, String key, String value) {
-        main.getEventPropertiesManager().registerEventID(description, key, value);
-    }
+//    @Override
+//    public void addEventIDToPropertiesFile(String description, String key, String value) {
+//        main.getEventPropertiesManager().registerEventID(description, key, value);
+//    }
 
-    /**
+    /*
      * Gets the full event ID associated with the key {@code key}
      *
      * @param key the key of the full event ID
      * @return the complete the event ID, or null if none is found
      */
     //TODO: move
-    @Override
-    public String getEventsID(String key) {
-        return main.getEventPropertiesManager().getEventID(key);
-    }
+//    @Override
+//    public String getEventsID(String key) {
+//        return main.getEventPropertiesManager().getEventID(key);
+//    }
 
     private class ContentGeneratorImpl implements intellimate.izou.sdk.specification.context.ContentGenerator {
         /**

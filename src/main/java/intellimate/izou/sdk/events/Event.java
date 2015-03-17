@@ -52,7 +52,7 @@ public class Event implements intellimate.izou.events.Event<Event> {
     private final Identification source;
     private final List<String> descriptors;
     private final ListResourceProvider listResourceContainer = new intellimate.izou.sdk.resource.ListResourceProvider();
-    private final EventBehaviourController eventBehaviourController = new EventBehaviourController(this);
+    private final EventBehaviourController eventBehaviourController = new EventBehaviourController();
 
     /**
      * Creates a new Event Object

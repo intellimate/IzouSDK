@@ -6,6 +6,7 @@ import intellimate.izou.sdk.resource.Resource;
 import intellimate.izou.sdk.util.AddOnModule;
 import intellimate.izou.sdk.util.ResourceGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public abstract class ContentGenerator extends AddOnModule implements intellimat
      * @return a List containing ID's for the Events
      */
     @Override
-    public List<? extends Event> announceEvents() {
+    public List<? extends Event<?>> announceEvents() {
         return setTriggeredEvents().stream()
                 .map(EventListener::getEvent)
                 .collect(Collectors.toList());
@@ -87,7 +88,7 @@ public abstract class ContentGenerator extends AddOnModule implements intellimat
     public List<intellimate.izou.resource.Resource> provideResource(
             List<? extends intellimate.izou.resource.Resource> list, Optional<Event> optional) {
         //TODO: check arguemnts and return type here! Missing ID etc. Fail fast!
-        return triggered(list, optional).stream().collect(Collectors.toList());
+        return new ArrayList<>(triggered(list, optional));
     }
 
     /**
