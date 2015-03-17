@@ -1,10 +1,11 @@
 package intellimate.izou.sdk;
 
 import intellimate.izou.addon.AddOn;
-import intellimate.izou.events.Event;
 import intellimate.izou.identification.Identifiable;
 import intellimate.izou.identification.Identification;
 import intellimate.izou.identification.IllegalIDException;
+import intellimate.izou.sdk.contentgenerator.EventListener;
+import intellimate.izou.sdk.events.EventPropertiesManager;
 import intellimate.izou.sdk.properties.PropertiesAssistant;
 import intellimate.izou.sdk.specification.context.ContentGenerator;
 import intellimate.izou.sdk.specification.context.ThreadPool;
@@ -157,6 +158,7 @@ public class Context implements intellimate.izou.system.Context {
 //    }
 
     private class ContentGeneratorImpl implements intellimate.izou.sdk.specification.context.ContentGenerator {
+        private final EventPropertiesManager eventPropertiesManager = new EventPropertiesManager();
         /**
          * register an ContentGenerator
          * @param contentGenerator the contentGenerator to register
@@ -165,11 +167,11 @@ public class Context implements intellimate.izou.system.Context {
         @Override
         public void registerContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator)
                                                                                             throws IllegalIDException {
-            List<? extends Event<?>> commonEvents = contentGenerator.announceEvents();
-            for (Event event : commonEvents) {
-
+            List<EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
+            for (EventListener eventListener : triggeredEvents) {
+                eventPropertiesManager.registerEventID(eventListener.getDescription(),
+                        eventListener.getDescriptorID(), eventListener.getDescriptor());
             }
-            //TODO: automatically register common events here! See contentgenerator.EventListener
             getResources().registerResourceBuilder(contentGenerator);
         }
 
@@ -180,6 +182,10 @@ public class Context implements intellimate.izou.system.Context {
          */
         @Override
         public void unregisterContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator) {
+            List<EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
+            for (EventListener eventListener : triggeredEvents) {
+                eventPropertiesManager.unregisterEventID(eventListener.getDescriptorID());
+            }
             getResources().unregisterResourceBuilder(contentGenerator);
         }
     }

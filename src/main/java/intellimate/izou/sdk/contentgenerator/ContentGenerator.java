@@ -41,7 +41,7 @@ public abstract class ContentGenerator extends AddOnModule implements intellimat
      */
     @Override
     public List<? extends Event<?>> announceEvents() {
-        return setTriggeredEvents().stream()
+        return getTriggeredEvents().stream()
                 .map(EventListener::getEvent)
                 .collect(Collectors.toList());
     }
@@ -54,25 +54,9 @@ public abstract class ContentGenerator extends AddOnModule implements intellimat
      */
     @Override
     public List<? extends intellimate.izou.resource.Resource> announceResources() {
-        return setTriggeredResources();
+        return getTriggeredResources();
 
     }
-
-    /**
-     * this method returns a List of EventListener, which indicate for which Events the ContentGenerator should be
-     * triggered.
-     * @return a List of EventListeners
-     */
-    public abstract List<EventListener> setTriggeredEvents();
-
-    /**
-     * This method is called to register what resources the object provides.
-     * just pass a List of Resources without Data in it.
-     *
-     * @return a List containing the resources the object provides
-     */
-    //makes it more coherent with setTriggeredEvents
-    public abstract List<Resource> setTriggeredResources();
 
     /**
      * this method is called when an object wants to get a Resource.

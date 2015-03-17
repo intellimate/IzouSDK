@@ -30,7 +30,6 @@ public class EventPropertiesManager implements ReloadableFile {
         reloadFile(null);
     }
 
-    //TODO: call this method
     private void createIzouPropertiesFiles() throws IOException {
         String propertiesPath = new File(".").getCanonicalPath() + File.separator + "properties" + File.separator +
                 "local_events.properties";

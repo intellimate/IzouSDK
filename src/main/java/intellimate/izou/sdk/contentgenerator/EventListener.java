@@ -2,7 +2,6 @@ package intellimate.izou.sdk.contentgenerator;
 
 import intellimate.izou.identification.IdentificationManager;
 import intellimate.izou.sdk.events.Event;
-import intellimate.izou.sdk.resource.Resource;
 import intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.Arrays;
@@ -16,46 +15,76 @@ import java.util.Optional;
  */
 public class EventListener {
     private final Event event;
+    private final String descriptor;
+    private final String description;
+    private final String descriptorID;
 
-    private EventListener(Event event) {
+    /**
+     * Creates a new EventListener.
+     *
+     * @param event the Event to associate with
+     * @param descriptor the descriptor of the Event you want to listen to
+     * @param description the description of the descriptor
+     * @param descriptorID an ID for the descriptor (Should contain no special characters, spaces etc.)
+     */
+    public EventListener(Event event, String descriptor, String description, String descriptorID) {
         this.event = event;
+        this.descriptor = descriptor;
+        this.description = description;
+        this.descriptorID = descriptorID;
     }
 
     /**
      * create the EventListener
      * @param descriptor the descriptor of the Event you want to listen to
      * @param description the description of the descriptor
-     * @param descriptorID an ID for the descriptor (Should contain no special characters, spaces etc.)
+     * @param descriptorID an ID for the descriptor (Should contain no special characters, spaces etc.). Only String
+     *                     which match the regex (\w-_)+ are allowed.
      * @param addOnModule the AddOnModule which wants to create the EventListener
      * @return if one of the parameter is null, or unable to to obtain ID
+     * @throws java.lang.IllegalArgumentException if the descriptorID contains illegal characters
      */
     public Optional<EventListener> createEventListener(String descriptor, String description,
-                                                       String descriptorID, AddOnModule addOnModule) {
-        Optional<Resource<String>> descriptionResource = IdentificationManager.getInstance()
-                .getIdentification(addOnModule)
-                .map(id -> new Resource<>("description", id, description));
-        if (!descriptionResource.isPresent()) {
-            addOnModule.getContext().getLogger().error("Unable to obtain resource");
-            return Optional.empty();
-        }
-        Optional<Resource<String>> eventIDResource = IdentificationManager.getInstance().getIdentification(addOnModule)
-                .map(id -> new Resource<>("descriptorID", id, descriptorID));
-        if (!eventIDResource.isPresent()) {
-            addOnModule.getContext().getLogger().error("Unable to obtain resource");
-            return Optional.empty();
-        }
+                                                       String descriptorID, AddOnModule addOnModule)
+                                                                                        throws IllegalArgumentException{
+
+        if (!descriptorID.matches("(\\w-_)+"))
+            throw new IllegalArgumentException("descriptorID: " + descriptorID + " contains illegal characters");
         return IdentificationManager.getInstance().getIdentification(addOnModule)
                 .flatMap(id -> Event.createEvent(Event.NOTIFICATION, id, Arrays.asList(descriptor)))
-                .map(event -> event.addResources(Arrays.asList(descriptionResource.get(), eventIDResource.get())))
-                .map(EventListener::new);
+                .map(event -> new EventListener(event, descriptor, description, descriptorID));
     }
 
     /**
-     * returns the associated Event
+     * Returns the associated Event
      *
      * @return The Event
      */
     public Event getEvent() {
         return event;
+    }
+
+    /**
+     * Returns the descriptor of the Event you want to listen to
+     * @return a String
+     */
+    public String getDescriptor() {
+        return descriptor;
+    }
+
+    /**
+     * the description of the descriptor
+     * @return a String
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * an ID for the descriptor (Should contain no special characters, spaces etc.)
+     * @return a String
+     */
+    public String getDescriptorID() {
+        return descriptorID;
     }
 }
