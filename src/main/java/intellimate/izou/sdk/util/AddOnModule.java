@@ -5,7 +5,8 @@ import intellimate.izou.identification.IdentificationManager;
 import intellimate.izou.sdk.Context;
 
 /**
- * this is the base-class for all AddOn-Modules, it provides various utility methods.
+ * This is the base-class for all AddOn-Modules, it provides various utility methods.
+ *
  * @author Leander Kurscheidt
  * @version 1.0
  */

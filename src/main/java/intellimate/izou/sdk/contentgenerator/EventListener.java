@@ -31,7 +31,8 @@ public class EventListener {
      */
     public Optional<EventListener> createEventListener(String descriptor, String description,
                                                        String descriptorID, AddOnModule addOnModule) {
-        Optional<Resource<String>> descriptionResource = IdentificationManager.getInstance().getIdentification(addOnModule)
+        Optional<Resource<String>> descriptionResource = IdentificationManager.getInstance()
+                .getIdentification(addOnModule)
                 .map(id -> new Resource<>("description", id, description));
         if (!descriptionResource.isPresent()) {
             addOnModule.getContext().getLogger().error("Unable to obtain resource");
@@ -51,6 +52,7 @@ public class EventListener {
 
     /**
      * returns the associated Event
+     *
      * @return The Event
      */
     public Event getEvent() {

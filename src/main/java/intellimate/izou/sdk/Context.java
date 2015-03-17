@@ -5,13 +5,14 @@ import intellimate.izou.events.Event;
 import intellimate.izou.identification.Identifiable;
 import intellimate.izou.identification.Identification;
 import intellimate.izou.identification.IllegalIDException;
-import intellimate.izou.sdk.properties.PropertiesContainer;
+import intellimate.izou.sdk.properties.PropertiesAssistant;
 import intellimate.izou.sdk.specification.context.ContentGenerator;
 import intellimate.izou.sdk.specification.context.ThreadPool;
 import intellimate.izou.system.context.*;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -20,23 +21,26 @@ import java.util.concurrent.ExecutorService;
  */
 public class Context implements intellimate.izou.system.Context {
     private intellimate.izou.system.Context context;
-    private final Properties properties;
+    private final PropertiesImpl properties;
     private final ThreadPool threadPool;
     private final ContentGenerator contentGenerator;
+
     /**
+     * Creates a context for the addOn. It is where
      */
     public Context(intellimate.izou.system.Context context) {
         this.context = context;
-        properties = new Properties(new PropertiesAssistant(this, getAddOn().getID()));
+        properties = new PropertiesImpl(new PropertiesAssistant(this, getAddOn().getID()));
         threadPool = new ThreadPoolImpl();
         contentGenerator = new ContentGeneratorImpl();
     }
 
     /**
-     * returns the API used fo the Properties
+     * Gets the API used for the Properties
+     *
      * @return Properties
      */
-    public Properties getProperties() {
+    public intellimate.izou.sdk.specification.context.IzouProperties getProperties() {
         return properties;
     }
 
@@ -162,12 +166,16 @@ public class Context implements intellimate.izou.system.Context {
         public void registerContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator)
                                                                                             throws IllegalIDException {
             List<? extends Event<?>> commonEvents = contentGenerator.announceEvents();
+            for (Event event : commonEvents) {
+
+            }
             //TODO: automatically register common events here! See contentgenerator.EventListener
             getResources().registerResourceBuilder(contentGenerator);
         }
 
         /**
-         * unregisters an ContentGenerator
+         * Unregisters an ContentGenerator
+         *
          * @param contentGenerator the ContentGenerator to unregister
          */
         @Override
@@ -176,19 +184,18 @@ public class Context implements intellimate.izou.system.Context {
         }
     }
 
-    private static class Properties {
-        private PropertiesAssistant propertiesManager;
+    private static class PropertiesImpl implements intellimate.izou.sdk.specification.context.IzouProperties {
+        private PropertiesAssistant propertiesAssistant;
 
         /**
          * Creates a new properties object within the context
-         *
          */
-        public Properties(PropertiesAssistant propertiesAssistant) {
-            this.propertiesManager = propertiesAssistant;
+        public PropertiesImpl(PropertiesAssistant propertiesAssistant) {
+            this.propertiesAssistant = propertiesAssistant;
         }
 
         /**
-         * You should probably use getPropertiesContainer() unless you have a very good reason not to.
+         * You should probably use getProperties() unless you have a very good reason not to.
          *
          * Searches for the property with the specified key in this property list.
          *
@@ -198,26 +205,29 @@ public class Context implements intellimate.izou.system.Context {
          * @param key the property key.
          * @return the value in this property list with the specified key value.
          */
+        @Override
         public String getProperties(String key) {
-            return propertiesManager.getPropertiesContainer().getProperties().getProperty(key);
+            return propertiesAssistant.getProperties().getProperty(key);
         }
 
         /**
-         * Returns an Instance of Properties, if found
+         * Returns an instance of Properties, if found
          *
-         * @return an Instance of Properties or null;
+         * @return an instance of Properties or null;
          */
-        public PropertiesContainer getPropertiesContainer() {
-            return propertiesManager.getPropertiesContainer();
+        @Override
+        public Properties getProperties() {
+            return propertiesAssistant.getProperties();
         }
 
         /**
-         * Gets the {@code propertiesManger}
+         * Gets the {@code propertiesAssistant}
          *
-         * @return the {@code propertiesManger}
+         * @return the {@code propertiesAssistant}
          */
-        public PropertiesAssistant getPropertiesManger() {
-            return propertiesManager;
+        @Override
+        public PropertiesAssistant getPropertiesAssistant() {
+            return propertiesAssistant;
         }
 
         /**
@@ -229,8 +239,9 @@ public class Context implements intellimate.izou.system.Context {
          * @param key the key to be placed into this property list.
          * @param value the value corresponding to key.
          */
+        @Override
         public void setProperties(String key, String value) {
-            this.propertiesManager.getPropertiesContainer().getProperties().setProperty(key, value);
+            this.propertiesAssistant.setProperties(key, value);
         }
 
         /**
@@ -238,19 +249,9 @@ public class Context implements intellimate.izou.system.Context {
          *
          * @param properties instance of properties, not null
          */
-        public void setProperties(java.util.Properties properties) {
-            if(properties == null) return;
-            this.propertiesManager.setProperties(properties);
-        }
-
-        /**
-         * Sets properties-container
-         *
-         * @param propertiesContainer the properties-container
-         */
-        public void setPropertiesContainer(PropertiesContainer propertiesContainer) {
-            if(propertiesContainer == null) return;
-            this.propertiesManager.setPropertiesContainer(propertiesContainer);
+        @Override
+        public void setProperties(Properties properties) {
+            this.propertiesAssistant.setProperties(properties);
         }
 
         /**
@@ -258,8 +259,9 @@ public class Context implements intellimate.izou.system.Context {
          *
          * @return path to properties file
          */
+        @Override
         public String getPropertiesPath() {
-            return propertiesManager.getPropertiesPath();
+            return propertiesAssistant.getPropertiesPath();
         }
 
         /**
@@ -267,8 +269,9 @@ public class Context implements intellimate.izou.system.Context {
          *
          * @param propertiesPath to properties file
          */
+        @Override
         public void setPropertiesPath(String propertiesPath) {
-            this.propertiesManager.setPropertiesPath(propertiesPath);
+            this.propertiesAssistant.setPropertiesPath(propertiesPath);
         }
 
         /**
@@ -276,8 +279,9 @@ public class Context implements intellimate.izou.system.Context {
          *
          * @return path to default properties file
          */
+        @Override
         public String getDefaultPropertiesPath() {
-            return propertiesManager.getDefaultPropertiesPath();
+            return propertiesAssistant.getDefaultPropertiesPath();
         }
     }
 

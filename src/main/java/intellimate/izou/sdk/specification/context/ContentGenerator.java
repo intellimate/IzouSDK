@@ -12,7 +12,8 @@ public interface ContentGenerator {
      * @param contentGenerator the contentGenerator to register
      * @throws intellimate.izou.identification.IllegalIDException not implemented yet
      */
-    void registerContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator) throws IllegalIDException;
+    void registerContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator)
+            throws IllegalIDException;
 
     /**
      * unregisters an ContentGenerator

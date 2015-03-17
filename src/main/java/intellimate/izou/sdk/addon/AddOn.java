@@ -18,13 +18,15 @@ import ro.fortsoft.pf4j.PluginWrapper;
  * It will be instantiated and its registering-methods will be called by the PluginManager.
  * This class has method for a properties-file named addOnID.properties (AddOnsID in the form: package.class)
  */
-public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProvider, Loggable, LoggedExceptionCallback {
+public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProvider, Loggable,
+        LoggedExceptionCallback {
     private final String addOnID;
     private Context context;
     private PluginWrapper plugin;
 
     /**
-     * the default constructor for AddOns
+     * The default constructor for AddOns
+     *
      * @param addOnID the ID of the Plugin in the form: package.class
      */
     public AddOn(String addOnID) {
@@ -32,7 +34,7 @@ public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProv
     }
 
     /**
-     * this method is used to register the modules
+     * This method is used to register the modules
      */
     @Override
     public void register() {
@@ -78,42 +80,48 @@ public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProv
     }
 
     /**
-     * this method gets called before registering
+     * This method gets called before registering
      */
     public abstract void prepare();
 
     /**
-     * use this method to register (if needed) your Activators.
+     * Use this method to register (if needed) your Activators.
+     *
      * @return Array containing Instances of Activators
      */
     public abstract Activator[] registerActivator();
 
     /**
-     * use this method to register (if needed) your ContentGenerators.
+     * Use this method to register (if needed) your ContentGenerators.
+     *
      * @return Array containing Instances of ContentGenerators
      */
     public abstract ContentGenerator[] registerContentGenerator();
 
     /**
-     * use this method to register (if needed) your EventControllers.
+     * Use this method to register (if needed) your EventControllers.
+     *
      * @return Array containing Instances of EventControllers
      */
     public abstract EventsController[] registerEventController();
 
     /**
-     * use this method to register (if needed) your OutputPlugins.
+     * Use this method to register (if needed) your OutputPlugins.
+     *
      * @return Array containing Instances of OutputPlugins
      */
     public abstract OutputPlugin[] registerOutputPlugin();
 
     /**
-     * use this method to register (if needed) your Output.
+     * Use this method to register (if needed) your Output.
+     *
      * @return Array containing Instances of OutputExtensions
      */
     public abstract OutputExtension[] registerOutputExtension();
 
     /**
      * Internal initiation of addOn - fake constructor, comes before prepare
+     *
      * @param context the context to initialize with
      */
     @Override
@@ -122,7 +130,7 @@ public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProv
     }
 
     /**
-     * returns the Context of the AddOn.
+     * Returns the Context of the AddOn.
      *
      * Context provides some general Communications.
      *
@@ -134,7 +142,8 @@ public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProv
     }
 
     /**
-     * gets the associated Plugin.
+     * Gets the associated Plugin.
+     *
      * @return the Plugin.
      */
     @Override
@@ -143,7 +152,8 @@ public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProv
     }
 
     /**
-     * sets the Plugin IF it is not already set.
+     * Sets the Plugin IF it is not already set.
+     *
      * @param plugin the plugin
      */
     @Override
