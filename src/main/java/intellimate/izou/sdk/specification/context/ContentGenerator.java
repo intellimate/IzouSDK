@@ -8,7 +8,8 @@ import intellimate.izou.identification.IllegalIDException;
  */
 public interface ContentGenerator {
     /**
-     * register an ContentGenerator
+     * Register an ContentGenerator
+     *
      * @param contentGenerator the contentGenerator to register
      * @throws intellimate.izou.identification.IllegalIDException not implemented yet
      */

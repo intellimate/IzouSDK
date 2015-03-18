@@ -1,9 +1,9 @@
 package intellimate.izou.sdk.properties;
 
 import intellimate.izou.addon.AddOn;
-import intellimate.izou.identification.Identifiable;
 import intellimate.izou.sdk.Context;
-import intellimate.izou.sdk.specification.context.IzouProperties;
+import intellimate.izou.sdk.events.EventPropertiesAssistant;
+import intellimate.izou.sdk.util.AddOnModule;
 import intellimate.izou.system.file.ReloadableFile;
 
 import java.io.*;
@@ -15,20 +15,30 @@ import java.util.Properties;
  *
  * <p>Unlike most manager classes in Izou, the PropertiesManager is included in every {@code AddOn} instance</p>
  */
-//TODO: how to solve the problem with the ID? combine with the ID of the addOn class? it's accessible from the context
-public class PropertiesAssistant implements ReloadableFile, Identifiable {
+public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
     private Context context;
-    private String addOnID;
     private String propertiesPath;
     private String defaultPropertiesPath;
     private Properties properties;
+    private EventPropertiesAssistant assistant;
 
     public PropertiesAssistant(Context context, String addOnID) {
+        super(context, addOnID + ".PropertiesAssistant");
         this.context = context;
-        this.addOnID = addOnID;
         this.properties = new Properties();
         this.propertiesPath = null;
         this.defaultPropertiesPath = null;
+        this.assistant = new EventPropertiesAssistant(context, addOnID + ".EventPropertiesAssistant");
+        initProperties();
+    }
+
+    /**
+     * Gets the EventPropertiesAssistant
+     *
+     * @return the EventPropertiesAssistant
+     */
+    public EventPropertiesAssistant getEventPropertiesAssistant() {
+        return assistant;
     }
 
     /**
@@ -64,7 +74,7 @@ public class PropertiesAssistant implements ReloadableFile, Identifiable {
      * @param key the key to be placed into this property list.
      * @param value the value corresponding to key.
      */
-    public void setProperties(String key, String value) {
+    public void setProperty(String key, String value) {
         properties.setProperty(key, value);
     }
 
@@ -109,13 +119,13 @@ public class PropertiesAssistant implements ReloadableFile, Identifiable {
     }
 
     /**
-     * Initializes properties in the addOn. Creates new properties file with default properties.
+     * Initializes properties in the addOn. Creates new properties file using default properties.
      */
     public void initProperties() {
         String propertiesPathTemp;
         try {
             propertiesPathTemp = new File(".").getCanonicalPath() + File.separator + "properties" + File.separator
-                    + addOnID + ".properties";
+                    + getID() + ".properties";
         } catch (IOException e) {
             propertiesPathTemp = null;
             context.getLogger().error("Error while trying to build the propertiesPathTemp", e);
@@ -170,7 +180,7 @@ public class PropertiesAssistant implements ReloadableFile, Identifiable {
      * @return true if operation has succeeded, else false
      */
     private boolean writeToPropertiesFile(String defaultPropsPath) {
-        return context.getFiles().writeToFile(defaultPropsPath, context.getProperties().getPropertiesPath());
+        return context.getFiles().writeToFile(defaultPropsPath, propertiesPath);
     }
 
     /**
@@ -197,8 +207,7 @@ public class PropertiesAssistant implements ReloadableFile, Identifiable {
         Properties temp = new Properties();
         InputStream inputStream = null;
         try {
-            IzouProperties prop = context.getProperties();
-            File properties = new File(context.getProperties().getPropertiesPath());
+            File properties = new File(propertiesPath);
 
             //Reader reader = new FileReader(properties);
             BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(properties),
@@ -210,7 +219,7 @@ public class PropertiesAssistant implements ReloadableFile, Identifiable {
             this.properties = temp;
         } catch(IOException e) {
             context.getLogger().error("Error while trying to load the Properties-File: "
-                    + context.getProperties().getPropertiesPath(), e);
+                    + propertiesPath, e);
         } finally {
             if (inputStream != null) {
                 try {
@@ -223,8 +232,8 @@ public class PropertiesAssistant implements ReloadableFile, Identifiable {
     }
 
     /**
-     * If you are looking for a way to change to default location of your <i>defaultProperties.txt</i> file, go look
-     * at {@link intellimate.izou.sdk.addon.AddOn#setUnusualDefaultPropertiesPath}
+     * If you are looking for a way to change to default location of your <i>defaultProperties.txt</i> file, you could
+     * use this but,
      * <p>
      * *** YOU SHOULD NOT HAVE TO USE THIS METHOD ***
      * <br><br>
@@ -284,12 +293,7 @@ public class PropertiesAssistant implements ReloadableFile, Identifiable {
         try {
             reloadProperties();
         } catch (IOException e) {
-            context.getLogger().error("Error reloading property file for" + addOnID, e);
+            context.getLogger().error("Error reloading property file for" + getID(), e);
         }
-    }
-
-    @Override
-    public String getID() {
-        return addOnID;
     }
 }

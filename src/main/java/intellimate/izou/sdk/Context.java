@@ -5,7 +5,6 @@ import intellimate.izou.identification.Identifiable;
 import intellimate.izou.identification.Identification;
 import intellimate.izou.identification.IllegalIDException;
 import intellimate.izou.sdk.contentgenerator.EventListener;
-import intellimate.izou.sdk.events.EventPropertiesManager;
 import intellimate.izou.sdk.properties.PropertiesAssistant;
 import intellimate.izou.sdk.specification.context.ContentGenerator;
 import intellimate.izou.sdk.specification.context.ThreadPool;
@@ -13,7 +12,6 @@ import intellimate.izou.system.context.*;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -21,8 +19,8 @@ import java.util.concurrent.ExecutorService;
  * @version 1.0
  */
 public class Context implements intellimate.izou.system.Context {
+    private final PropertiesAssistant propertiesAssistant = new PropertiesAssistant(this, getAddOn().getID());
     private intellimate.izou.system.Context context;
-    private final PropertiesImpl properties;
     private final ThreadPool threadPool;
     private final ContentGenerator contentGenerator;
 
@@ -31,7 +29,6 @@ public class Context implements intellimate.izou.system.Context {
      */
     public Context(intellimate.izou.system.Context context) {
         this.context = context;
-        properties = new PropertiesImpl(new PropertiesAssistant(this, getAddOn().getID()));
         threadPool = new ThreadPoolImpl();
         contentGenerator = new ContentGeneratorImpl();
     }
@@ -41,8 +38,8 @@ public class Context implements intellimate.izou.system.Context {
      *
      * @return Properties
      */
-    public intellimate.izou.sdk.specification.context.IzouProperties getProperties() {
-        return properties;
+    public PropertiesAssistant getPropertiesAssistant() {
+        return propertiesAssistant;
     }
 
     /**
@@ -158,9 +155,10 @@ public class Context implements intellimate.izou.system.Context {
 //    }
 
     private class ContentGeneratorImpl implements intellimate.izou.sdk.specification.context.ContentGenerator {
-        private final EventPropertiesManager eventPropertiesManager = new EventPropertiesManager();
+
         /**
-         * register an ContentGenerator
+         * Register an ContentGenerator
+         *
          * @param contentGenerator the contentGenerator to register
          * @throws IllegalIDException not implemented yet
          */
@@ -169,7 +167,7 @@ public class Context implements intellimate.izou.system.Context {
                                                                                             throws IllegalIDException {
             List<EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
             for (EventListener eventListener : triggeredEvents) {
-                eventPropertiesManager.registerEventID(eventListener.getDescription(),
+                propertiesAssistant.getEventPropertiesAssistant().registerEventID(eventListener.getDescription(),
                         eventListener.getDescriptorID(), eventListener.getDescriptor());
             }
             getResources().registerResourceBuilder(contentGenerator);
@@ -184,110 +182,9 @@ public class Context implements intellimate.izou.system.Context {
         public void unregisterContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator) {
             List<EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
             for (EventListener eventListener : triggeredEvents) {
-                eventPropertiesManager.unregisterEventID(eventListener.getDescriptorID());
+                propertiesAssistant.getEventPropertiesAssistant().unregisterEventID(eventListener.getDescriptorID());
             }
             getResources().unregisterResourceBuilder(contentGenerator);
-        }
-    }
-
-    private static class PropertiesImpl implements intellimate.izou.sdk.specification.context.IzouProperties {
-        private PropertiesAssistant propertiesAssistant;
-
-        /**
-         * Creates a new properties object within the context
-         */
-        public PropertiesImpl(PropertiesAssistant propertiesAssistant) {
-            this.propertiesAssistant = propertiesAssistant;
-        }
-
-        /**
-         * You should probably use getProperties() unless you have a very good reason not to.
-         *
-         * Searches for the property with the specified key in this property list.
-         *
-         * If the key is not found in this property list, the default property list, and its defaults, recursively, are
-         * then checked. The method returns null if the property is not found.
-         *
-         * @param key the property key.
-         * @return the value in this property list with the specified key value.
-         */
-        @Override
-        public String getProperties(String key) {
-            return propertiesAssistant.getProperties().getProperty(key);
-        }
-
-        /**
-         * Returns an instance of Properties, if found
-         *
-         * @return an instance of Properties or null;
-         */
-        @Override
-        public Properties getProperties() {
-            return propertiesAssistant.getProperties();
-        }
-
-        /**
-         * Gets the {@code propertiesAssistant}
-         *
-         * @return the {@code propertiesAssistant}
-         */
-        @Override
-        public PropertiesAssistant getPropertiesAssistant() {
-            return propertiesAssistant;
-        }
-
-        /**
-         * Calls the HashTable method put.
-         *
-         * Provided for parallelism with the getProperty method. Enforces use of strings for
-         *     * property keys and values. The value returned is the result of the HashTable call to put.
-
-         * @param key the key to be placed into this property list.
-         * @param value the value corresponding to key.
-         */
-        @Override
-        public void setProperties(String key, String value) {
-            this.propertiesAssistant.setProperties(key, value);
-        }
-
-        /**
-         * Sets properties
-         *
-         * @param properties instance of properties, not null
-         */
-        @Override
-        public void setProperties(Properties properties) {
-            this.propertiesAssistant.setProperties(properties);
-        }
-
-        /**
-         * Gets the path to properties file (the real properties file - as opposed to the {@code defaultProperties.txt} file)
-         *
-         * @return path to properties file
-         */
-        @Override
-        public String getPropertiesPath() {
-            return propertiesAssistant.getPropertiesPath();
-        }
-
-        /**
-         * Sets the path to properties file (the real properties file - as opposed to the {@code defaultProperties.txt} file)
-         *
-         * @param propertiesPath to properties file
-         */
-        @Override
-        public void setPropertiesPath(String propertiesPath) {
-            this.propertiesAssistant.setPropertiesPath(propertiesPath);
-        }
-
-        /**
-         * Gets the path to default properties file (the file which is copied into the real properties on start)
-         *
-         * @return path to default properties file
-         */
-        @Override
-        public String getDefaultPropertiesPath() {
-            return propertiesAssistant.getDefaultPropertiesPath();
         }
     }
 

@@ -1,5 +1,7 @@
 package intellimate.izou.sdk.events;
 
+import intellimate.izou.sdk.Context;
+import intellimate.izou.sdk.util.AddOnModule;
 import intellimate.izou.system.file.FileSystemManager;
 import intellimate.izou.system.file.ReloadableFile;
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +14,7 @@ import java.util.Properties;
  * EventPropertiesManager manages all events written in the local_events.properties file. You can register (add)
  * events to the file, and get events from the file. The file pretty much serves as a hub for event IDs.
  */
-public class EventPropertiesManager implements ReloadableFile {
+public class EventPropertiesAssistant extends AddOnModule implements ReloadableFile {
 
     /**
      * The path to the local_events.properties file
@@ -25,8 +27,14 @@ public class EventPropertiesManager implements ReloadableFile {
     /**
      * Creates a new EventPropertiesManager
      */
-    public EventPropertiesManager() {
+    public EventPropertiesAssistant(Context context, String id) {
+        super(context, id + ".EventPropertiesAssistant");
         properties = new Properties();
+        try {
+            createIzouPropertiesFiles();
+        } catch (IOException e) {
+
+        }
         reloadFile(null);
     }
 
