@@ -6,7 +6,7 @@ import intellimate.izou.identification.IllegalIDException;
  * @author Leander Kurscheidt
  * @version 1.0
  */
-public interface ContentGenerator {
+public interface ContentGenerators {
     /**
      * Register an ContentGenerator
      *

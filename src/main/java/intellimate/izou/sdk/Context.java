@@ -6,7 +6,7 @@ import intellimate.izou.identification.Identification;
 import intellimate.izou.identification.IllegalIDException;
 import intellimate.izou.sdk.contentgenerator.EventListener;
 import intellimate.izou.sdk.properties.PropertiesAssistant;
-import intellimate.izou.sdk.specification.context.ContentGenerator;
+import intellimate.izou.sdk.specification.context.ContentGenerators;
 import intellimate.izou.sdk.specification.context.ThreadPool;
 import intellimate.izou.system.context.*;
 import org.apache.logging.log4j.spi.ExtendedLogger;
@@ -22,7 +22,7 @@ public class Context implements intellimate.izou.system.Context {
     private final PropertiesAssistant propertiesAssistant = new PropertiesAssistant(this, getAddOn().getID());
     private intellimate.izou.system.Context context;
     private final ThreadPool threadPool;
-    private final ContentGenerator contentGenerator;
+    private final ContentGenerators contentGenerators;
 
     /**
      * Creates a context for the addOn. It is where
@@ -30,7 +30,7 @@ public class Context implements intellimate.izou.system.Context {
     public Context(intellimate.izou.system.Context context) {
         this.context = context;
         threadPool = new ThreadPoolImpl();
-        contentGenerator = new ContentGeneratorImpl();
+        contentGenerators = new ContentGeneratorsImpl();
     }
 
     /**
@@ -115,8 +115,8 @@ public class Context implements intellimate.izou.system.Context {
      * returns the API used to manage the ContentGenerators
      * @return ContentGenerator
      */
-    public intellimate.izou.sdk.specification.context.ContentGenerator getContentGenerator() {
-        return contentGenerator;
+    public ContentGenerators getContentGenerators() {
+        return contentGenerators;
     }
 
     /**
@@ -154,7 +154,7 @@ public class Context implements intellimate.izou.system.Context {
 //        return main.getEventPropertiesManager().getEventID(key);
 //    }
 
-    private class ContentGeneratorImpl implements intellimate.izou.sdk.specification.context.ContentGenerator {
+    private class ContentGeneratorsImpl implements ContentGenerators {
 
         /**
          * Register an ContentGenerator
