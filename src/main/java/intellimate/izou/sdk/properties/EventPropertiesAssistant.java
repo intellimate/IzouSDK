@@ -1,4 +1,4 @@
-package intellimate.izou.sdk.events;
+package intellimate.izou.sdk.properties;
 
 import intellimate.izou.sdk.Context;
 import intellimate.izou.sdk.util.AddOnModule;
@@ -32,10 +32,10 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
         properties = new Properties();
         try {
             createIzouPropertiesFiles();
+            reloadFile(null);
         } catch (IOException e) {
-
+            context.getLogger().error("Unable to initialize local_events.properties file", e);
         }
-        reloadFile(null);
     }
 
     private void createIzouPropertiesFiles() throws IOException {

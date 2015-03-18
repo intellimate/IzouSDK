@@ -2,7 +2,6 @@ package intellimate.izou.sdk.properties;
 
 import intellimate.izou.addon.AddOn;
 import intellimate.izou.sdk.Context;
-import intellimate.izou.sdk.events.EventPropertiesAssistant;
 import intellimate.izou.sdk.util.AddOnModule;
 import intellimate.izou.system.file.ReloadableFile;
 
