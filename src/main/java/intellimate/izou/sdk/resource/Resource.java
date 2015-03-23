@@ -22,7 +22,7 @@ public class Resource<T> implements intellimate.izou.resource.Resource<T, Resour
      * @param resourceID the ID of the Resource
      */
     public Resource(String resourceID) {
-        this(resourceID, null, null);
+        this(resourceID, null, null, null);
     }
 
     /**
@@ -32,7 +32,7 @@ public class Resource<T> implements intellimate.izou.resource.Resource<T, Resour
      * @param provider the Provider of the Resource
      */
     public Resource(String resourceID, Identification provider) {
-        this(resourceID, provider, null);
+        this(resourceID, provider, null, null);
     }
 
     /**
@@ -44,6 +44,17 @@ public class Resource<T> implements intellimate.izou.resource.Resource<T, Resour
      */
     public Resource(String resourceID, Identification provider, T t) {
         this(resourceID, provider, t, null);
+    }
+
+    /**
+     * creates a new Resource.
+     * This method is thread-safe.
+     * @param resourceID the ID of the Resource
+     * @param provider the Provider of the Resource
+     * @param consumer the ID of the Consumer
+     */
+    public Resource(String resourceID, Identification provider, Identification consumer) {
+        this(resourceID, provider, null, consumer);
     }
 
     /**
