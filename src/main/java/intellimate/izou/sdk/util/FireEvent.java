@@ -22,10 +22,9 @@ public interface FireEvent extends ContextProvider, Identifiable {
      * </p>
      * @param type the type of the Event (See static Strings in IzouSDK Events)
      * @param descriptors the Descriptors of the Event
-     * @throws IllegalIDException not implemented yet
      * @return true if fired, false if unable
      */
-    default boolean fire(String type, List<String> descriptors) throws IllegalIDException {
+    default boolean fire(String type, List<String> descriptors) {
         return fire(type, descriptors, 5);
     }
 
@@ -37,10 +36,9 @@ public interface FireEvent extends ContextProvider, Identifiable {
      * @param type the type of the Event (See static Strings in IzouSDK Events)
      * @param descriptors the Descriptors of the Event
      * @param retry how many times it should try
-     * @throws IllegalIDException not implemented yet
      * @return true if fired, false if unable
      */
-    default boolean fire(String type, List<String> descriptors, int retry) throws IllegalIDException {
+    default boolean fire(String type, List<String> descriptors, int retry) {
         Optional<Event> event = IdentificationManager.getInstance().getIdentification(this)
                 .flatMap(id -> intellimate.izou.sdk.events.Event.createEvent(type, id, descriptors));
         if (event.isPresent()) {
@@ -57,6 +55,9 @@ public interface FireEvent extends ContextProvider, Identifiable {
                 } catch (InterruptedException e1) {
                     throw new RuntimeException(e);
                 }
+            } catch (IllegalIDException e) {
+                //maybe change in future SDK-Versions? currently not implemented in Izou
+                getContext().getLogger().error("Illegal ID!", e);
             }
         }
         return false;
