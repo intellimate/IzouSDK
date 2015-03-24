@@ -20,7 +20,12 @@ public interface ThreadPoolUser extends ContextProvider {
      * @return the new CompletableFuture
      */
     default CompletableFuture<Void> submit(Runnable runnable) {
-        return CompletableFuture.runAsync(runnable, getContext().getThreadPool().getThreadPool());
+        return CompletableFuture.runAsync(runnable, getContext().getThreadPool().getThreadPool())
+                .whenComplete((u, ex) -> {
+                    if (ex != null) {
+                        getContext().getThreadPool().handleThrowable(ex, runnable);
+                    }
+                });
     }
 
     /**
@@ -30,7 +35,12 @@ public interface ThreadPoolUser extends ContextProvider {
      * @return the new CompletableFuture
      */
     default <U> CompletableFuture<U> submit(Supplier<U> supplier) {
-        return CompletableFuture.supplyAsync(supplier, getContext().getThreadPool().getThreadPool());
+        return CompletableFuture.supplyAsync(supplier, getContext().getThreadPool().getThreadPool())
+                .whenComplete((u, ex) -> {
+                    if (ex != null) {
+                        getContext().getThreadPool().handleThrowable(ex, supplier);
+                    }
+                });
     }
 
     /**
