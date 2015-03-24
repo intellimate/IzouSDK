@@ -21,7 +21,7 @@ public interface ContentGeneratorModel extends ResourceBuilderModel {
      * triggered.
      * @return a List of EventListeners
      */
-    List<EventListener> getTriggeredEvents();
+    List<? extends EventListener> getTriggeredEvents();
 
     /**
      * This method is called to register what resources the object provides.
@@ -29,5 +29,5 @@ public interface ContentGeneratorModel extends ResourceBuilderModel {
      *
      * @return a List containing the resources the object provides
      */
-    List<Resource> getTriggeredResources();
+    List<? extends Resource> getTriggeredResources();
 }
