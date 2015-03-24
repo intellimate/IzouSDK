@@ -5,6 +5,8 @@ import intellimate.izou.identification.Identification;
 import intellimate.izou.identification.IdentificationManager;
 import intellimate.izou.sdk.resource.Resource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -63,5 +65,21 @@ public interface ResourceCreator extends ContextProvider, Identifiable {
         if (!generated.isPresent())
             getContext().getLogger().error("unable to generate Resource");
         return generated;
+    }
+
+    /**
+     * utility method to create a list from an Optional.
+     * @param optional the Optional to create the List from
+     * @param <T> the type
+     * @return a List containing something is the optional is not empty
+     */
+    default <T> List<T> optionalToList(Optional<T> optional) {
+        return optional
+                .map(t -> {
+                    List<T> list = new ArrayList<>();
+                    list.add(t);
+                    return list;
+                })
+                .orElse(new ArrayList<>());
     }
 }
