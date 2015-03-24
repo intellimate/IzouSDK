@@ -1,6 +1,6 @@
 package intellimate.izou.sdk.resource;
 
-import intellimate.izou.resource.ListResourceProviderModel;
+import intellimate.izou.resource.ListResourceProvider;
 import intellimate.izou.resource.ResourceModel;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * A ResourceContainer which holds all the Resources in an List internally
  */
-public class ListResourceProvider implements ListResourceProviderModel {
+public class ListResourceProviderImpl implements ListResourceProvider {
     List<ResourceModel> resources = new ArrayList<>();
 
     /**

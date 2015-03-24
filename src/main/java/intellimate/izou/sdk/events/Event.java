@@ -3,9 +3,9 @@ package intellimate.izou.sdk.events;
 import intellimate.izou.events.EventBehaviourControllerModel;
 import intellimate.izou.events.EventModel;
 import intellimate.izou.identification.Identification;
-import intellimate.izou.resource.ListResourceProviderModel;
+import intellimate.izou.resource.ListResourceProvider;
 import intellimate.izou.resource.ResourceModel;
-import intellimate.izou.sdk.resource.ListResourceProvider;
+import intellimate.izou.sdk.resource.ListResourceProviderImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class Event implements EventModel<Event> {
     private final String type;
     private final Identification source;
     private final List<String> descriptors;
-    private final ListResourceProviderModel listResourceContainer = new ListResourceProvider();
+    private final ListResourceProvider listResourceContainer = new ListResourceProviderImpl();
     private final EventBehaviourController eventBehaviourController = new EventBehaviourController();
 
     /**
@@ -126,7 +126,7 @@ public class Event implements EventModel<Event> {
      * @return an instance of ListResourceContainer
      */
     @Override
-    public ListResourceProviderModel getListResourceContainer() {
+    public ListResourceProvider getListResourceContainer() {
         return listResourceContainer;
     }
 

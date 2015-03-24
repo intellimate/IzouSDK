@@ -161,7 +161,7 @@ public class Resource<T> implements ResourceModel<T> {
      * creates a list with this Element in it.
      * @return a list
      */
-    public List<Resource<T>> toList() {
+    public List<Resource> toList() {
         return Arrays.asList(this);
     }
 
