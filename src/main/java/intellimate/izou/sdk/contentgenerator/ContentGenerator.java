@@ -6,7 +6,7 @@ import intellimate.izou.sdk.Context;
 import intellimate.izou.sdk.resource.Resource;
 import intellimate.izou.sdk.specification.ContentGeneratorModel;
 import intellimate.izou.sdk.util.AddOnModule;
-import intellimate.izou.sdk.util.ResourceGenerator;
+import intellimate.izou.sdk.util.ResourceCreator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  *     of it in a ThreadPool and generate(String eventID) will be called.
  * </p>
  */
-public abstract class ContentGenerator extends AddOnModule implements ContentGeneratorModel, ResourceGenerator {
+public abstract class ContentGenerator extends AddOnModule implements ContentGeneratorModel, ResourceCreator {
 
     /**
      * Creates a new content generator.
