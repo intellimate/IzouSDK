@@ -162,9 +162,4 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
             }
         }
     }
-
-    @Override
-    public String getID() {
-        return null;
-    }
 }

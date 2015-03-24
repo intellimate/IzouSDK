@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutorService;
  * @version 1.0
  */
 public class Context implements intellimate.izou.system.Context {
-    private final PropertiesAssistant propertiesAssistant = new PropertiesAssistant(this, getAddOn().getID());
+    private final PropertiesAssistant propertiesAssistant;
     private intellimate.izou.system.Context context;
     private final ThreadPool threadPool;
     private final ContentGenerators contentGenerators;
@@ -32,6 +32,7 @@ public class Context implements intellimate.izou.system.Context {
         this.context = context;
         threadPool = new ThreadPoolImpl();
         contentGenerators = new ContentGeneratorsImpl();
+        propertiesAssistant = new PropertiesAssistant(this, getAddOn().getID());
     }
 
     /**
@@ -166,7 +167,7 @@ public class Context implements intellimate.izou.system.Context {
         @Override
         public void registerContentGenerator(ContentGeneratorModel contentGenerator)
                                                                                             throws IllegalIDException {
-            List<EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
+            List<? extends EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
             for (EventListener eventListener : triggeredEvents) {
                 propertiesAssistant.getEventPropertiesAssistant().registerEventID(eventListener.getDescription(),
                         eventListener.getDescriptorID(), eventListener.getDescriptor());
@@ -181,7 +182,7 @@ public class Context implements intellimate.izou.system.Context {
          */
         @Override
         public void unregisterContentGenerator(ContentGeneratorModel contentGenerator) {
-            List<EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
+            List<? extends EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
             for (EventListener eventListener : triggeredEvents) {
                 propertiesAssistant.getEventPropertiesAssistant().unregisterEventID(eventListener.getDescriptorID());
             }
@@ -222,6 +223,17 @@ public class Context implements intellimate.izou.system.Context {
         @Override
         public ExecutorService getThreadPool(Identifiable identifiable) throws IllegalIDException {
             return context.getThreadPool().getThreadPool(identifiable);
+        }
+
+        /**
+         * tries everything to log the exception
+         *
+         * @param throwable the Throwable
+         * @param target    an instance of the thing which has thrown the Exception
+         */
+        @Override
+        public void handleThrowable(Throwable throwable, Object target) {
+            context.getThreadPool().handleThrowable(throwable, target);
         }
 
         /**

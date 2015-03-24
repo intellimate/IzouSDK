@@ -6,7 +6,7 @@
 
     <groupId>intellimate.izou</groupId>
     <artifactId>IzouSDK</artifactId>
-    <version>0.5.9</version>
+    <version>0.5.11</version>
 
     <properties>
         <!-- github server corresponds to entry in ~/.m2/settings.xml -->
