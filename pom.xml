@@ -29,7 +29,7 @@
         <dependency>
             <groupId>intellimate.izou</groupId>
             <artifactId>Izou</artifactId>
-            <version>1.5-SNAPSHOT</version>
+            <version>[1.5,1.6)</version>
         </dependency>
     </dependencies>
 
