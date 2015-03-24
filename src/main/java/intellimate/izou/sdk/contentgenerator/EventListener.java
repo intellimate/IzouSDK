@@ -28,7 +28,7 @@ public class EventListener {
      * @param description the description of the descriptor
      * @param descriptorID an ID for the descriptor (Should contain no special characters, spaces etc.)
      */
-    public EventListener(Event event, String descriptor, String description, String descriptorID) {
+    EventListener(Event event, String descriptor, String description, String descriptorID) {
         this.event = event;
         this.descriptor = descriptor;
         this.description = description;
@@ -45,7 +45,7 @@ public class EventListener {
      * @return if one of the parameter is null, or unable to to obtain ID
      * @throws java.lang.IllegalArgumentException if the descriptorID contains illegal characters
      */
-    public Optional<EventListener> createEventListener(String descriptor, String description,
+    public static Optional<EventListener> createEventListener(String descriptor, String description,
                                                        String descriptorID, AddOnModule addOnModule)
                                                                                         throws IllegalArgumentException{
 
