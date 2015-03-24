@@ -1,7 +1,7 @@
 package intellimate.izou.sdk.output;
 
 import com.google.common.reflect.TypeToken;
-import intellimate.izou.events.Event;
+import intellimate.izou.events.EventModel;
 import intellimate.izou.sdk.Context;
 
 /**
@@ -49,7 +49,7 @@ public abstract class OutputExtension<T> extends OutputExtensionArgument<Object,
      * @return the result
      */
     @Override
-    public T generate(Event event, Object o) {
+    public T generate(EventModel event, Object o) {
         return generate(event);
     }
 
@@ -59,5 +59,5 @@ public abstract class OutputExtension<T> extends OutputExtensionArgument<Object,
      * @param event the event to generate for
      * @return the result
      */
-    public abstract T generate(Event event);
+    public abstract T generate(EventModel event);
 }

@@ -4,6 +4,7 @@ import intellimate.izou.identification.Identifiable;
 import intellimate.izou.identification.Identification;
 import intellimate.izou.identification.IdentificationManager;
 import intellimate.izou.identification.IllegalIDException;
+import intellimate.izou.resource.ResourceModel;
 import intellimate.izou.sdk.resource.Resource;
 
 import java.util.List;
@@ -21,8 +22,7 @@ public interface ResourceUser extends ContextProvider, Identifiable {
      * @param resourceID the id of the resource
      * @return an Optional containing a future of a list of results
      */
-    default Optional<CompletableFuture<List<intellimate.izou.resource.Resource>>>
-                                                                                generateResource(String resourceID) {
+    default Optional<CompletableFuture<List<ResourceModel>>> generateResource(String resourceID) {
         return generateResource(resourceID, null);
     }
 
@@ -32,10 +32,9 @@ public interface ResourceUser extends ContextProvider, Identifiable {
      * @param provider the specified provider
      * @return an Optional containing a future of a list of results
      */
-    default Optional<CompletableFuture<List<intellimate.izou.resource.Resource>>>
-                                                        generateResource(String resourceID, Identification provider) {
+    default Optional<CompletableFuture<List<ResourceModel>>> generateResource(String resourceID, Identification provider) {
         return IdentificationManager.getInstance()
-                .getIdentification(this.getID())
+                .getIdentification(this)
                 .map(id -> new Resource(resourceID, provider, id))
                 .flatMap(resource -> {
                     try {

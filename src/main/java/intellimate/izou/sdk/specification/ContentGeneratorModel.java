@@ -1,6 +1,6 @@
 package intellimate.izou.sdk.specification;
 
-import intellimate.izou.resource.ResourceBuilder;
+import intellimate.izou.resource.ResourceBuilderModel;
 import intellimate.izou.sdk.contentgenerator.EventListener;
 import intellimate.izou.sdk.resource.Resource;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * @author Leander Kurscheidt
  * @version 1.0
  */
-public interface ContentGenerator extends ResourceBuilder {
+public interface ContentGeneratorModel extends ResourceBuilderModel {
     /**
      * this method returns a List of EventListener, which indicate for which Events the ContentGenerator should be
      * triggered.

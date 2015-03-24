@@ -1,8 +1,10 @@
 package intellimate.izou.sdk.contentgenerator;
 
-import intellimate.izou.events.Event;
+import intellimate.izou.events.EventModel;
+import intellimate.izou.resource.ResourceModel;
 import intellimate.izou.sdk.Context;
 import intellimate.izou.sdk.resource.Resource;
+import intellimate.izou.sdk.specification.ContentGeneratorModel;
 import intellimate.izou.sdk.util.AddOnModule;
 import intellimate.izou.sdk.util.ResourceGenerator;
 
@@ -18,8 +20,7 @@ import java.util.stream.Collectors;
  *     of it in a ThreadPool and generate(String eventID) will be called.
  * </p>
  */
-public abstract class ContentGenerator extends AddOnModule implements intellimate.izou.sdk.specification.ContentGenerator,
-                                                                        ResourceGenerator {
+public abstract class ContentGenerator extends AddOnModule implements ContentGeneratorModel, ResourceGenerator {
 
     /**
      * Creates a new content generator.
@@ -40,7 +41,7 @@ public abstract class ContentGenerator extends AddOnModule implements intellimat
      * @return a List containing ID's for the Events
      */
     @Override
-    public List<? extends Event<?>> announceEvents() {
+    public List<? extends EventModel<?>> announceEvents() {
         return getTriggeredEvents().stream()
                 .map(EventListener::getEvent)
                 .collect(Collectors.toList());
@@ -53,7 +54,7 @@ public abstract class ContentGenerator extends AddOnModule implements intellimat
      * @return a List containing the resources the object provides
      */
     @Override
-    public List<? extends intellimate.izou.resource.Resource> announceResources() {
+    public List<? extends ResourceModel> announceResources() {
         return getTriggeredResources();
 
     }
@@ -69,8 +70,7 @@ public abstract class ContentGenerator extends AddOnModule implements intellimat
      * @return a list of resources with data
      */
     @Override
-    public List<intellimate.izou.resource.Resource> provideResource(
-            List<? extends intellimate.izou.resource.Resource> list, Optional<Event> optional) {
+    public List<ResourceModel> provideResource(List<? extends ResourceModel> list, Optional<EventModel> optional) {
         //TODO: check arguemnts and return type here! Missing ID etc. Fail fast!
         return new ArrayList<>(triggered(list, optional));
     }
@@ -85,6 +85,5 @@ public abstract class ContentGenerator extends AddOnModule implements intellimat
      * @param optional     if an event caused the action, it gets passed. It can also be null.
      * @return a list of resources with data
      */
-    public abstract List<? extends Resource> triggered(
-            List<? extends intellimate.izou.resource.Resource> list, Optional<Event> optional);
+    public abstract List<? extends Resource> triggered(List<? extends ResourceModel> list, Optional<EventModel> optional);
 }

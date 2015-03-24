@@ -1,12 +1,14 @@
 package intellimate.izou.sdk.addon;
 
-import intellimate.izou.activator.Activator;
-import intellimate.izou.events.EventsController;
+import intellimate.izou.activator.ActivatorModel;
+import intellimate.izou.addon.AddOnModel;
+import intellimate.izou.events.EventsControllerModel;
 import intellimate.izou.identification.IllegalIDException;
-import intellimate.izou.output.OutputExtension;
-import intellimate.izou.output.OutputPlugin;
+import intellimate.izou.output.OutputExtensionModel;
+import intellimate.izou.output.OutputPluginModel;
 import intellimate.izou.sdk.Context;
-import intellimate.izou.sdk.specification.ContentGenerator;
+import intellimate.izou.sdk.contentgenerator.ContentGenerator;
+import intellimate.izou.sdk.specification.ContentGeneratorModel;
 import intellimate.izou.sdk.util.ContextProvider;
 import intellimate.izou.sdk.util.Loggable;
 import intellimate.izou.sdk.util.LoggedExceptionCallback;
@@ -18,8 +20,7 @@ import ro.fortsoft.pf4j.PluginWrapper;
  * It will be instantiated and its registering-methods will be called by the PluginManager.
  * This class has method for a properties-file named addOnID.properties (AddOnsID in the form: package.class)
  */
-public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProvider, Loggable,
-        LoggedExceptionCallback {
+public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, LoggedExceptionCallback {
     private final String addOnID;
     private Context context;
     private PluginWrapper plugin;
@@ -46,7 +47,7 @@ public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProv
             }
         }
 
-        for (EventsController eventsController : registerEventController()) {
+        for (EventsControllerModel eventsController : registerEventController()) {
             try {
                 getContext().getEvents().distributor().registerEventsController(eventsController);
             } catch (IllegalIDException e) {
@@ -54,7 +55,7 @@ public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProv
             }
         }
 
-        for (OutputPlugin outputPlugin : registerOutputPlugin()) {
+        for (OutputPluginModel outputPlugin : registerOutputPlugin()) {
             try {
                 getContext().getOutput().addOutputPlugin(outputPlugin);
             } catch (IllegalIDException e) {
@@ -62,7 +63,7 @@ public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProv
             }
         }
 
-        for (OutputExtension outputExtension : registerOutputExtension()) {
+        for (OutputExtensionModel outputExtension : registerOutputExtension()) {
             try {
                 getContext().getOutput().addOutputExtension(outputExtension);
             } catch (IllegalIDException e) {
@@ -70,7 +71,7 @@ public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProv
             }
         }
 
-        for (Activator activator : registerActivator()) {
+        for (ActivatorModel activator : registerActivator()) {
             try {
                 getContext().getActivators().addActivator(activator);
             } catch (IllegalIDException e) {
@@ -89,7 +90,7 @@ public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProv
      *
      * @return Array containing Instances of Activators
      */
-    public abstract Activator[] registerActivator();
+    public abstract ActivatorModel[] registerActivator();
 
     /**
      * Use this method to register (if needed) your ContentGenerators.
@@ -103,21 +104,21 @@ public abstract class AddOn implements intellimate.izou.addon.AddOn, ContextProv
      *
      * @return Array containing Instances of EventControllers
      */
-    public abstract EventsController[] registerEventController();
+    public abstract EventsControllerModel[] registerEventController();
 
     /**
      * Use this method to register (if needed) your OutputPlugins.
      *
      * @return Array containing Instances of OutputPlugins
      */
-    public abstract OutputPlugin[] registerOutputPlugin();
+    public abstract OutputPluginModel[] registerOutputPlugin();
 
     /**
      * Use this method to register (if needed) your Output.
      *
      * @return Array containing Instances of OutputExtensions
      */
-    public abstract OutputExtension[] registerOutputExtension();
+    public abstract OutputExtensionModel[] registerOutputExtension();
 
     /**
      * Internal initiation of addOn - fake constructor, comes before prepare

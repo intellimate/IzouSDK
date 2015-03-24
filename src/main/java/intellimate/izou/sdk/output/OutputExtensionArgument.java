@@ -1,7 +1,8 @@
 package intellimate.izou.sdk.output;
 
 import com.google.common.reflect.TypeToken;
-import intellimate.izou.events.Event;
+import intellimate.izou.events.EventModel;
+import intellimate.izou.output.OutputExtensionModel;
 import intellimate.izou.sdk.Context;
 import intellimate.izou.sdk.util.AddOnModule;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * OutputExtension's purpose is to take resourceData and convert it into another data format so that it can be rendered correctly
  * by the output-plugin. These objects are represented in the form of future objects that are stored in tDoneList
  */
-public abstract class OutputExtensionArgument<T, X> extends AddOnModule implements intellimate.izou.output.OutputExtension<T, X> {
+public abstract class OutputExtensionArgument<T, X> extends AddOnModule implements OutputExtensionModel<T, X> {
 
     /**
      * the id of the outputPlugin the outputExtension belongs to
@@ -126,7 +127,7 @@ public abstract class OutputExtensionArgument<T, X> extends AddOnModule implemen
      * @return the state of whether the outputExtension can execute with the current event
      */
     @Override
-    public boolean canRun(Event event) {
+    public boolean canRun(EventModel event) {
         //noinspection SimplifiableIfStatement
         if (event != null) {
             return event.getListResourceContainer().providesResource(getResourceIdWishList());
@@ -143,6 +144,6 @@ public abstract class OutputExtensionArgument<T, X> extends AddOnModule implemen
      */
     @Override
     //more clarity
-    public abstract X generate(Event event, T t);
+    public abstract X generate(EventModel event, T t);
 }
 

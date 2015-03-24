@@ -1,11 +1,12 @@
 package intellimate.izou.sdk;
 
-import intellimate.izou.addon.AddOn;
+import intellimate.izou.addon.AddOnModel;
 import intellimate.izou.identification.Identifiable;
 import intellimate.izou.identification.Identification;
 import intellimate.izou.identification.IllegalIDException;
 import intellimate.izou.sdk.contentgenerator.EventListener;
 import intellimate.izou.sdk.properties.PropertiesAssistant;
+import intellimate.izou.sdk.specification.ContentGeneratorModel;
 import intellimate.izou.sdk.specification.context.ContentGenerators;
 import intellimate.izou.sdk.specification.context.ThreadPool;
 import intellimate.izou.system.context.*;
@@ -125,7 +126,7 @@ public class Context implements intellimate.izou.system.Context {
      * @return the addOn
      */
     @Override
-    public AddOn getAddOn() {
+    public AddOnModel getAddOn() {
         return context.getAddOn();
     }
 
@@ -163,7 +164,7 @@ public class Context implements intellimate.izou.system.Context {
          * @throws IllegalIDException not implemented yet
          */
         @Override
-        public void registerContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator)
+        public void registerContentGenerator(ContentGeneratorModel contentGenerator)
                                                                                             throws IllegalIDException {
             List<EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
             for (EventListener eventListener : triggeredEvents) {
@@ -179,7 +180,7 @@ public class Context implements intellimate.izou.system.Context {
          * @param contentGenerator the ContentGenerator to unregister
          */
         @Override
-        public void unregisterContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator) {
+        public void unregisterContentGenerator(ContentGeneratorModel contentGenerator) {
             List<EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
             for (EventListener eventListener : triggeredEvents) {
                 propertiesAssistant.getEventPropertiesAssistant().unregisterEventID(eventListener.getDescriptorID());

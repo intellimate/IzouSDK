@@ -1,8 +1,11 @@
 package intellimate.izou.sdk.events;
 
+import intellimate.izou.events.EventBehaviourControllerModel;
+import intellimate.izou.events.EventModel;
 import intellimate.izou.identification.Identification;
-import intellimate.izou.resource.ListResourceProvider;
-import intellimate.izou.resource.Resource;
+import intellimate.izou.resource.ListResourceProviderModel;
+import intellimate.izou.resource.ResourceModel;
+import intellimate.izou.sdk.resource.ListResourceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +15,7 @@ import java.util.Optional;
  * This class represents an Event.
  * This class is immutable! for every change it will return an new instance!
  */
-public class Event implements intellimate.izou.events.Event<Event> {
+public class Event implements EventModel<Event> {
     /**
      * Use this type when other AddOns should react to this Event.
      */
@@ -51,7 +54,7 @@ public class Event implements intellimate.izou.events.Event<Event> {
     private final String type;
     private final Identification source;
     private final List<String> descriptors;
-    private final ListResourceProvider listResourceContainer = new intellimate.izou.sdk.resource.ListResourceProvider();
+    private final ListResourceProviderModel listResourceContainer = new ListResourceProvider();
     private final EventBehaviourController eventBehaviourController = new EventBehaviourController();
 
     /**
@@ -123,7 +126,7 @@ public class Event implements intellimate.izou.events.Event<Event> {
      * @return an instance of ListResourceContainer
      */
     @Override
-    public ListResourceProvider getListResourceContainer() {
+    public ListResourceProviderModel getListResourceContainer() {
         return listResourceContainer;
     }
 
@@ -133,7 +136,7 @@ public class Event implements intellimate.izou.events.Event<Event> {
      * @return the resulting Event (which is the same instance)
      */
     @Override
-    public Event addResource(Resource resource) {
+    public Event addResource(ResourceModel resource) {
         listResourceContainer.addResource(resource);
         return this;
     }
@@ -143,7 +146,7 @@ public class Event implements intellimate.izou.events.Event<Event> {
      * @param resources a list containing all the resources
      */
     @Override
-    public Event addResources(List<Resource> resources) {
+    public Event addResources(List<ResourceModel> resources) {
         listResourceContainer.addResource(resources);
         return this;
     }
@@ -216,7 +219,7 @@ public class Event implements intellimate.izou.events.Event<Event> {
      * @return an instance of EventBehaviourController
      */
     @Override
-    public intellimate.izou.events.EventBehaviourController getEventBehaviourController() {
+    public EventBehaviourControllerModel getEventBehaviourController() {
         return eventBehaviourController;
     }
 }

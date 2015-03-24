@@ -1,5 +1,6 @@
 package intellimate.izou.sdk.contentgenerator;
 
+import intellimate.izou.events.EventModel;
 import intellimate.izou.identification.IdentificationManager;
 import intellimate.izou.sdk.events.Event;
 import intellimate.izou.sdk.util.AddOnModule;
@@ -60,7 +61,7 @@ public class EventListener {
      *
      * @return The Event
      */
-    public Event getEvent() {
+    public EventModel<?> getEvent() {
         return event;
     }
 

@@ -1,5 +1,6 @@
 package intellimate.izou.sdk.activator;
 
+import intellimate.izou.activator.ActivatorModel;
 import intellimate.izou.sdk.Context;
 import intellimate.izou.sdk.util.AddOnModule;
 import intellimate.izou.sdk.util.FireEvent;
@@ -10,7 +11,7 @@ import intellimate.izou.sdk.util.FireEvent;
  * The Activator always runs in the Background, just overwrite activatorStarts(). To use Activator simply extend from it
  * and hand an instance over to the ActivatorManager.
  */
-public abstract class Activator extends AddOnModule implements intellimate.izou.activator.Activator, FireEvent {
+public abstract class Activator extends AddOnModule implements ActivatorModel, FireEvent {
     private boolean stop = false;
 
     public Activator(Context context, String ID) {

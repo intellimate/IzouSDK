@@ -1,6 +1,7 @@
 package intellimate.izou.sdk.specification.context;
 
 import intellimate.izou.identification.IllegalIDException;
+import intellimate.izou.sdk.specification.ContentGeneratorModel;
 
 /**
  * @author Leander Kurscheidt
@@ -13,12 +14,12 @@ public interface ContentGenerators {
      * @param contentGenerator the contentGenerator to register
      * @throws intellimate.izou.identification.IllegalIDException not implemented yet
      */
-    void registerContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator)
+    void registerContentGenerator(ContentGeneratorModel contentGenerator)
             throws IllegalIDException;
 
     /**
      * unregisters an ContentGenerator
      * @param contentGenerator the ContentGenerator to unregister
      */
-    void unregisterContentGenerator(intellimate.izou.sdk.specification.ContentGenerator contentGenerator);
+    void unregisterContentGenerator(ContentGeneratorModel contentGenerator);
 }

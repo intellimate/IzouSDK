@@ -1,5 +1,6 @@
 package intellimate.izou.sdk.events;
 
+import intellimate.izou.events.EventBehaviourControllerModel;
 import intellimate.izou.identification.Identification;
 
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.function.Function;
 /**
  * This class can control the Behaviour of the the Event, like which Output-Plugin should get the Event first.
  */
-public class EventBehaviourController implements intellimate.izou.events.EventBehaviourController {
+public class EventBehaviourController implements EventBehaviourControllerModel {
 
     private Function<List<Identification>, HashMap<Integer, List<Identification>>> outputPluginBehaviour;
 

@@ -1,9 +1,10 @@
 package intellimate.izou.sdk.output;
 
 import com.google.common.reflect.TypeToken;
-import intellimate.izou.events.Event;
+import intellimate.izou.events.EventModel;
 import intellimate.izou.identification.Identification;
-import intellimate.izou.resource.Resource;
+import intellimate.izou.output.OutputPluginModel;
+import intellimate.izou.resource.ResourceModel;
 import intellimate.izou.sdk.Context;
 import intellimate.izou.sdk.util.AddOnModule;
 import intellimate.izou.sdk.util.ThreadPoolUser;
@@ -22,13 +23,12 @@ import java.util.stream.Collectors;
  * output and then render it on its own medium
  */
 @SuppressWarnings("UnusedDeclaration")
-public abstract class OutputPluginArgument<T, X> extends AddOnModule
-                                                implements intellimate.izou.output.OutputPlugin<T, X>, ThreadPoolUser {
+public abstract class OutputPluginArgument<T, X> extends AddOnModule implements OutputPluginModel<T, X>, ThreadPoolUser {
 
     /**
      * here are the events stored before they get processed
      */
-    private final BlockingQueue<Event> eventBlockingQueue = new LinkedBlockingDeque<>();
+    private final BlockingQueue<EventModel> eventBlockingQueue = new LinkedBlockingDeque<>();
     /**
      * the type argument for the Data you want to receive
      */
@@ -69,7 +69,7 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule
      *
      * @return blocking-queue that stores Events
      */
-    public BlockingQueue<Event> getEventBlockingQueue() {
+    public BlockingQueue<EventModel> getEventBlockingQueue() {
         return eventBlockingQueue;
     }
 
@@ -116,15 +116,15 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule
      * @throws IllegalStateException raised if problems adding an event to blockingQueue
      */
     @Override
-    public void addToEventList(Event event) {
+    public void addToEventList(EventModel event) {
         eventBlockingQueue.add(event);
     }
 
     /**
      * @param event the current processed Event
      */
-    public void isDone(Event event) {
-        Optional<Resource> resource = event.getListResourceContainer().provideResource(getID()).stream()
+    public void isDone(EventModel event) {
+        Optional<ResourceModel> resource = event.getListResourceContainer().provideResource(getID()).stream()
                 .filter(resourceS -> resourceS.getProvider().getID()
                         .equals(getContext().getOutput().getManagerIdentification().getID()))
                 .findFirst();
@@ -169,7 +169,7 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule
     @Override
     public void run() {
         while (!stop) {
-            Event event;
+            EventModel event;
             try {
                 event = blockingQueueHandling();  //gets the new Event if one was added to the blockingQueue
             } catch (InterruptedException e) {
@@ -201,7 +201,7 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule
      * @throws InterruptedException if interrupted while waiting
      * @return the recently added Event-instance to be processed by the outputPlugin
      */
-    public Event blockingQueueHandling() throws InterruptedException {
+    public EventModel blockingQueueHandling() throws InterruptedException {
         return eventBlockingQueue.take();
     }
 

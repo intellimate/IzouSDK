@@ -1,6 +1,7 @@
 package intellimate.izou.sdk.resource;
 
-import intellimate.izou.resource.Resource;
+import intellimate.izou.resource.ListResourceProviderModel;
+import intellimate.izou.resource.ResourceModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,15 +11,15 @@ import java.util.stream.Collectors;
 /**
  * A ResourceContainer which holds all the Resources in an List internally
  */
-public class ListResourceProvider implements intellimate.izou.resource.ListResourceProvider {
-    List<Resource> resources = new ArrayList<>();
+public class ListResourceProvider implements ListResourceProviderModel {
+    List<ResourceModel> resources = new ArrayList<>();
 
     /**
      * adds a Resource to the Container
      * @param resource an instance of the resource to add
      */
     @Override
-    public void addResource(Resource resource) {
+    public void addResource(ResourceModel resource) {
         resources.add(resource);
     }
 
@@ -27,7 +28,7 @@ public class ListResourceProvider implements intellimate.izou.resource.ListResou
      * @param resources a List of resources to add
      */
     @Override
-    public void addResource(List<Resource> resources) {
+    public void addResource(List<ResourceModel> resources) {
         this.resources.addAll(resources);
     }
 
@@ -38,9 +39,9 @@ public class ListResourceProvider implements intellimate.izou.resource.ListResou
      * @return true if the container can provide the resource
      */
     @Override
-    public boolean providesResource(Resource resource) {
+    public boolean providesResource(ResourceModel resource) {
         return resources.stream()
-                .map(Resource::getResourceID)
+                .map(ResourceModel::getResourceID)
                 .anyMatch(resourceS -> resourceS.equals(resource.getResourceID()));
     }
 
@@ -53,7 +54,7 @@ public class ListResourceProvider implements intellimate.izou.resource.ListResou
     @Override
     public boolean containsResourcesFromSource(String sourceID) {
         return resources.stream()
-                .map(Resource::getResourceID)
+                .map(ResourceModel::getResourceID)
                 .anyMatch(source -> source.equals(sourceID));
     }
 
@@ -66,7 +67,7 @@ public class ListResourceProvider implements intellimate.izou.resource.ListResou
     @Override
     public boolean providesResource(List<String> resourcesIDs) {
         return resources.stream()
-                .map(Resource::getResourceID)
+                .map(ResourceModel::getResourceID)
                 .anyMatch(resourcesIDs::contains);
     }
 
@@ -78,7 +79,7 @@ public class ListResourceProvider implements intellimate.izou.resource.ListResou
      * @return a list of resources found
      */
     @Override
-    public List<Resource> provideResource(String[] resourceIDs) {
+    public List<ResourceModel> provideResource(String[] resourceIDs) {
         return resources.stream()
                 .filter(resource -> Arrays.stream(resourceIDs)
                         .anyMatch(resourceID -> resourceID.equals(resource.getResourceID())))
@@ -92,7 +93,7 @@ public class ListResourceProvider implements intellimate.izou.resource.ListResou
      * @return a list of resources found
      */
     @Override
-    public List<Resource> provideResource(String resourceID) {
+    public List<ResourceModel> provideResource(String resourceID) {
         return resources.stream()
                 .filter(resource -> resource.getResourceID().equals(resourceID))
                 .collect(Collectors.toList());
@@ -105,7 +106,7 @@ public class ListResourceProvider implements intellimate.izou.resource.ListResou
      * @return a list containing all the found resources
      */
     @Override
-    public List<Resource> provideResourceFromSource(String sourceID) {
+    public List<ResourceModel> provideResourceFromSource(String sourceID) {
         return resources.stream()
                 .filter(resource -> resource.getProvider().getID().equals(sourceID))
                 .collect(Collectors.toList());

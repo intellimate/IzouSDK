@@ -1,6 +1,7 @@
 package intellimate.izou.sdk.resource;
 
 import intellimate.izou.identification.Identification;
+import intellimate.izou.resource.ResourceModel;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.function.Function;
  * An Resource is an object which is used to pass data from one part of the application to another.
  * Note! This Object is immutable!
  */
-public class Resource<T> implements intellimate.izou.resource.Resource<T, Resource<T>> {
+public class Resource<T> implements ResourceModel<T, Resource<T>> {
     private final String resourceID;
     private final Identification provider;
     private final Identification consumer;
