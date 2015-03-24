@@ -29,6 +29,5 @@ public interface ContentGeneratorModel extends ResourceBuilderModel {
      *
      * @return a List containing the resources the object provides
      */
-    //makes it more coherent with getTriggeredEvents
     List<Resource> getTriggeredResources();
 }

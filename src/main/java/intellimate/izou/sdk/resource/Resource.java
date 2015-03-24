@@ -11,7 +11,7 @@ import java.util.function.Function;
  * An Resource is an object which is used to pass data from one part of the application to another.
  * Note! This Object is immutable!
  */
-public class Resource<T> implements ResourceModel<T, Resource<T>> {
+public class Resource<T> implements ResourceModel<T> {
     private final String resourceID;
     private final Identification provider;
     private final Identification consumer;
@@ -158,21 +158,9 @@ public class Resource<T> implements ResourceModel<T, Resource<T>> {
     }
 
     /**
-     * maps this resource to another type
-     * @param function the mapping function
-     * @param <R> the return type
-     * @return R
-     */
-    @Override
-    public <R> R map(Function<Resource<T>, R> function) {
-        return function.apply(this);
-    }
-
-    /**
      * creates a list with this Element in it.
      * @return a list
      */
-    @Override
     public List<Resource<T>> toList() {
         return Arrays.asList(this);
     }
