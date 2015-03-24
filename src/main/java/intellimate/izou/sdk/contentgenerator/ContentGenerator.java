@@ -84,5 +84,5 @@ public abstract class ContentGenerator extends AddOnModule implements ContentGen
      * @param optional     if an event caused the action, it gets passed. It can also be null.
      * @return a list of resources with data
      */
-    public abstract List<? extends Resource<?>> triggered(List<? extends ResourceModel> list, Optional<EventModel> optional);
+    public abstract List<? extends Resource> triggered(List<? extends ResourceModel> list, Optional<EventModel> optional);
 }
