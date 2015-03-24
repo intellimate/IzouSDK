@@ -49,7 +49,7 @@ public class EventListener {
                                                        String descriptorID, AddOnModule addOnModule)
                                                                                         throws IllegalArgumentException{
 
-        if (!descriptorID.matches("(\\w-_)+"))
+        if (!descriptorID.matches("[\\w\\-_]+"))
             throw new IllegalArgumentException("descriptorID: " + descriptorID + " contains illegal characters");
         return IdentificationManager.getInstance().getIdentification(addOnModule)
                 .flatMap(id -> Event.createEvent(Event.NOTIFICATION, id, Arrays.asList(descriptor)))
