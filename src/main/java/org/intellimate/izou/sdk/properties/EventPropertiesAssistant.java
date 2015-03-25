@@ -26,6 +26,8 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
 
     /**
      * Creates a new EventPropertiesManager
+     * @param context the context to use
+     * @param id the id of the addon
      */
     public EventPropertiesAssistant(Context context, String id) {
         super(context, id + ".EventPropertiesAssistant");

@@ -84,6 +84,7 @@ public class Event implements EventModel<Event> {
      * Creates a new Event Object
      * @param type the Type of the Event, try to use the predefined Event types
      * @param source the source of the Event, most likely a this reference.
+     * @param descriptors the descriptors
      * @return an Optional, that may be empty if type is null or empty or source is null
      */
     public static Optional<Event> createEvent(String type, Identification source, List<String> descriptors) {

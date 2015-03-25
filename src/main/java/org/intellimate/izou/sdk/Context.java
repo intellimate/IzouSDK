@@ -25,7 +25,8 @@ public class Context implements org.intellimate.izou.system.Context {
     private final ContentGenerators contentGenerators;
 
     /**
-     * Creates a context for the addOn. It is where
+     * Creates a context for the addOn.
+     * @param context the context to use
      */
     public Context(org.intellimate.izou.system.Context context) {
         this.context = context;
@@ -217,7 +218,7 @@ public class Context implements org.intellimate.izou.system.Context {
          *
          * @param identifiable the Identifiable to set each created Task as the Source
          * @return an instance of ExecutorService
-         * @throws intellimate.izou.identification.IllegalIDException not implemented yet
+         * @throws org.intellimate.izou.identification.IllegalIDException not implemented yet
          */
         @Override
         public ExecutorService getThreadPool(Identifiable identifiable) throws IllegalIDException {

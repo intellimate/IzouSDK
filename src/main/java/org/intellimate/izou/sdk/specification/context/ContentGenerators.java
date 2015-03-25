@@ -12,7 +12,7 @@ public interface ContentGenerators {
      * Register an ContentGenerator
      *
      * @param contentGenerator the contentGenerator to register
-     * @throws intellimate.izou.identification.IllegalIDException not implemented yet
+     * @throws org.intellimate.izou.identification.IllegalIDException not implemented yet
      */
     void registerContentGenerator(ContentGeneratorModel contentGenerator)
             throws IllegalIDException;

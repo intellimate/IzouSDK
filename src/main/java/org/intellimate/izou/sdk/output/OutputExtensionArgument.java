@@ -37,6 +37,7 @@ public abstract class OutputExtensionArgument<T, X> extends AddOnModule implemen
      * creates a new outputExtension with a new id
      * @param context the context of the addon
      * @param id the id to be set to the id of outputExtension
+     * @param pluginId the id of the plugin to associate to
      */
     public OutputExtensionArgument(Context context, String id, String pluginId) {
         this(id, context);
