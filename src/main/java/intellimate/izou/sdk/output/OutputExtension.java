@@ -32,12 +32,12 @@ public abstract class OutputExtension<T> extends OutputExtensionArgument<Object,
     }
 
     /**
-     * returns the ReturnType of the generic
+     * returns the Type of the argument for the OutputExtensions, or null if none
      *
-     * @return the type of the generic
+     * @return the type of the Argument
      */
     @Override
-    public TypeToken<T> getReturnType() {
+    public TypeToken<Object> getArgumentType() {
         return null;
     }
 
