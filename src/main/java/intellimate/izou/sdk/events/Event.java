@@ -19,11 +19,11 @@ public class Event implements EventModel<Event> {
     /**
      * Use this type when other AddOns should react to this Event.
      */
-    public static final String RESPONSE = Event.class.getCanonicalName() + "Response";
+    public static final String RESPONSE = "Response";
     /**
      * Use this type when other AddOns should just notice (they needn't).
      */
-    public static final String NOTIFICATION = Event.class.getCanonicalName() + "Notification";
+    public static final String NOTIFICATION = "Notification";
     //common Events-Descriptors:
     /**
      * Event for a Welcome with maximum response.
@@ -166,7 +166,9 @@ public class Event implements EventModel<Event> {
      */
     @Override
     public List<String> getAllInformations() {
-        return null;
+        ArrayList<String> strings = new ArrayList<>(descriptors);
+        strings.add(type);
+        return strings;
     }
 
     /**

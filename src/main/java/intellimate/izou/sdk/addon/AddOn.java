@@ -8,7 +8,6 @@ import intellimate.izou.output.OutputExtensionModel;
 import intellimate.izou.output.OutputPluginModel;
 import intellimate.izou.sdk.Context;
 import intellimate.izou.sdk.contentgenerator.ContentGenerator;
-import intellimate.izou.sdk.specification.ContentGeneratorModel;
 import intellimate.izou.sdk.util.ContextProvider;
 import intellimate.izou.sdk.util.Loggable;
 import intellimate.izou.sdk.util.LoggedExceptionCallback;
@@ -39,43 +38,58 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
      */
     @Override
     public void register() {
-        for (ContentGenerator contentGenerator : registerContentGenerator()) {
-            try {
-                getContext().getResources().registerResourceBuilder(contentGenerator);
-            } catch (IllegalIDException e) {
-                context.getLogger().fatal("Illegal Id for Module: " + contentGenerator.getID(), e);
+        ContentGenerator[] contentGenerators = registerContentGenerator();
+        if (contentGenerators != null) {
+            for (ContentGenerator contentGenerator : contentGenerators) {
+                try {
+                    getContext().getResources().registerResourceBuilder(contentGenerator);
+                } catch (IllegalIDException e) {
+                    context.getLogger().fatal("Illegal Id for Module: " + contentGenerator.getID(), e);
+                }
             }
         }
 
-        for (EventsControllerModel eventsController : registerEventController()) {
-            try {
-                getContext().getEvents().distributor().registerEventsController(eventsController);
-            } catch (IllegalIDException e) {
-                context.getLogger().fatal("Illegal Id for Module: " + eventsController.getID(), e);
+        EventsControllerModel[] eventsControllerModels = registerEventController();
+        if (eventsControllerModels != null) {
+            for (EventsControllerModel eventsController : eventsControllerModels) {
+                try {
+                    getContext().getEvents().distributor().registerEventsController(eventsController);
+                } catch (IllegalIDException e) {
+                    context.getLogger().fatal("Illegal Id for Module: " + eventsController.getID(), e);
+                }
             }
         }
 
-        for (OutputPluginModel outputPlugin : registerOutputPlugin()) {
-            try {
-                getContext().getOutput().addOutputPlugin(outputPlugin);
-            } catch (IllegalIDException e) {
-                context.getLogger().fatal("Illegal Id for Module: " + outputPlugin.getID(), e);
+        OutputPluginModel[] outputPluginModels = registerOutputPlugin();
+        if (outputPluginModels != null) {
+            for (OutputPluginModel outputPlugin : outputPluginModels) {
+                try {
+                    getContext().getOutput().addOutputPlugin(outputPlugin);
+                } catch (IllegalIDException e) {
+                    context.getLogger().fatal("Illegal Id for Module: " + outputPlugin.getID(), e);
+                }
             }
         }
 
-        for (OutputExtensionModel outputExtension : registerOutputExtension()) {
-            try {
-                getContext().getOutput().addOutputExtension(outputExtension);
-            } catch (IllegalIDException e) {
-                context.getLogger().fatal("Illegal Id for Module: " + outputExtension.getID(), e);
+        OutputExtensionModel[] outputExtensionModels = registerOutputExtension();
+        if (outputExtensionModels != null) {
+            for (OutputExtensionModel outputExtension : outputExtensionModels) {
+                try {
+                    getContext().getOutput().addOutputExtension(outputExtension);
+                } catch (IllegalIDException e) {
+                    context.getLogger().fatal("Illegal Id for Module: " + outputExtension.getID(), e);
+                }
             }
         }
 
-        for (ActivatorModel activator : registerActivator()) {
-            try {
-                getContext().getActivators().addActivator(activator);
-            } catch (IllegalIDException e) {
-                context.getLogger().fatal("Illegal Id for Module: " + activator.getID(), e);
+        ActivatorModel[] activatorModels = registerActivator();
+        if (activatorModels != null) {
+            for (ActivatorModel activator : activatorModels) {
+                try {
+                    getContext().getActivators().addActivator(activator);
+                } catch (IllegalIDException e) {
+                    context.getLogger().fatal("Illegal Id for Module: " + activator.getID(), e);
+                }
             }
         }
     }
