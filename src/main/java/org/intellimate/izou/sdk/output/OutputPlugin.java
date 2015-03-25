@@ -34,6 +34,16 @@ public abstract class OutputPlugin<T> extends OutputPluginArgument<Object, T> {
     }
 
     /**
+     * returns the argument for the OutputExtensions
+     *
+     * @return the argument
+     */
+    @Override
+    public Object getArgument() {
+        return null;
+    }
+
+    /**
      * method that uses tDoneList to generate a final output that will then be rendered.
      *
      * @param data the data generated
