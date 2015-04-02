@@ -1,23 +1,24 @@
 package org.intellimate.izou.sdk.addon;
 
-import ro.fortsoft.pf4j.IzouPlugin;
+import ro.fortsoft.pf4j.Plugin;
 import ro.fortsoft.pf4j.PluginWrapper;
 
 /**
  * This class must be extended for an AddOn to work properly.
  * It is used to identify the zip Files as candidates for AddOns
  */
-public abstract class ZipFileManager extends IzouPlugin {
+public abstract class ZipFileManager extends Plugin {
+    public ZipFileManager(PluginWrapper wrapper) {
+        super(wrapper);
+    }
 
     /**
-     * Constructor to be used by plugin manager for plugin instantiation.
-     * Your plugins have to provide constructor with this exact signature to
-     * be successfully loaded by manager.
+     * Gets the izou sdk version of the plugin
      *
-     * @param wrapper    the PluginWrapper to assign the ZipFileManager to
-     * @param sdkVersion the version of the izou sdk this plugin is using
+     * @return the izou sdk version of the plugin
      */
-    public ZipFileManager(PluginWrapper wrapper, String sdkVersion) {
-        super(wrapper, sdkVersion);
+    @Override
+    public String getSDKVersion() {
+        return "0.5.20";
     }
 }
