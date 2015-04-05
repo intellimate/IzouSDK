@@ -18,7 +18,7 @@ public abstract class EventsController extends AddOnModule implements EventsCont
 
     @Override
     public boolean controlEventDispatcher(EventModel eventModel) {
-        if (eventModel.getType().equals(Event.NOTIFICATION))
+        if (eventModel.getType().equals(Event.NOTIFICATION) || eventModel.containsDescriptor("izou.alarm"))
             return true;
         return controlEvents(eventModel);
     }
