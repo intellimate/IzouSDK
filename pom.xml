@@ -207,7 +207,7 @@
                 <configuration>
                     <releaseName>${plugin.version}</releaseName>
                     <tag>${plugin.version}</tag>
-                    <artifact>${project.build.directory}/${artifactId}-${version}.zip</artifact>
+                    <artifact>${project.build.directory}/${artifactId}-${version}-jar-with-dependencies.zip</artifact>
                 </configuration>
                 <executions>
                     <execution>

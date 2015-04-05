@@ -22,6 +22,7 @@ public abstract class Activator extends AddOnModule implements ActivatorModel, F
     public Boolean call() throws Exception {
         while (!stop) {
             activatorStarts();
+            Thread.sleep(10);
         }
         return false;
     }
