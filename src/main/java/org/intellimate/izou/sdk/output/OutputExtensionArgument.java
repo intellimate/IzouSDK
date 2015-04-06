@@ -12,6 +12,8 @@ import java.util.List;
 /**
  * OutputExtension's purpose is to take resourceData and convert it into another data format so that it can be rendered correctly
  * by the output-plugin. These objects are represented in the form of future objects that are stored in tDoneList
+ * @param <T> the return type
+ * @param <X> the type of the Argument
  */
 public abstract class OutputExtensionArgument<T, X> extends AddOnModule implements OutputExtensionModel<T, X> {
 

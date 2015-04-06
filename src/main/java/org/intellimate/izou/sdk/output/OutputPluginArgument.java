@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 /**
  * The OutputPlugin class gets Event and then starts threads filled with output-extension tasks to create the final
  * output and then render it on its own medium
+ * @param <T> the type of the Argument
+ * @param <X> the return type
  */
 @SuppressWarnings("UnusedDeclaration")
 public abstract class OutputPluginArgument<T, X> extends AddOnModule implements OutputPluginModel<T, X>, ThreadPoolUser {

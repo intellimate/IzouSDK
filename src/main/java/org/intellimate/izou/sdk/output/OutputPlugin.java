@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * an OutputPlugin without an Argument
+ * @param <T> the return type
  * @author Leander Kurscheidt
  * @version 1.0
  */

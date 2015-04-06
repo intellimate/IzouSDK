@@ -6,6 +6,7 @@ import org.intellimate.izou.sdk.Context;
 
 /**
  * an OutputExtension without an Argument
+ * @param <T> the return type
  * @author Leander Kurscheidt
  * @version 1.0
  */
