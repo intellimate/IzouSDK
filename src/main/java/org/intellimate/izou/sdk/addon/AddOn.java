@@ -38,6 +38,7 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
      */
     @Override
     public void register() {
+        prepare();
         ContentGenerator[] contentGenerators = registerContentGenerator();
         if (contentGenerators != null) {
             for (ContentGenerator contentGenerator : contentGenerators) {
