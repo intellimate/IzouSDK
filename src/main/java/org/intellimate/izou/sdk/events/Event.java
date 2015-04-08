@@ -18,18 +18,22 @@ import java.util.Optional;
 public class Event implements EventModel<Event> {
     /**
      * Use this type when other AddOns should react to this Event.
+     * @deprecated use {@link CommonEvents}
      */
+    @Deprecated
     public static final String RESPONSE = "Response";
     /**
-     * Use this type when other AddOns should just notice (they needn't).
+     * Use this type when only our Addon reacts to this Event
+     * @deprecated use {@link CommonEvents}
      */
+    @Deprecated
     public static final String NOTIFICATION = "Notification";
     //common Events-Descriptors:
     /**
      * Event for a Welcome with maximum response.
      *
      * Every component that can contribute should contribute to this Event.
-     * @deprecated see <a href="https://github.com/intellimate/Izou/wiki/Common-IDs">new online documentation</a>
+     * @deprecated use {@link CommonEvents}
      */
     @Deprecated
     public static final String FULL_WELCOME_EVENT = "izou.FullResponse";
@@ -37,7 +41,7 @@ public class Event implements EventModel<Event> {
      * Event for a Welcome with major response.
      *
      * Every component that is import should contribute to this Event.
-     * @deprecated see <a href="https://github.com/intellimate/Izou/wiki/Common-IDs">new online documentation</a>
+     * @deprecated use {@link CommonEvents}
      */
     @Deprecated
     @SuppressWarnings("UnusedDeclaration")
@@ -46,7 +50,7 @@ public class Event implements EventModel<Event> {
      * Event for a Welcome with minor response.
      *
      * Only components that have information of great importance should contribute to this event.
-     * @deprecated see <a href="https://github.com/intellimate/Izou/wiki/Common-IDs">new online documentation</a>
+     * @deprecated use {@link CommonEvents}
      */
     @Deprecated
     @SuppressWarnings("UnusedDeclaration")
