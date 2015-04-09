@@ -6,7 +6,8 @@ import org.intellimate.izou.sdk.util.AddOnModule;
 import java.util.Optional;
 
 /**
- * A collection of common Event-Listeners, Descriptions & Types, see {@url https://github.com/intellimate/Izou/wiki/Common-IDs}
+ * A collection of common Event-Listeners, Descriptions and Types, see
+ * <a href="https://github.com/intellimate/Izou/wiki/Common-IDs">online document</a>
  * @author LeanderK
  * @version 1.0
  */
@@ -25,7 +26,7 @@ public class CommonEvents {
     }
 
     /**
-     * returns the common EventListeners & Descriptors associated with the Presence
+     * returns the common EventListeners and Descriptors associated with the Presence
      * @return an object containing methods that return the instances
      */
     public Presence getPresence() {
@@ -33,7 +34,7 @@ public class CommonEvents {
     }
 
     /**
-     * returns the common EventListeners & Descriptors associated with the Response
+     * returns the common EventListeners and Descriptors associated with the Response
      * @return an object containing methods that return the instances
      */
     public Response getResponse() {
@@ -41,7 +42,7 @@ public class CommonEvents {
     }
 
     /**
-     * returns the common EventListeners & Types
+     * returns the common EventListeners and Types
      * @return an object containing methods that return the instances
      */
     public Type getType() {
