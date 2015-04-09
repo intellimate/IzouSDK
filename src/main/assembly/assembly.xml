@@ -19,10 +19,13 @@
                 <include>*:jar:*</include>
             </includes>
             <excludes>
-                <exclude>org.intellimate.izou:Izou</exclude>
-                <exclude>ro.fortsoft.pf4j:pf4j</exclude>
-                <exclude>org.slf4j:slf4j-jdk14</exclude>
-                <exclude>org.apache.logging.log4j</exclude>
+                <exclude>org.intellimate.izou:izou</exclude>
+                <exclude>org.intellimate.izou:pf4j</exclude>
+                <exclude>org.slf4j:slf4j-api</exclude>
+                <exclude>org.apache.logging.log4j:log4j-api</exclude>
+                <exclude>org.apache.logging.log4j:log4j-core</exclude>
+                <exclude>org.apache.logging.log4j:log4j-slf4j-impl</exclude>
+                <exclude>com.google.guava:guava</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>
