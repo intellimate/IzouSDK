@@ -10,14 +10,14 @@ import java.util.HashMap;
  * @author LeanderK
  * @version 1.0
  */
-public class CapabilitesResource extends Resource<HashMap<String, Boolean>> {
+public class CapabilitiesResource extends Resource<HashMap<String, Boolean>> {
     public static final String RESOURCE_ID = "izou.music.capabilitesresource";
 
     /**
      * creates a new Resource.
      * This method is thread-safe.
      */
-    public CapabilitesResource() {
+    public CapabilitiesResource() {
         super(RESOURCE_ID);
     }
 
@@ -27,7 +27,7 @@ public class CapabilitesResource extends Resource<HashMap<String, Boolean>> {
      *
      * @param provider   the Provider of the Resource
      */
-    public CapabilitesResource(Identification provider) {
+    public CapabilitiesResource(Identification provider) {
         super(RESOURCE_ID, provider);
     }
 
@@ -38,7 +38,7 @@ public class CapabilitesResource extends Resource<HashMap<String, Boolean>> {
      * @param provider             the Provider of the Resource
      * @param capabilities the capabilities
      */
-    public CapabilitesResource(Identification provider, Capabilities capabilities) {
+    public CapabilitiesResource(Identification provider, Capabilities capabilities) {
         super(RESOURCE_ID, provider, capabilities.write());
     }
 
@@ -49,7 +49,7 @@ public class CapabilitesResource extends Resource<HashMap<String, Boolean>> {
      * @param provider   the Provider of the Resource
      * @param consumer   the ID of the Consumer
      */
-    public CapabilitesResource(Identification provider, Identification consumer) {
+    public CapabilitiesResource(Identification provider, Identification consumer) {
         super(RESOURCE_ID, provider, consumer);
     }
 
@@ -61,7 +61,7 @@ public class CapabilitesResource extends Resource<HashMap<String, Boolean>> {
      * @param capabilities the capabilities
      * @param consumer             the ID of the Consumer
      */
-    public CapabilitesResource(Identification provider, Capabilities capabilities, Identification consumer) {
+    public CapabilitiesResource(Identification provider, Capabilities capabilities, Identification consumer) {
         super(RESOURCE_ID, provider, capabilities.write(), consumer);
     }
 }

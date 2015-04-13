@@ -4,8 +4,6 @@ import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.frameworks.music.player.TrackInfo;
 import org.intellimate.izou.sdk.resource.Resource;
 
-import java.util.Optional;
-
 /**
  * A resource which holds a trackInfo
  * @author LeanderK
@@ -13,20 +11,6 @@ import java.util.Optional;
  */
 public class TrackInfoResource extends Resource<TrackInfo> {
     public static String RESOURCE_ID = "izou.music.trackinfo";
-
-    public static Optional<TrackInfoResource> of (Resource<?> resource) {
-        if (resource.getID().equals(RESOURCE_ID)) {
-            try {
-                TrackInfo resourceTrackInfo = (TrackInfo) resource.getResource();
-                if (resourceTrackInfo != null) {
-                    return Optional.of(new TrackInfoResource(resource.getProvider(),
-                            resourceTrackInfo,
-                            resource.getConsumer()));
-                }
-            } catch (ClassCastException ignored) {}
-        }
-        return Optional.empty();
-    }
 
     /**
      * creates a new Resource.

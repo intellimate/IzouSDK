@@ -4,8 +4,6 @@ import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.resource.Resource;
 
-import java.util.Optional;
-
 /**
  * A resource containing commands for the player.
  * @author LeanderK
@@ -17,27 +15,6 @@ public class CommandResource extends Resource<String> {
     public final static String PAUSE = "pause";
     public final static String STOP = "stop";
     public final static String SELECT_TRACK = "select";
-
-    public static Optional<CommandResource> of (Resource<?> resource, Capabilities capabilities) {
-        if (resource.getID().equals(ResourceID)) {
-            try {
-                String command = (String) resource.getResource();
-                if (!verifyCommand(command)) {
-                    capabilities.getContext().getLogger().error("unknown command: " + command);
-                    return Optional.empty();
-                }
-                if (!verifyCapabilities(command, capabilities)) {
-                    capabilities.getContext().getLogger().error("not capable of handling: " + command);
-                    return Optional.empty();
-                }
-                return Optional.of(new CommandResource(resource.getProvider(),
-                        command,
-                        resource.getConsumer(),
-                        capabilities));
-            } catch (ClassCastException ignored) {}
-        }
-        return Optional.empty();
-    }
 
     /**
      * creates a new Resource.

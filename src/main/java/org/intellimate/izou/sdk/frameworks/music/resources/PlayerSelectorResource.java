@@ -3,8 +3,6 @@ package org.intellimate.izou.sdk.frameworks.music.resources;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.resource.Resource;
 
-import java.util.Optional;
-
 /**
  * A resource which holds an Identification used for example to select the Player
  * @author LeanderK
@@ -12,20 +10,6 @@ import java.util.Optional;
  */
 public class PlayerSelectorResource extends Resource<Identification> {
     public static String RESOURCE_ID = "izou.music.playerselecor";
-
-    public static Optional<PlayerSelectorResource> of (Resource<?> resource) {
-        if (resource.getID().equals(RESOURCE_ID)) {
-            try {
-                Identification resourceIdentification = (Identification) resource.getResource();
-                if (resourceIdentification != null) {
-                    return Optional.of(new PlayerSelectorResource(resource.getProvider(),
-                            resourceIdentification,
-                            resource.getConsumer()));
-                }
-            } catch (ClassCastException ignored) {}
-        }
-        return Optional.empty();
-    }
 
     /**
      * creates a new Resource.
