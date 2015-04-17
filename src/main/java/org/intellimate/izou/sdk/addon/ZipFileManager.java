@@ -11,14 +11,4 @@ public abstract class ZipFileManager extends Plugin {
     public ZipFileManager(PluginWrapper wrapper) {
         super(wrapper);
     }
-
-    /**
-     * Gets the izou sdk version of the plugin
-     *
-     * @return the izou sdk version of the plugin
-     */
-    @Override
-    public String getSDKVersion() {
-        return "0.5.20";
-    }
 }
