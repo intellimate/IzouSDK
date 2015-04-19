@@ -9,7 +9,7 @@ import org.intellimate.izou.sdk.resource.Resource;
  * @version 1.0
  */
 public class PlayerSelectorResource extends Resource<Identification> {
-    public static String RESOURCE_ID = "izou.music.playerselecor";
+    public static String RESOURCE_ID = "izou.music.resource.playerselecor";
 
     /**
      * creates a new Resource.

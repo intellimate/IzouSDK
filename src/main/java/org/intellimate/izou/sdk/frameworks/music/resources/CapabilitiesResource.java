@@ -11,7 +11,7 @@ import java.util.HashMap;
  * @version 1.0
  */
 public class CapabilitiesResource extends Resource<HashMap<String, Boolean>> {
-    public static final String RESOURCE_ID = "izou.music.capabilitesresource";
+    public static final String RESOURCE_ID = "izou.music.resource.capabilitesresource";
 
     /**
      * creates a new Resource.

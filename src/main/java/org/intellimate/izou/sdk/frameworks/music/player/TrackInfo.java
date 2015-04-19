@@ -14,7 +14,7 @@ public class TrackInfo {
     private final byte[] albumCover;
     private final String albumCoverFormat;
     private final Progress progress;
-
+    private final String id;
 
     public TrackInfo(String name, String artist, String album) {
         this.name = name;
@@ -23,6 +23,7 @@ public class TrackInfo {
         albumCover = null;
         albumCoverFormat = null;
         progress = null;
+        id = null;
     }
 
     public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat) {
@@ -32,6 +33,7 @@ public class TrackInfo {
         this.albumCover = albumCover;
         this.albumCoverFormat = albumCoverFormat;
         progress = null;
+        id = null;
     }
 
     public TrackInfo(String name, String artist, String album, Progress progress) {
@@ -41,15 +43,17 @@ public class TrackInfo {
         this.progress = progress;
         albumCover = null;
         albumCoverFormat = null;
+        id = null;
     }
 
-    public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, Progress progress) {
+    public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, Progress progress, String id) {
         this.name = name;
         this.artist = artist;
         this.album = album;
         this.albumCover = albumCover;
         this.albumCoverFormat = albumCoverFormat;
         this.progress = progress;
+        this.id = id;
     }
 
     /**
@@ -98,5 +102,16 @@ public class TrackInfo {
      */
     public Optional<Progress> getProgress() {
         return Optional.of(progress);
+    }
+
+    /**
+     * returns the ID of the TrackInfo.
+     * <p>
+     * this field is mostly internal, can be an url etc. should be used only if obtained from a player
+     * </p>
+     * @return the optional id
+     */
+    public Optional<String> getId() {
+        return Optional.of(id);
     }
 }

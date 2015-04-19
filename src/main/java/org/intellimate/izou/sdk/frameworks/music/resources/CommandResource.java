@@ -1,8 +1,11 @@
 package org.intellimate.izou.sdk.frameworks.music.resources;
 
 import org.intellimate.izou.identification.Identification;
+import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.resource.Resource;
+
+import java.util.Optional;
 
 /**
  * A resource containing commands for the player.
@@ -10,26 +13,46 @@ import org.intellimate.izou.sdk.resource.Resource;
  * @version 1.0
  */
 public class CommandResource extends Resource<String> {
-    public final static String ResourceID = "izou.music.command";
+    public final static String ResourceID = "izou.music.resource.command";
     public final static String PLAY = "play";
     public final static String PAUSE = "pause";
     public final static String STOP = "stop";
     public final static String SELECT_TRACK = "select";
+    public final static String NEXT = "next";
+    public static final String PREVIOUS = "previous";
+    public static final String JUMP = "jump";
+    public static final String CHANGE_PLAYBACK = "changeplayback";
 
     /**
      * creates a new Resource.
-     * This method is thread-safe.
      *
      * @param provider   the Provider of the Resource
      * @param command          the resource
      * @param capabilities the capabilities of the player
      */
-    public CommandResource(Identification provider, String command, Capabilities capabilities) {
+    CommandResource(Identification provider, String command, Capabilities capabilities) {
         super(ResourceID, provider, command);
-        if (!verifyCommand(command))
-            throw new IllegalArgumentException("IllegalCommand!");
-        if (!verifyCapabilities(command, capabilities))
-            throw new IllegalArgumentException("Player is not able to handle Command");
+    }
+
+    /**
+     * creates a new Resource.
+     *
+     * @param provider   the Provider of the Resource
+     * @param command          the resource
+     * @param capabilities the capabilities of the player
+     * @param context used for logging
+     */
+    public static Optional<CommandResource> createCommandResource(Identification provider, String command, Capabilities capabilities, Context context) {
+        CommandResource commandResource = new CommandResource(provider, command, capabilities);
+        if (!verifyCommand(command)) {
+            context.getLogger().error("IllegalCommand!");
+            return Optional.empty();
+        }
+        if (!verifyCapabilities(command, capabilities)) {
+            context.getLogger().error("Player is not able to handle Command!");
+            return Optional.empty();
+        }
+        return Optional.of(commandResource);
     }
 
     /**
@@ -55,7 +78,13 @@ public class CommandResource extends Resource<String> {
      * @return false if malformed
      */
     private static boolean verifyCommand(String command) {
-        return command.equals(PLAY) || command.equals(PAUSE) || command.equals(STOP) || command.equals(SELECT_TRACK);
+        return command.equals(PLAY) ||
+                command.equals(PAUSE) ||
+                command.equals(STOP) ||
+                command.equals(SELECT_TRACK) ||
+                command.equals(NEXT) ||
+                command.equals(PREVIOUS) ||
+                command.equals(CHANGE_PLAYBACK);
     }
 
     /**
@@ -69,6 +98,10 @@ public class CommandResource extends Resource<String> {
             case PLAY: return capabilities.hasPlayPauseControl();
             case PAUSE: return capabilities.hasPlayPauseControl();
             case SELECT_TRACK: return capabilities.isAbleToSelectTrack();
+            case NEXT: return capabilities.hasNextPrevious();
+            case PREVIOUS: return capabilities.hasNextPrevious();
+            case JUMP: return capabilities.isAbleToJump();
+            case CHANGE_PLAYBACK: return capabilities.isPlaybackChangeable();
             case STOP: return true;
         }
         return false;
