@@ -37,7 +37,6 @@ public class PlayerUpdate extends Event {
      *
      * @param addOnModule        the addonModule which is creating the Event
      * @param source      the source of the Event, most likely a this reference.
-     * @param trackInfo the current song
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     public static Optional<PlayerUpdate> create(AddOnModule addOnModule, Identification source) {
