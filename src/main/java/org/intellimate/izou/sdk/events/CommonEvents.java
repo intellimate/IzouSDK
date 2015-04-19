@@ -235,7 +235,7 @@ public class CommonEvents {
          * @return the descriptor
          */
         public String responseType() {
-            return "Response";
+            return "response";
         }
 
         /**
@@ -256,7 +256,7 @@ public class CommonEvents {
          * @return the descriptor
          */
         public String notificationType() {
-            return "izou.alarm";
+            return "notification";
         }
     }
 }

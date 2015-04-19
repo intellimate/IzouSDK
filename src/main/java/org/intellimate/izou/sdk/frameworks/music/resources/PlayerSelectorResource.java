@@ -9,46 +9,26 @@ import org.intellimate.izou.sdk.resource.Resource;
  * @version 1.0
  */
 public class PlayerSelectorResource extends Resource<Identification> {
-    public static String RESOURCE_ID = "izou.music.resource.playerselecor";
+    public static final String RESOURCE_ID = "izou.music.resource.playerselecor";
 
     /**
      * creates a new Resource.
      * This method is thread-safe.
      *
+     * @param consumer   the Provider of the Resource
      */
-    public PlayerSelectorResource() {
-        super(RESOURCE_ID);
+    public PlayerSelectorResource(Identification consumer) {
+        super(RESOURCE_ID, null, null, consumer);
     }
 
     /**
      * creates a new Resource.
      * This method is thread-safe.
      *
-     * @param provider   the Provider of the Resource
-     */
-    public PlayerSelectorResource(Identification provider) {
-        super(RESOURCE_ID, provider);
-    }
-
-    /**
-     * creates a new Resource.
-     * This method is thread-safe.
-     *
-     * @param provider       the Provider of the Resource
+     * @param consumer       the consumer of the Resource
      * @param identification the resource
      */
-    public PlayerSelectorResource(Identification provider, Identification identification) {
-        super(RESOURCE_ID, provider, identification, null);
-    }
-
-    /**
-     * creates a new Resource.
-     * This method is thread-safe.
-     *
-     * @param identification the resource
-     * @param consumer       the ID of the Consumer
-     */
-    public PlayerSelectorResource(Identification provider, Identification identification, Identification consumer) {
-        super(RESOURCE_ID, provider, identification, consumer);
+    public PlayerSelectorResource(Identification consumer, Identification identification) {
+        super(RESOURCE_ID, identification, identification, consumer);
     }
 }

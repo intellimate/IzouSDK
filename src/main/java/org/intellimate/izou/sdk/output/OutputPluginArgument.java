@@ -46,6 +46,11 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule implements 
     private boolean stop = false;
 
     /**
+     * signals whether the OutputPlugin is working
+     */
+    private boolean isWorking = false;
+
+    /**
      * creates a new output-plugin with a new id
      *
      * @param context context
@@ -122,6 +127,16 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule implements 
         eventBlockingQueue.add(event);
     }
 
+    @Override
+    public boolean isRunning() {
+        return isWorking;
+    }
+
+    @Override
+    public void stop() {
+        Thread.currentThread().interrupt();
+    }
+
     /**
      * @param event the current processed Event
      */
@@ -138,9 +153,9 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule implements 
     }
 
     /**
-     * stops the outputPlugin
+     * terminates the outputPlugin (will not listen to events anymore)
      */
-    public void stop() {
+    public void terminate() {
         stop = true;
         eventBlockingQueue.notify();
     }
