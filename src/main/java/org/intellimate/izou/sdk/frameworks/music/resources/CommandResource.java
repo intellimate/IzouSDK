@@ -22,6 +22,8 @@ public class CommandResource extends Resource<String> {
     public static final String PREVIOUS = "previous";
     public static final String JUMP = "jump";
     public static final String CHANGE_PLAYBACK = "changeplayback";
+    public static final String MUTE = "mute";
+    public static final String UNMUTE = "unmute";
 
     /**
      * creates a new Resource.
@@ -32,6 +34,10 @@ public class CommandResource extends Resource<String> {
      */
     CommandResource(Identification provider, String command, Capabilities capabilities) {
         super(ResourceID, provider, command);
+        if (!verifyCommand(command))
+            throw new IllegalArgumentException("IllegalCommand!");
+        if (!verifyCapabilities(command, capabilities))
+            throw new IllegalArgumentException("Player is not able to handle Command");
     }
 
     /**
@@ -56,23 +62,6 @@ public class CommandResource extends Resource<String> {
     }
 
     /**
-     * creates a new Resource.
-     * This method is thread-safe.
-     *
-     * @param provider   the Provider of the Resource
-     * @param command    the resource
-     * @param consumer   the ID of the Consumer
-     * @param capabilities the capabilities of the player
-     */
-    public CommandResource(Identification provider, String command, Identification consumer, Capabilities capabilities) {
-        super(ResourceID, provider, command, consumer);
-        if (!verifyCommand(command))
-            throw new IllegalArgumentException("IllegalCommand!");
-        if (!verifyCapabilities(command, capabilities))
-            throw new IllegalArgumentException("Player is not able to handle Command");
-    }
-
-    /**
      * verifies that an command is not malformed
      * @param command the Command
      * @return false if malformed
@@ -84,7 +73,9 @@ public class CommandResource extends Resource<String> {
                 command.equals(SELECT_TRACK) ||
                 command.equals(NEXT) ||
                 command.equals(PREVIOUS) ||
-                command.equals(CHANGE_PLAYBACK);
+                command.equals(CHANGE_PLAYBACK) ||
+                command.equals(MUTE) ||
+                command.equals(UNMUTE);
     }
 
     /**
@@ -102,6 +93,8 @@ public class CommandResource extends Resource<String> {
             case PREVIOUS: return capabilities.hasNextPrevious();
             case JUMP: return capabilities.isAbleToJump();
             case CHANGE_PLAYBACK: return capabilities.isPlaybackChangeable();
+            case UNMUTE: return true;
+            case MUTE: return true;
             case STOP: return true;
         }
         return false;

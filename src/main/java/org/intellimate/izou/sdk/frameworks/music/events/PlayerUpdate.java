@@ -39,7 +39,7 @@ public class PlayerUpdate extends Event {
      * @param source      the source of the Event, most likely a this reference.
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    public static Optional<PlayerUpdate> create(AddOnModule addOnModule, Identification source) {
+    public static Optional<PlayerUpdate> createPlayerUpdate(AddOnModule addOnModule, Identification source) {
         try {
             PlayerUpdate playerUpdate = new PlayerUpdate(addOnModule, source);
             return Optional.of(playerUpdate);
@@ -56,7 +56,7 @@ public class PlayerUpdate extends Event {
      * @param volume the current volume
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    public static Optional<PlayerUpdate> create(AddOnModule addOnModule, Identification source, Volume volume) {
+    public static Optional<PlayerUpdate> createPlayerUpdate(AddOnModule addOnModule, Identification source, Volume volume) {
         if (volume == null)
             return Optional.empty();
         try {
@@ -76,7 +76,7 @@ public class PlayerUpdate extends Event {
      * @param playlist the current playing tracks
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    public static Optional<PlayerUpdate> create(AddOnModule addOnModule, Identification source, Playlist playlist) {
+    public static Optional<PlayerUpdate> createPlayerUpdate(AddOnModule addOnModule, Identification source, Playlist playlist) {
         if (playlist == null)
             return Optional.empty();
         try {
@@ -96,7 +96,7 @@ public class PlayerUpdate extends Event {
      * @param trackInfo the current song
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    public static Optional<PlayerUpdate> create(AddOnModule addOnModule, Identification source, TrackInfo trackInfo) {
+    public static Optional<PlayerUpdate> createPlayerUpdate(AddOnModule addOnModule, Identification source, TrackInfo trackInfo) {
         if (trackInfo == null)
             return Optional.empty();
         try {

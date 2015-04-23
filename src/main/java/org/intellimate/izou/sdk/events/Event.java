@@ -22,13 +22,13 @@ public class Event implements EventModel<Event> {
      * @deprecated use {@link CommonEvents}
      */
     @Deprecated
-    public static final String RESPONSE = "Response";
+    public static final String RESPONSE = "response";
     /**
      * Use this type when only our Addon reacts to this Event
      * @deprecated use {@link CommonEvents}
      */
     @Deprecated
-    public static final String NOTIFICATION = "Notification";
+    public static final String NOTIFICATION = "notification";
     //common Events-Descriptors:
     /**
      * Event for a Welcome with maximum response.

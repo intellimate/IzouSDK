@@ -14,6 +14,7 @@ import java.util.Optional;
 public class CommonEvents {
     private final Presence presence = new Presence();
     private final Response response = new Response();
+    private final Descriptors descriptors = new Descriptors();
     private final Type type = new Type();
     private final AddOnModule addOnModule;
 
@@ -22,7 +23,11 @@ public class CommonEvents {
     }
 
     public static CommonEvents get(AddOnModule addOnModule) {
-        return new CommonEvents(addOnModule);
+        if (addOnModule !=  null) {
+            return new CommonEvents(addOnModule);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -47,6 +52,14 @@ public class CommonEvents {
      */
     public Type getType() {
         return type;
+    }
+
+    /**
+     * returns common descriptors
+     * @return an object containing methods that return the instances
+     */
+    public Descriptors getDescriptors() {
+        return descriptors;
     }
 
     /**
@@ -257,6 +270,29 @@ public class CommonEvents {
          */
         public String notificationType() {
             return "notification";
+        }
+    }
+
+    public class Descriptors {
+        /**
+         * Event-Type which indicates that this events stops an already running addon
+         * @return an optional which may contain an EventListener
+         */
+        public Optional<EventListener> stopListener() {
+            return EventListener.createEventListener(
+                    stopDescriptor(),
+                    "Event-Type which indicates that that this events stops an already running addon",
+                    "izou_stop",
+                    addOnModule
+            );
+        }
+
+        /**
+         * Event-Type which indicates that only your AddOn should react to an Event
+         * @return the descriptor
+         */
+        public String stopDescriptor() {
+            return "stop";
         }
     }
 }
