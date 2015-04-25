@@ -3,7 +3,7 @@ package org.intellimate.izou.sdk.frameworks.music.events;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
-import org.intellimate.izou.sdk.frameworks.music.resources.PlayerSelectorResource;
+import org.intellimate.izou.sdk.frameworks.common.resources.OutputPluginSelectorResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class StopMusic extends Event {
             return Optional.empty();
         try {
             StopMusic stopRequest = new StopMusic(addOnModule, source);
-            stopRequest.addResource(new PlayerSelectorResource(source, target));
+            stopRequest.addResource(new OutputPluginSelectorResource(source, target));
             return Optional.of(stopRequest);
         } catch (IllegalArgumentException e) {
             return Optional.empty();

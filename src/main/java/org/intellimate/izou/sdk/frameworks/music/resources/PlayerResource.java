@@ -4,11 +4,11 @@ import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.resource.Resource;
 
 /**
- * A resource which holds an Identification used for example to select the Player
+ * A resource which holds an Identification used obtain the current playing OP
  * @author LeanderK
  * @version 1.0
  */
-public class PlayerSelectorResource extends Resource<Identification> {
+public class PlayerResource extends Resource<Identification> {
     public static final String RESOURCE_ID = "izou.music.resource.playerselecor";
 
     /**
@@ -17,7 +17,7 @@ public class PlayerSelectorResource extends Resource<Identification> {
      *
      * @param consumer   the Provider of the Resource
      */
-    public PlayerSelectorResource(Identification consumer) {
+    public PlayerResource(Identification consumer) {
         super(RESOURCE_ID, null, null, consumer);
     }
 
@@ -28,7 +28,7 @@ public class PlayerSelectorResource extends Resource<Identification> {
      * @param consumer       the consumer of the Resource
      * @param identification the resource
      */
-    public PlayerSelectorResource(Identification consumer, Identification identification) {
+    public PlayerResource(Identification consumer, Identification identification) {
         super(RESOURCE_ID, identification, identification, consumer);
     }
 }

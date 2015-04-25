@@ -3,8 +3,8 @@ package org.intellimate.izou.sdk.frameworks.music.events;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
+import org.intellimate.izou.sdk.frameworks.common.resources.OutputPluginSelectorResource;
 import org.intellimate.izou.sdk.frameworks.music.player.TrackInfo;
-import org.intellimate.izou.sdk.frameworks.music.resources.PlayerSelectorResource;
 import org.intellimate.izou.sdk.frameworks.music.resources.TrackInfoResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
@@ -43,7 +43,7 @@ public class StartMusicRequest extends Event {
             return Optional.empty();
         try {
             StartMusicRequest request = new StartMusicRequest(addOnModule, source);
-            request.addResource(new PlayerSelectorResource(source, target));
+            request.addResource(new OutputPluginSelectorResource(source, target));
             return Optional.of(request);
         } catch (IllegalArgumentException e) {
             return Optional.empty();
@@ -63,7 +63,7 @@ public class StartMusicRequest extends Event {
             return Optional.empty();
         try {
             StartMusicRequest request = new StartMusicRequest(addOnModule, source);
-            request.addResource(new PlayerSelectorResource(source, target));
+            request.addResource(new OutputPluginSelectorResource(source, target));
             request.addResource(new TrackInfoResource(target, trackInfo, source));
             return Optional.of(request);
         } catch (IllegalArgumentException e) {

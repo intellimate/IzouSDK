@@ -3,7 +3,7 @@ package org.intellimate.izou.sdk.frameworks.music.events;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
-import org.intellimate.izou.sdk.frameworks.music.resources.PlayerSelectorResource;
+import org.intellimate.izou.sdk.frameworks.common.resources.OutputPluginSelectorResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class PlayerCommand extends Event {
     public static Optional<PlayerUpdate> createPlayerCommand(AddOnModule addOnModule, Identification source, Identification target) {
         try {
             PlayerUpdate playerUpdate = new PlayerUpdate(addOnModule, source);
-            playerUpdate.addResource(new PlayerSelectorResource(source, target));
+            playerUpdate.addResource(new OutputPluginSelectorResource(source, target));
             return Optional.of(playerUpdate);
         } catch (IllegalArgumentException e) {
             return Optional.empty();
