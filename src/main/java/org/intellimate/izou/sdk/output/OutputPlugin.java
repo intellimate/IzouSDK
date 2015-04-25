@@ -1,6 +1,7 @@
 package org.intellimate.izou.sdk.output;
 
 import com.google.common.reflect.TypeToken;
+import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.sdk.Context;
 
 import java.util.List;
@@ -50,5 +51,5 @@ public abstract class OutputPlugin<T> extends OutputPluginArgument<Object, T> {
      * @param data the data generated
      */
     @Override
-    public abstract void renderFinalOutput(List<T> data);
+    public abstract void renderFinalOutput(List<T> data, EventModel eventModel);
 }
