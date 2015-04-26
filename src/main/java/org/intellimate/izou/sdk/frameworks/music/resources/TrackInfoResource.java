@@ -10,7 +10,7 @@ import org.intellimate.izou.sdk.resource.Resource;
  * @version 1.0
  */
 public class TrackInfoResource extends Resource<TrackInfo> {
-    public static String RESOURCE_ID = "izou.music.resource.trackinfo";
+    public static final String RESOURCE_ID = "izou.music.resource.trackinfo";
 
     /**
      * creates a new Resource.

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
+ * use this event to stop the music from playing
  * @author LeanderK
  * @version 1.0
  */

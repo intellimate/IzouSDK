@@ -36,6 +36,14 @@ public class Playlist {
     }
 
     /**
+     * returns the current played track
+     * @return an instance of TrackInfo
+     */
+    public TrackInfo getCurrent() {
+        return queue.get(position);
+    }
+
+    /**
      * gets the name (optional)
      * <p>
      *     playlist doesn't need to have a name

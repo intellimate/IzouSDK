@@ -22,8 +22,6 @@ public class CommandResource extends Resource<String> {
     public static final String PREVIOUS = "previous";
     public static final String JUMP = "jump";
     public static final String CHANGE_PLAYBACK = "changeplayback";
-    public static final String MUTE = "mute";
-    public static final String UNMUTE = "unmute";
 
     /**
      * creates a new Resource.
@@ -73,9 +71,7 @@ public class CommandResource extends Resource<String> {
                 command.equals(SELECT_TRACK) ||
                 command.equals(NEXT) ||
                 command.equals(PREVIOUS) ||
-                command.equals(CHANGE_PLAYBACK) ||
-                command.equals(MUTE) ||
-                command.equals(UNMUTE);
+                command.equals(CHANGE_PLAYBACK);
     }
 
     /**
@@ -93,8 +89,6 @@ public class CommandResource extends Resource<String> {
             case PREVIOUS: return capabilities.hasNextPrevious();
             case JUMP: return capabilities.isAbleToJump();
             case CHANGE_PLAYBACK: return capabilities.isPlaybackChangeable();
-            case UNMUTE: return true;
-            case MUTE: return true;
             case STOP: return true;
         }
         return false;

@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author LeanderK
  * @version 1.0
  */
-public class MusicPlayerError extends Event {
+public class PlayerError extends Event {
     public static final String ID = "izou.music.events.error";
 
     /**
@@ -23,7 +23,7 @@ public class MusicPlayerError extends Event {
      * @param source      the source of the Event, most likely a this reference.
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    protected MusicPlayerError(AddOnModule addOnModule, Identification source) throws IllegalArgumentException {
+    protected PlayerError(AddOnModule addOnModule, Identification source) throws IllegalArgumentException {
         super(CommonEvents.get(addOnModule).getType().responseType(), source, new ArrayList<>(Arrays.asList(ID)));
     }
 
@@ -34,13 +34,13 @@ public class MusicPlayerError extends Event {
      * @param error the error (not null and not empty)
      * @return the optional event
      */
-    public static Optional<MusicPlayerError> createMusicPlayerError(AddOnModule addOnModule, Identification source, String error) {
+    public static Optional<PlayerError> createMusicPlayerError(AddOnModule addOnModule, Identification source, String error) {
         if (error == null || error.isEmpty())
             return Optional.empty();
         try {
-            MusicPlayerError musicPlayerError = new MusicPlayerError(addOnModule, source);
-            musicPlayerError.addResource(new MusicErrorResource(source, error));
-            return Optional.of(musicPlayerError);
+            PlayerError playerError = new PlayerError(addOnModule, source);
+            playerError.addResource(new MusicErrorResource(source, error));
+            return Optional.of(playerError);
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
