@@ -205,7 +205,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * sets an new Volume
      * @param volume the Volume
      */
-    public void setVolume(Volume volume) {
+    public void updateVolume(Volume volume) {
         this.volume = volume;
         updatePlayInfo(volume);
     }
@@ -224,7 +224,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * sets the new Progress
      * @param progress the progress
      */
-    public void setProgress(Progress progress) {
+    public void updateProgress(Progress progress) {
         this.progress = progress;
         updatePlayInfo(progress);
     }

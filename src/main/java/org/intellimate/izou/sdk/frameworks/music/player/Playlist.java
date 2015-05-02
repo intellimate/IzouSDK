@@ -39,11 +39,17 @@ public class Playlist {
     }
 
     /**
-     * returns the current played track
+     * returns the current played track or null
      * @return an instance of TrackInfo
      */
     public TrackInfo getCurrent() {
-        return queue.get(position);
+        TrackInfo trackInfo = null;
+        try {
+            trackInfo = queue.get(position);
+        } catch (IndexOutOfBoundsException e) {
+            trackInfo = null;
+        }
+        return null;
     }
 
     /**
