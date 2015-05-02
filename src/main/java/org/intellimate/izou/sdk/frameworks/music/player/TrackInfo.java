@@ -13,7 +13,6 @@ public class TrackInfo {
     private final String album;
     private final byte[] albumCover;
     private final String albumCoverFormat;
-    private final Progress progress;
     private final String id;
 
     public TrackInfo(String name, String artist, String album) {
@@ -22,7 +21,6 @@ public class TrackInfo {
         this.album = album;
         albumCover = null;
         albumCoverFormat = null;
-        progress = null;
         id = null;
     }
 
@@ -32,27 +30,15 @@ public class TrackInfo {
         this.album = album;
         this.albumCover = albumCover;
         this.albumCoverFormat = albumCoverFormat;
-        progress = null;
         id = null;
     }
 
-    public TrackInfo(String name, String artist, String album, Progress progress) {
-        this.name = name;
-        this.artist = artist;
-        this.album = album;
-        this.progress = progress;
-        albumCover = null;
-        albumCoverFormat = null;
-        id = null;
-    }
-
-    public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, Progress progress, String id) {
+    public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String id) {
         this.name = name;
         this.artist = artist;
         this.album = album;
         this.albumCover = albumCover;
         this.albumCoverFormat = albumCoverFormat;
-        this.progress = progress;
         this.id = id;
     }
 
@@ -96,14 +82,6 @@ public class TrackInfo {
      */
     public Optional<String> getAlbumCoverFormat() {
         return Optional.of(albumCoverFormat);
-    }
-
-    /**
-     * returns the Progress of the track
-     * @return the optional Progress
-     */
-    public Optional<Progress> getProgress() {
-        return Optional.of(progress);
     }
 
     /**
