@@ -172,7 +172,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         if (runsInPlay)
             return;
         isRunning = false;
-        endSound(this);
+        endSound();
     }
 
     /**
@@ -187,7 +187,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
 
     public void updatePlaylist(Playlist playlist) {
         this.playlist = playlist;
-        updatePlayInfo(this, playlist);
+        updatePlayInfo(playlist);
     }
 
     /**
@@ -206,7 +206,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      */
     public void setVolume(Volume volume) {
         this.volume = volume;
-        updatePlayInfo(this, volume);
+        updatePlayInfo(volume);
     }
 
     /**
@@ -225,7 +225,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      */
     public void setProgress(Progress progress) {
         this.progress = progress;
-        updatePlayInfo(this, progress);
+        updatePlayInfo(progress);
     }
 
     /**
@@ -241,7 +241,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
             this.progress = progress;
         if (volume != null)
             this.volume = volume;
-        updatePlayInfo(this, playlist, progress, null, volume);
+        updatePlayInfo(playlist, progress, null, volume);
     }
 
     /**
@@ -252,7 +252,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      */
     public void trackInfoUpdate(Playlist playlist, TrackInfo info) {
         this.playlist = playlist;
-        updatePlayInfo(this, info);
+        updatePlayInfo(info);
     }
 
     /**
@@ -316,7 +316,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     public void renderFinalOutput(List<T> data, EventModel eventModel) {
         if (StartMusicRequest.verify(eventModel, capabilities, this, activators)) {
             if (!isOutputRunning()) {
-                playerError(PlayerError.ERROR_ALREADY_PLAYING, this);
+                playerError(PlayerError.ERROR_ALREADY_PLAYING);
             }
             playingThread = submit((Runnable) () -> {
                 //noinspection RedundantIfStatement
@@ -330,7 +330,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
                     .thenRun(() -> {
                         if (runsInPlay) {
                             isRunning = false;
-                            endSound(this);
+                            endSound();
                         }
                     });
         }
@@ -356,7 +356,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * @return the command handler
      */
     protected CommandHandler createCommandHandler() {
-        return new CommandHandler(this, this, this, this::stopSound, capabilities);
+        return new CommandHandler(this, this, this, capabilities);
     }
 
     /**
@@ -368,7 +368,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         Optional<Progress> progress = ProgressResource.getProgress(eventModel);
         Optional<TrackInfo> trackInfo = TrackInfoResource.getTrackInfo(eventModel);
         Optional<Volume> volume = VolumeResource.getVolume(eventModel);
-        startSound(this, playlist.orElse(null), progress.orElse(null), trackInfo.orElse(null), volume.orElse(null));
+        startSound(playlist.orElse(null), progress.orElse(null), trackInfo.orElse(null), volume.orElse(null));
     }
 
     @Override
