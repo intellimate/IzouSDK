@@ -1,9 +1,10 @@
 package org.intellimate.izou.sdk.contentgenerator;
 
 import org.intellimate.izou.events.EventModel;
+import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
-import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -41,18 +42,18 @@ public class EventListener {
      * @param description the description of the descriptor
      * @param descriptorID an ID for the descriptor (Should contain no special characters, spaces etc.). Only String
      *                     which match the regex (\w-_)+ are allowed.
-     * @param addOnModule the AddOnModule which wants to create the EventListener
+     * @param identifiable the identifiable which wants to create the EventListener
      * @return if one of the parameter is null, or unable to to obtain ID
      * @throws java.lang.IllegalArgumentException if the descriptorID contains illegal characters
      */
     public static Optional<EventListener> createEventListener(String descriptor, String description,
-                                                       String descriptorID, AddOnModule addOnModule)
+                                                       String descriptorID, Identifiable identifiable)
                                                                                         throws IllegalArgumentException{
 
         if (!descriptorID.matches("[\\w\\-_]+"))
             throw new IllegalArgumentException("descriptorID: " + descriptorID + " contains illegal characters");
-        return IdentificationManager.getInstance().getIdentification(addOnModule)
-                .flatMap(id -> Event.createEvent(Event.NOTIFICATION, id, Collections.singletonList(descriptor)))
+        return IdentificationManager.getInstance().getIdentification(identifiable)
+                .flatMap(id -> Event.createEvent(CommonEvents.Type.NOTIFICATION_TYPE, id, Collections.singletonList(descriptor)))
                 .map(event -> new EventListener(event, descriptor, description, descriptorID));
     }
 

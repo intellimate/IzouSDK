@@ -4,7 +4,6 @@ import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
 import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
-import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,27 +20,25 @@ public class StopEvent extends Event {
      * Creates a new Event Object
      *
      * @param source      the source of the Event, most likely a this reference.
-     * @param addOnModule the addOnModule which will responsible for firing
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    protected StopEvent(AddOnModule addOnModule, Identification source)
+    protected StopEvent(Identification source)
             throws IllegalArgumentException {
-        super(CommonEvents.get(addOnModule).getType().responseType(), source, new ArrayList<>(Arrays.asList(ID,
-                CommonEvents.get(addOnModule).getDescriptors().stopDescriptor())));
+        super(CommonEvents.Type.RESPONSE_TYPE, source, new ArrayList<>(Arrays.asList(ID,
+                CommonEvents.Descriptors.STOP_DESCRIPTOR)));
     }
 
     /**
      * creates a new StopEvent
-     * @param addOnModule a reference to the module which created this Event
      * @param source the caller
      * @param target the target who should start playing
      * @return the optional StartMusicRequest
      */
-    public static Optional<StopEvent> createStopEvent(AddOnModule addOnModule, Identification source, Identification target) {
+    public static Optional<StopEvent> createStopEvent(Identification source, Identification target) {
         if (target == null || target.equals(source))
             return Optional.empty();
         try {
-            StopEvent stopRequest = new StopEvent(addOnModule, source);
+            StopEvent stopRequest = new StopEvent(source);
             stopRequest.addResource(new SelectorResource(source, target));
             return Optional.of(stopRequest);
         } catch (IllegalArgumentException e) {
@@ -51,13 +48,12 @@ public class StopEvent extends Event {
 
     /**
      * creates a new StopEvent
-     * @param addOnModule a reference to the module which created this Event
      * @param source the caller
      * @return the optional StartMusicRequest
      */
-    public static Optional<StopEvent> createStopEvent(AddOnModule addOnModule, Identification source) {
+    public static Optional<StopEvent> createStopEvent(Identification source) {
         try {
-            StopEvent stopRequest = new StopEvent(addOnModule, source);
+            StopEvent stopRequest = new StopEvent(source);
             return Optional.of(stopRequest);
         } catch (IllegalArgumentException e) {
             return Optional.empty();

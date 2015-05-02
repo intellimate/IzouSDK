@@ -4,7 +4,6 @@ import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.IdentificationManager;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.EndedEvent;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.StartEvent;
-import org.intellimate.izou.sdk.util.AddOnModule;
 import org.intellimate.izou.sdk.util.ContextProvider;
 import org.intellimate.izou.sdk.util.FireEvent;
 
@@ -19,11 +18,10 @@ public interface PermanentSoundHelper extends Identifiable, FireEvent, ContextPr
 
     /**
      * fires an StartEvent
-     * @param addOnModule the AddonModule
      */
-    default void startSound(AddOnModule addOnModule) {
-        Optional<StartEvent> startEvent = IdentificationManager.getInstance().getIdentification(addOnModule)
-                .flatMap(id -> StartEvent.createStartEvent(addOnModule, id));
+    default void startSound() {
+        Optional<StartEvent> startEvent = IdentificationManager.getInstance().getIdentification(this)
+                .flatMap(StartEvent::createStartEvent);
         if (!startEvent.isPresent()) {
             getContext().getLogger().error("unable to fire startEvent");
         } else {
@@ -33,11 +31,10 @@ public interface PermanentSoundHelper extends Identifiable, FireEvent, ContextPr
 
     /**
      * fires an EndedEvent
-     * @param addOnModule the addonModule
      */
-    default void endSound(AddOnModule addOnModule) {
-        Optional<EndedEvent> startEvent = IdentificationManager.getInstance().getIdentification(addOnModule)
-                .flatMap(id -> EndedEvent.createEndedEvent(addOnModule, id));
+    default void endSound() {
+        Optional<EndedEvent> startEvent = IdentificationManager.getInstance().getIdentification(this)
+                .flatMap(EndedEvent::createEndedEvent);
         if (!startEvent.isPresent()) {
             getContext().getLogger().error("unable to fire startEvent");
         } else {

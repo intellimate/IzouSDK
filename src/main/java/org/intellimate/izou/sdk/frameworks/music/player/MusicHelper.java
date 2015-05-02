@@ -12,7 +12,6 @@ import org.intellimate.izou.sdk.frameworks.music.resources.TrackInfoResource;
 import org.intellimate.izou.sdk.frameworks.music.resources.VolumeResource;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.StartEvent;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.output.PermanentSoundHelper;
-import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.Optional;
 
@@ -24,28 +23,26 @@ public interface MusicHelper extends PermanentSoundHelper {
     /**
      * fires an StartEvent
      *
-     * @param addOnModule the AddonModule
      */
     @Override
-    default void startSound(AddOnModule addOnModule) {
+    default void startSound() {
         getContext().getLogger().warn("creating start music event without Information");
-        startSound(addOnModule, null, null, null, null);
+        startSound(null, null, null, null);
     }
 
     /**
      * fires an StartEvent
      *
-     * @param addOnModule the AddonModule
      * @param playlist the playlist or null
      * @param progress the progress or null
      * @param trackInfo the trackInfo or null
      * @param volume the volume or null
      */
-    default void startSound(AddOnModule addOnModule, Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
-        Optional<Event> startEvent = IdentificationManager.getInstance().getIdentification(addOnModule)
-                .flatMap(id -> PlayerUpdate.createPlayerUpdate(addOnModule, id))
+    default void startSound(Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
+        Optional<Event> startEvent = IdentificationManager.getInstance().getIdentification(this)
+                .flatMap(PlayerUpdate::createPlayerUpdate)
                 .map(event -> event.addDescriptor(StartEvent.ID));
-        Optional<Identification> id = IdentificationManager.getInstance().getIdentification(addOnModule);
+        Optional<Identification> id = IdentificationManager.getInstance().getIdentification(this);
         if (!startEvent.isPresent() || !id.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerUpdate");
         } else {
@@ -69,11 +66,10 @@ public interface MusicHelper extends PermanentSoundHelper {
     /**
      * fires an Music-Player-Error
      * @param message the message
-     * @param addOnModule the addonModule which should fire it
      */
-    default void playerError(String message, AddOnModule addOnModule) {
+    default void playerError(String message) {
         Optional<PlayerError> playerError = IdentificationManager.getInstance().getIdentification(this)
-                .flatMap(id -> PlayerError.createMusicPlayerError(addOnModule, id, message));
+                .flatMap(id -> PlayerError.createMusicPlayerError(id, message));
         if (!playerError.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerError");
         } else {
@@ -84,13 +80,12 @@ public interface MusicHelper extends PermanentSoundHelper {
     /**
      * fires an Music-Player-Error
      * @param message the message
-     * @param addOnModule the addonModule which should fire it
      * @param target the one who caused the error
      */
-    default void playerError(String message, AddOnModule addOnModule, Identification target) {
+    default void playerError(String message, Identification target) {
         Optional<PlayerError> playerError = IdentificationManager.getInstance().getIdentification(this)
-                .flatMap(id -> PlayerError.createMusicPlayerError(addOnModule, id, message));
-        Optional<Identification> id = IdentificationManager.getInstance().getIdentification(addOnModule);
+                .flatMap(id -> PlayerError.createMusicPlayerError(id, message));
+        Optional<Identification> id = IdentificationManager.getInstance().getIdentification(this);
         if (!playerError.isPresent() || !id.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerError");
         } else {
@@ -101,16 +96,15 @@ public interface MusicHelper extends PermanentSoundHelper {
 
     /**
      * fires an update event which notifies that parameters have changed
-     * @param addOnModule the AddonModule responsible
      * @param playlist the optional playlist
      * @param progress the optional progress
      * @param trackInfo the optional trackInfo
      * @param volume the optional volume
      */
-    default void updatePlayInfo(AddOnModule addOnModule, Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
-        Optional<PlayerUpdate> updateEvent = IdentificationManager.getInstance().getIdentification(addOnModule)
-                .flatMap(id -> PlayerUpdate.createPlayerUpdate(addOnModule, id));
-        Optional<Identification> id = IdentificationManager.getInstance().getIdentification(addOnModule);
+    default void updatePlayInfo(Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
+        Optional<PlayerUpdate> updateEvent = IdentificationManager.getInstance().getIdentification(this)
+                .flatMap(PlayerUpdate::createPlayerUpdate);
+        Optional<Identification> id = IdentificationManager.getInstance().getIdentification(this);
         if (!updateEvent.isPresent() || !id.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerUpdate");
         } else {
@@ -133,37 +127,33 @@ public interface MusicHelper extends PermanentSoundHelper {
 
     /**
      * fires an update event which notifies that parameters have changed
-     * @param addOnModule the AddonModule responsible
      * @param playlist the optional playlist
      */
-    default void updatePlayInfo(AddOnModule addOnModule, Playlist playlist) {
-        updatePlayInfo(addOnModule, playlist, null, null, null);
+    default void updatePlayInfo(Playlist playlist) {
+        updatePlayInfo(playlist, null, null, null);
     }
 
     /**
      * fires an update event which notifies that parameters have changed
-     * @param addOnModule the AddonModule responsible
      * @param progress the optional progress
      */
-    default void updatePlayInfo(AddOnModule addOnModule, Progress progress) {
-        updatePlayInfo(addOnModule, null, progress, null, null);
+    default void updatePlayInfo(Progress progress) {
+        updatePlayInfo(null, progress, null, null);
     }
 
     /**
      * fires an update event which notifies that parameters have changed
-     * @param addOnModule the AddonModule responsible
      * @param trackInfo the optional trackInfo
      */
-    default void updatePlayInfo(AddOnModule addOnModule, TrackInfo trackInfo) {
-        updatePlayInfo(addOnModule, null, null, trackInfo, null);
+    default void updatePlayInfo(TrackInfo trackInfo) {
+        updatePlayInfo(null, null, trackInfo, null);
     }
 
     /**
      * fires an update event which notifies that parameters have changed
-     * @param addOnModule the AddonModule responsible
      * @param volume the optional volume
      */
-    default void updatePlayInfo(AddOnModule addOnModule, Volume volume) {
-        updatePlayInfo(addOnModule, null, null, null, volume);
+    default void updatePlayInfo(Volume volume) {
+        updatePlayInfo(null, null, null, volume);
     }
 }

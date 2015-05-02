@@ -1,7 +1,7 @@
 package org.intellimate.izou.sdk.events;
 
+import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.sdk.contentgenerator.EventListener;
-import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.Optional;
 
@@ -12,287 +12,229 @@ import java.util.Optional;
  * @version 1.0
  */
 public class CommonEvents {
-    private final Presence presence = new Presence();
-    private final Response response = new Response();
-    private final Descriptors descriptors = new Descriptors();
-    private final Type type = new Type();
-    private final AddOnModule addOnModule;
-
-    CommonEvents(AddOnModule addOnModule) {
-        this.addOnModule = addOnModule;
-    }
-
-    public static CommonEvents get(AddOnModule addOnModule) {
-        if (addOnModule !=  null) {
-            return new CommonEvents(addOnModule);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * returns the common EventListeners and Descriptors associated with the Presence
-     * @return an object containing methods that return the instances
-     */
-    public Presence getPresence() {
-        return presence;
-    }
-
-    /**
-     * returns the common EventListeners and Descriptors associated with the Response
-     * @return an object containing methods that return the instances
-     */
-    public Response getResponse() {
-        return response;
-    }
-
-    /**
-     * returns the common EventListeners and Types
-     * @return an object containing methods that return the instances
-     */
-    public Type getType() {
-        return type;
-    }
-
-    /**
-     * returns common descriptors
-     * @return an object containing methods that return the instances
-     */
-    public Descriptors getDescriptors() {
-        return descriptors;
-    }
 
     /**
      * if the type of event is based on comparing the current time a fixed or dynamic time AND the of the other systems
      * reaction should be consistent ignoring environment variables
+     * @param identifiable the identifiable ot associate the EventListener with
      * @return an optional which may contain an EventListener
      */
-    public Optional<EventListener> alarmListener() {
+    public Optional<EventListener> alarmListener(Identifiable identifiable) {
         return EventListener.createEventListener(
-                alarmDescriptor(),
+                ALARM_DESCRIPTOR,
                 "if the type of event is based on comparing the current time a fixed or dynamic time AND the of the "
                         + "other systems reaction should be consistent ignoring environment variables",
                 "izou_alarm",
-                addOnModule
+                identifiable
         );
     }
 
     /**
      * if the type of event is based on comparing the current time a fixed or dynamic time AND the of the other systems
      * reaction should be consistent ignoring environment variables
-     * @return the descriptor
      */
-    public static String alarmDescriptor() {
-        return "izou.alarm";
-    }
+    public static final String ALARM_DESCRIPTOR = "izou.alarm";
 
-    public class Presence {
+    /**
+     * the common EventListeners and Descriptors associated with the Presence
+     */
+    public static class Presence {
         /**
          * this event does not mean the user is able to notice anything (can be used for warm-up), it indicates
          * he might be
+         * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */
-        public Optional<EventListener> generalListener() {
+        public static Optional<EventListener> generalListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    generalDescriptor(),
+                    GENERAL_DESCRIPTOR,
                     "this event does not mean the user is able to notice anything (can be used for warm-up), it " +
                             "indicates he might be",
                     "izou_presence_general",
-                    addOnModule
+                    identifiable
             );
         }
 
         /**
          * this event does not mean the user is able to notice anything (can be used for warm-up), it indicates
          * he might be
-         * @return the descriptor
          */
-        public String generalDescriptor() {
-            return "izou.presence.general";
-        }
+        public static final String GENERAL_DESCRIPTOR = "izou.presence.general";
 
         /**
          * it means the user has probably left (he could have left a while ago)
+         * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */
-        public Optional<EventListener> generalLeavingListener() {
+        public static Optional<EventListener> generalLeavingListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    generalLeavingDescriptor(),
+                    GENERAL_LEAVING_DESCRIPTOR,
                     "it means the user has probably left (he could have left a while ago)",
                     "izou_presence_general_leaving",
-                    addOnModule
+                    identifiable
             );
         }
 
         /**
          * it means the user has probably left (he could have left a while ago)
-         * @return the descriptor
          */
-        public String generalLeavingDescriptor() {
-            return "izou.presence.general.leaving";
-        }
+        public static final String GENERAL_LEAVING_DESCRIPTOR = "izou.presence.general.leaving";
 
         /**
          * it means that the addon can guarantee that the user entered an area near izou
+         * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */
-        public Optional<EventListener> strictListener() {
+        public static Optional<EventListener> strictListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    strictDescriptor(),
+                    STRICT_DESCRIPTOR,
                     "it means that the addon can guarantee that the user entered an area near izou",
                     "izou_presence_strict",
-                    addOnModule
+                    identifiable
             );
         }
 
         /**
          * it means that the addon can guarantee that the user entered an area near izou
-         * @return the descriptor
          */
-        public String strictDescriptor() {
-            return "izou.alarm";
-        }
+        public static final String STRICT_DESCRIPTOR = "izou.alarm";
     }
 
-    public class Response {
+    /**
+     * the common EventListeners and Descriptors associated with the Response
+     */
+    public static class Response {
         /**
          * Event for maximum response. Every component that can contribute should contribute to this Event.
          * Examples: alarm, User coming home etc. Handle them carefully, they should be only fired rarely!
+         * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */
-        public Optional<EventListener> fullResponseListener() {
+        public static Optional<EventListener> fullResponseListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    fullResponseDescriptor(),
+                    FULL_RESPONSE_DESCRIPTOR,
                     "Event for maximum response. Every component that can contribute should contribute to this " +
                             "Event. Examples: alarm, User coming home etc. Handle them carefully, they should be only " +
                             "fired rarely!",
                     "izou_full_response",
-                    addOnModule
+                    identifiable
             );
         }
 
         /**
          * Event for maximum response. Every component that can contribute should contribute to this Event.
          * Examples: alarm, User coming home etc. Handle them carefully, they should be only fired rarely!
-         * @return the descriptor
          */
-        public String fullResponseDescriptor() {
-            return "izou.FullResponse";
-        }
+        public static final String FULL_RESPONSE_DESCRIPTOR = "izou.FullResponse";
 
         /**
          * Event for major response. Every component that is import should contribute to this Event. MajorResponse
          * is intended to be the most common Response-Event
+         * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */
-        public Optional<EventListener> majorResponseListener() {
+        public static Optional<EventListener> majorResponseListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    majorResponseDescriptor(),
+                    MAJOR_RESPONSE_DESCRIPTOR,
                     "Event for major response. Every component that is import should contribute to this Event. " +
                             "MajorResponse is intended to be the most common Response-Event",
                     "izou_major_response",
-                    addOnModule
+                    identifiable
             );
         }
 
         /**
          * Event for major response. Every component that is import should contribute to this Event. MajorResponse
          * is intended to be the most common Response-Event
-         * @return the descriptor
          */
-        public String majorResponseDescriptor() {
-            return "izou.MajorResponse";
-        }
+        public static final String MAJOR_RESPONSE_DESCRIPTOR = "izou.MajorResponse";
 
         /**
          * Event for a Welcome with minor response. Only components that have information of great
          * importance should contribute to this event!
+         * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */
-        public Optional<EventListener> minorResponseListener() {
+        public static Optional<EventListener> minorResponseListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    minorResponseDescriptor(),
+                    MINOR_RESPONSE_DESCRIPTOR,
                     "Event for a Welcome with minor response. Only components that have information of great importance " +
                             "should contribute to this event!",
                     "izou_minor_response",
-                    addOnModule
+                    identifiable
             );
         }
 
         /**
          * Event for a Welcome with minor response. Only components that have information of great
          * importance should contribute to this event!
-         * @return the descriptor
          */
-        public String minorResponseDescriptor() {
-            return "izou.MinorResponse";
-        }
+        public static final String MINOR_RESPONSE_DESCRIPTOR = "izou.MinorResponse";
     }
 
-    public class Type {
+    /**
+     * the common EventListeners and Types
+     */
+    public static class Type {
         /**
          * Event-Type which indicates that other AddOns should react to this Event.
+         * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */
-        public Optional<EventListener> responseListener() {
+        public static Optional<EventListener> responseListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    responseType(),
+                    RESPONSE_TYPE,
                     "Event-Type which indicates that other AddOns should react to this Event.",
                     "izou_response",
-                    addOnModule
+                    identifiable
             );
         }
 
         /**
          * Event-Type which indicates that other AddOns should react to this Event.
-         * @return the descriptor
          */
-        public String responseType() {
-            return "response";
-        }
+        public static final String RESPONSE_TYPE = "response";
 
         /**
          * Event-Type which indicates that only your AddOn should react to an Event
+         * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */
-        public Optional<EventListener> notificationListener() {
+        public static Optional<EventListener> notificationListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    notificationType(),
+                    NOTIFICATION_TYPE,
                     "Event-Type which indicates that only your AddOn should react to an Event",
                     "izou_notification",
-                    addOnModule
+                    identifiable
             );
         }
 
         /**
          * Event-Type which indicates that only your AddOn should react to an Event
-         * @return the descriptor
          */
-        public String notificationType() {
-            return "notification";
-        }
+        public static final String NOTIFICATION_TYPE = "notification";
     }
 
-    public class Descriptors {
+    /**
+     * common descriptors
+     */
+    public static class Descriptors {
         /**
          * Event-Type which indicates that this events stops an already running addon
+         * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */
-        public Optional<EventListener> stopListener() {
+        public static Optional<EventListener> stopListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    stopDescriptor(),
+                    STOP_DESCRIPTOR,
                     "Event-Type which indicates that that this events stops an already running addon",
                     "izou_stop",
-                    addOnModule
+                    identifiable
             );
         }
-
         /**
          * Event-Type which indicates that only your AddOn should react to an Event
-         * @return the descriptor
          */
-        public String stopDescriptor() {
-            return "stop";
-        }
+        public static final String STOP_DESCRIPTOR = "stop";
     }
 }

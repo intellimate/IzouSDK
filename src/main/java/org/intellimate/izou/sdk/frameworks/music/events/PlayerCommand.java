@@ -3,12 +3,12 @@ package org.intellimate.izou.sdk.frameworks.music.events;
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
+import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
 import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
 import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.frameworks.music.resources.CommandResource;
-import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -23,33 +23,32 @@ public class PlayerCommand extends Event {
     /**
      * Creates a new Event Object
      *
-     * @param addOnModule        the addonModule which is creating the Event
      * @param source      the source of the Event, most likely a this reference.
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    protected PlayerCommand(AddOnModule addOnModule, Identification source) throws IllegalArgumentException {
-        super(CommonEvents.get(addOnModule).getType().responseType(), source, Collections.singletonList(ID));
+    protected PlayerCommand(Identification source) throws IllegalArgumentException {
+        super(CommonEvents.Type.RESPONSE_TYPE, source, Collections.singletonList(ID));
     }
 
     /**
      * Creates a new Event Object
      *
-     * @param addOnModule        the addonModule which is creating the Event
      * @param source      the source of the Event, most likely a this reference.
      * @param target the target who should start playing
      * @param capabilities the capabilities of the player
      * @param command the command
+     * @param context the context to use
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    public static Optional<PlayerCommand> createPlayerCommand(AddOnModule addOnModule, Identification source, Identification target, String command, Capabilities capabilities) {
+    public static Optional<PlayerCommand> createPlayerCommand(Identification source, Identification target, String command, Capabilities capabilities, Context context) {
         try {
             Optional<CommandResource> commandResource = CommandResource.createCommandResource(source, command,
-                    capabilities, addOnModule.getContext());
+                    capabilities, context);
             if (!commandResource.isPresent()) {
-                addOnModule.error("unable to obtain commandResource");
+                context.getLogger().error("unable to obtain commandResource");
                 return Optional.empty();
             }
-            PlayerCommand playerCommand = new PlayerCommand(addOnModule, source);
+            PlayerCommand playerCommand = new PlayerCommand(source);
             playerCommand.addResource(new SelectorResource(source, target));
             playerCommand.addResource(commandResource.get());
             return Optional.of(playerCommand);
