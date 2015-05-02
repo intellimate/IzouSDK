@@ -22,7 +22,7 @@ public class Volume {
         return volume;
     }
 
-    private static Optional<Volume> createVolume(int volume) {
+    public static Optional<Volume> createVolume(int volume) {
         if ((volume >= 0 && volume <= 100) || volume == -1) {
             return Optional.of(new Volume(volume));
         } else {
