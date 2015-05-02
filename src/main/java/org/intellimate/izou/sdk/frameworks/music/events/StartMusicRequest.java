@@ -9,9 +9,10 @@ import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
 import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.frameworks.music.player.TrackInfo;
 import org.intellimate.izou.sdk.frameworks.music.resources.TrackInfoResource;
-import org.intellimate.izou.sdk.util.AddOnModule;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * this events request the start of the music-playing
@@ -28,35 +29,33 @@ public class StartMusicRequest extends Event {
      * @param source      the source of the Event, most likely a this reference.
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    protected StartMusicRequest(AddOnModule addOnModule, Identification source)
+    protected StartMusicRequest(Identification source)
                                                                         throws IllegalArgumentException {
-        super(CommonEvents.get(addOnModule).getType().responseType(), source, Collections.singletonList(ID));
+        super(CommonEvents.Type.RESPONSE_TYPE, source, Collections.singletonList(ID));
     }
 
     /**
      * creates a new StartRequest
-     * @param addOnModule a reference to the module which created this Event
      * @param source the caller
      * @param target the target who should start playing
      * @return the optional StartMusicRequest
      */
-    public static Optional<StartMusicRequest> createStartMusicRequest(AddOnModule addOnModule, Identification source, Identification target) {
-        return createStartMusicRequest(addOnModule, source, target, null);
+    public static Optional<StartMusicRequest> createStartMusicRequest(Identification source, Identification target) {
+        return createStartMusicRequest(source, target, null);
     }
 
     /**
      * creates a new StartRequest
-     * @param addOnModule a reference to the module which created this Event
      * @param source the caller
      * @param target the target who should start playing
      * @param trackInfo the track to play
      * @return the optional StartMusicRequest
      */
-    public static Optional<StartMusicRequest> createStartMusicRequest(AddOnModule addOnModule, Identification source, Identification target, TrackInfo trackInfo) {
+    public static Optional<StartMusicRequest> createStartMusicRequest(Identification source, Identification target, TrackInfo trackInfo) {
         if (target.equals(source))
             return Optional.empty();
         try {
-            StartMusicRequest request = new StartMusicRequest(addOnModule, source);
+            StartMusicRequest request = new StartMusicRequest(source);
             request.addResource(new SelectorResource(source, target));
             if (trackInfo != null)
                 request.addResource(new TrackInfoResource(target, trackInfo, source));

@@ -9,7 +9,6 @@ import org.intellimate.izou.sdk.frameworks.music.resources.CommandResource;
 import org.intellimate.izou.sdk.frameworks.music.resources.ProgressResource;
 import org.intellimate.izou.sdk.frameworks.music.resources.TrackInfoResource;
 import org.intellimate.izou.sdk.frameworks.music.resources.VolumeResource;
-import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 public class CommandHandler {
     private final MusicHelper musicHelper;
     private final MusicProvider musicProvider;
-    private final AddOnModule addOnModule;
     private final Capabilities capabilities;
     private final Runnable stopCallback;
     private Consumer<String> playPause = null;
@@ -41,13 +39,11 @@ public class CommandHandler {
      * @param musicProvider the musicProvider
      * @param stopCallback the callback for the stop-command
      * @param capabilities the capabilities
-     * @param addOnModule the addonModule
      */
-    public CommandHandler(MusicHelper musicHelper, MusicProvider musicProvider, AddOnModule addOnModule,
+    public CommandHandler(MusicHelper musicHelper, MusicProvider musicProvider,
                           Runnable stopCallback, Capabilities capabilities) {
         this.musicHelper = musicHelper;
         this.capabilities = capabilities;
-        this.addOnModule = addOnModule;
         this.musicProvider = musicProvider;
         this.stopCallback = stopCallback;
     }
@@ -142,7 +138,7 @@ public class CommandHandler {
                 continue;
             if (!CommandResource.verifyCapabilities(resourceModel.getResource(), capabilities)) {
                 musicHelper.playerError(PlayerError.ERROR_NOT_ABLE + "command: " + resourceModel.getResource(),
-                        addOnModule, resourceModel.getProvider());
+                        resourceModel.getProvider());
                 continue;
             }
             switch (resourceModel.getResource()) {
@@ -179,7 +175,7 @@ public class CommandHandler {
         Optional<Volume> volumeResource = VolumeResource.getVolume(eventModel);
         if (!volumeResource.isPresent()) {
             musicHelper.playerError(PlayerError.ERROR_ILLEGAL + "command: " + resourceModel.getResource() + "missing resource",
-                    addOnModule, resourceModel.getProvider());
+                    resourceModel.getProvider());
         }
         changeVolume.accept(volumeResource.get());
     }
@@ -193,7 +189,7 @@ public class CommandHandler {
         Optional<Progress> progress = ProgressResource.getProgress(eventModel);
         if (!progress.isPresent()) {
             musicHelper.playerError(PlayerError.ERROR_ILLEGAL + "command: " + resourceModel.getResource() + "missing resource",
-                    addOnModule, resourceModel.getProvider());
+                    resourceModel.getProvider());
         }
         jumpProgress.accept(progress.get());
     }
@@ -207,7 +203,7 @@ public class CommandHandler {
         Optional<TrackInfo> trackInfo = TrackInfoResource.getTrackInfo(eventModel);
         if (!trackInfo.isPresent()) {
             musicHelper.playerError(PlayerError.ERROR_ILLEGAL + "command: " + resourceModel.getResource() + "missing resource",
-                    addOnModule, resourceModel.getProvider());
+                    resourceModel.getProvider());
         }
         selectTrack.accept(trackInfo.get());
     }

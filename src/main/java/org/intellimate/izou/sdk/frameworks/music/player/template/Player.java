@@ -293,7 +293,6 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     /**
      * This method is called when an object wants to get a Resource.
      * <p>
-     * <p>
      * Don't use the Resources provided as arguments, they are just the requests.
      * There is a timeout after 1 second.
      * </p>
@@ -361,7 +360,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     }
 
     /**
-     * this method will be called to create & fire the StartMusicRequest
+     * this method will be called to create and fire the StartMusicRequest
      * @param eventModel the cause
      */
     protected void fireStartMusicRequest(EventModel eventModel) {

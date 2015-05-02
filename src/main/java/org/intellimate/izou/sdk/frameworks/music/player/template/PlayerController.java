@@ -40,6 +40,7 @@ public abstract class PlayerController extends Activator {
 
     /**
      * starts the playing command
+     * @param trackInfo the track to play
      */
     public void startPlaying(TrackInfo trackInfo) {
         Optional<Identification> ownIdentification = IdentificationManager.getInstance()

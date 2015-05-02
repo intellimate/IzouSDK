@@ -3,7 +3,6 @@ package org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
-import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -21,20 +20,19 @@ public class StartEvent extends Event {
      * @param source      the source of the Event, most likely a this reference.
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    protected StartEvent(AddOnModule addOnModule, Identification source)
+    protected StartEvent(Identification source)
             throws IllegalArgumentException {
-        super(CommonEvents.get(addOnModule).getType().responseType(), source, Collections.singletonList(ID));
+        super(CommonEvents.Type.RESPONSE_TYPE, source, Collections.singletonList(ID));
     }
 
     /**
      * creates a new StartEvent
-     * @param addOnModule a reference to the module which created this Event
      * @param source the caller
      * @return the optional StartMusicRequest
      */
-    public static Optional<StartEvent> createStartEvent(AddOnModule addOnModule, Identification source) {
+    public static Optional<StartEvent> createStartEvent(Identification source) {
         try {
-            StartEvent startRequest = new StartEvent(addOnModule, source);
+            StartEvent startRequest = new StartEvent(source);
             return Optional.of(startRequest);
         } catch (IllegalArgumentException e) {
             return Optional.empty();
