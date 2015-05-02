@@ -64,6 +64,16 @@ public class InformationProvider extends AddOnModule implements MusicResourceGen
     }
 
     /**
+     * gets the PlaybackState of the Player
+     *
+     * @return the PlaybackState
+     */
+    @Override
+    public PlaybackState getPlaybackState() {
+        return musicProvider.getPlaybackState();
+    }
+
+    /**
      * true if playing and false if not
      *
      * @return tre if playing
