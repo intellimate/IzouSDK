@@ -2,17 +2,17 @@ package org.intellimate.izou.sdk.frameworks.music.resources;
 
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identification;
-import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.frameworks.music.player.Progress;
 import org.intellimate.izou.sdk.resource.Resource;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 /**
  * @author LeanderK
  * @version 1.0
  */
-public class ProgressResource extends Resource<Progress> {
+public class ProgressResource extends Resource<HashMap<String, Long>> {
     public static final String ID = "izou.music.resource.progress";
 
     /**
@@ -33,7 +33,7 @@ public class ProgressResource extends Resource<Progress> {
      * @param progress   the resource
      */
     public ProgressResource(Identification provider, Progress progress) {
-        super(ID, provider, progress);
+        super(ID, provider, progress.export());
     }
 
     /**
@@ -56,7 +56,7 @@ public class ProgressResource extends Resource<Progress> {
      * @param consumer   the ID of the Consumer
      */
     public ProgressResource(Identification provider, Progress progress, Identification consumer) {
-        super(ID, provider, progress, consumer);
+        super(ID, provider, progress.export(), consumer);
     }
 
     /**
@@ -70,9 +70,9 @@ public class ProgressResource extends Resource<Progress> {
                     .getListResourceContainer()
                     .provideResource(ID)
                     .stream()
-                    .map(ResourceModel::getResource)
-                    .filter(ob -> ob instanceof Progress)
-                    .map(ob -> (Progress) ob)
+                    .map(Progress::importResource)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .findAny();
         } else {
             return Optional.empty();

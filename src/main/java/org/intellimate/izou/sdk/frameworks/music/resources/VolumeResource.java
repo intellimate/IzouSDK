@@ -13,7 +13,7 @@ import java.util.Optional;
  * @author LeanderK
  * @version 1.0
  */
-public class VolumeResource extends Resource<Volume> {
+public class VolumeResource extends Resource<Integer> {
     public static final String ID = "izou.music.resource.volume";
 
     /**
@@ -34,7 +34,7 @@ public class VolumeResource extends Resource<Volume> {
      * @param volume     the resource
      */
     public VolumeResource(Identification provider, Volume volume) {
-        super(ID, provider, volume);
+        super(ID, provider, volume.getVolume());
     }
 
     /**
@@ -57,7 +57,7 @@ public class VolumeResource extends Resource<Volume> {
      * @param consumer   the ID of the Consumer
      */
     public VolumeResource(Identification provider, Volume volume, Identification consumer) {
-        super(ID, provider, volume, consumer);
+        super(ID, provider, volume.getVolume(), consumer);
     }
 
     /**
@@ -72,8 +72,11 @@ public class VolumeResource extends Resource<Volume> {
                     .provideResource(ID)
                     .stream()
                     .map(ResourceModel::getResource)
-                    .filter(ob -> ob instanceof Volume)
-                    .map(ob -> (Volume) ob)
+                    .filter(ob -> ob instanceof Integer)
+                    .map(ob -> (Integer) ob)
+                    .map(Volume::createVolume)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .findAny();
         } else {
             return Optional.empty();

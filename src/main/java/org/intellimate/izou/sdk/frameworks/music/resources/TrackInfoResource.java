@@ -6,6 +6,7 @@ import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.frameworks.music.player.TrackInfo;
 import org.intellimate.izou.sdk.resource.Resource;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Optional;
  * @author LeanderK
  * @version 1.0
  */
-public class TrackInfoResource extends Resource<TrackInfo> {
+public class TrackInfoResource extends Resource<HashMap<String, Object>> {
     @SuppressWarnings("SpellCheckingInspection")
     public static final String RESOURCE_ID = "izou.music.resource.trackinfo";
 
@@ -43,7 +44,7 @@ public class TrackInfoResource extends Resource<TrackInfo> {
      * @param trackInfo  the resource
      */
     public TrackInfoResource(Identification provider, TrackInfo trackInfo) {
-        super(RESOURCE_ID, provider, trackInfo);
+        super(RESOURCE_ID, provider, trackInfo.export());
     }
 
     /**
@@ -66,7 +67,7 @@ public class TrackInfoResource extends Resource<TrackInfo> {
      * @param consumer   the ID of the Consumer
      */
     public TrackInfoResource(Identification provider, TrackInfo trackInfo, Identification consumer) {
-        super(RESOURCE_ID, provider, trackInfo, consumer);
+        super(RESOURCE_ID, provider, trackInfo.export(), consumer);
     }
 
     /**

@@ -159,14 +159,6 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     }
 
     /**
-     * sets whether the output is playing, or pausing
-     * @param isPlaying if it is playing true
-     */
-    void setIsPlaying(boolean isPlaying) {
-        this.isPlaying = isPlaying;
-    }
-
-    /**
      * this method has no effect if runsInPlay is enabled in the constructor
      */
     public void setPlayingStopped() {

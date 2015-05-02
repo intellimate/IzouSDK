@@ -1,6 +1,9 @@
 package org.intellimate.izou.sdk.frameworks.music.player;
 
+import org.intellimate.izou.resource.ResourceModel;
+
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
@@ -10,11 +13,17 @@ import java.util.function.BiPredicate;
  * @version 1.0
  */
 public class TrackInfo {
+    public static final String nameDescriptor = "izou.music.trackinfo.name";
     private final String name;
+    public static final String artistDescriptor = "izou.music.trackinfo.artist";
     private final String artist;
+    public static final String albumDescriptor = "izou.music.trackinfo.album";
     private final String album;
+    public static final String albumCoverDescriptor = "izou.music.trackinfo.albumCover";
     private final byte[] albumCover;
+    public static final String albumCoverFormatDescriptor = "izou.music.trackinfo.albumCoverFormat";
     private final String albumCoverFormat;
+    public static final String idDescriptor = "izou.music.trackinfo.id";
     private final String id;
 
     public TrackInfo(String name, String artist, String album) {
@@ -156,5 +165,42 @@ public class TrackInfo {
                 this.albumCoverFormat == null? albumCoverFormat : this.albumCoverFormat,
                 this.id == null? id : this.id
         ));
+    }
+
+    /**
+     * exports the TrackInfo to a Hashmap
+     * @return a HashMap
+     */
+    public HashMap<String, Object> export() {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(nameDescriptor, name);
+        data.put(artistDescriptor, artist);
+        data.put(albumDescriptor, albumDescriptor);
+        data.put(albumCoverDescriptor, albumCover);
+        data.put(albumCoverFormatDescriptor, albumCoverFormatDescriptor);
+        data.put(idDescriptor, id);
+        return data;
+    }
+
+    /**
+     * creates a TrackInfo from the resourceModel
+     * @param resourceModel the resourceModel
+     * @return the optional TrackInfo
+     */
+    public static Optional<TrackInfo> importFromResource(ResourceModel resourceModel) {
+        Object resource = resourceModel.getResource();
+        try {
+            @SuppressWarnings("unchecked")
+            HashMap<String, Object> hashMap = (HashMap<String, Object>) resource;
+            String name = (String) hashMap.get(nameDescriptor);
+            String album = (String) hashMap.get(albumDescriptor);
+            String artist = (String) hashMap.get(artistDescriptor);
+            byte[] albumCover = (byte[]) hashMap.get(albumCoverDescriptor);
+            String albumCoverFormat = (String) hashMap.get(albumCoverFormatDescriptor);
+            String id = (String) hashMap.get(idDescriptor);
+            return Optional.of(new TrackInfo(name, artist, album, albumCover, albumCoverFormat, id));
+        } catch (ClassCastException e) {
+            return Optional.empty();
+        }
     }
 }
