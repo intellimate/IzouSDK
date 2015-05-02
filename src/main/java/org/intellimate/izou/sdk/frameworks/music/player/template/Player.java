@@ -20,6 +20,7 @@ import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.StopEvent
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.UnMuteEvent;
 import org.intellimate.izou.sdk.output.OutputPlugin;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -31,9 +32,9 @@ import java.util.concurrent.CompletableFuture;
  * @version 1.0
  */
 public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider, ResourceBuilderModel, MusicHelper {
-    private Playlist playlist = null;
-    private Volume volume = null;
-    private Progress progress = null;
+    private Playlist playlist = new Playlist(new ArrayList<>());
+    private Volume volume = Volume.createVolume(50).orElse(null);
+    private Progress progress = new Progress(0,0);
     private final Capabilities capabilities;
     private final InformationProvider informationProvider = new InformationProvider(getContext(), getID(), this);
     private CompletableFuture<?> playingThread = null;
