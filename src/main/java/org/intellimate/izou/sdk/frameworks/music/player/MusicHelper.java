@@ -36,6 +36,10 @@ public interface MusicHelper extends PermanentSoundHelper {
      * fires an StartEvent
      *
      * @param addOnModule the AddonModule
+     * @param playlist the playlist or null
+     * @param progress the progress or null
+     * @param trackInfo the trackInfo or null
+     * @param volume the volume or null
      */
     default void startSound(AddOnModule addOnModule, Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
         Optional<Event> startEvent = IdentificationManager.getInstance().getIdentification(addOnModule)

@@ -19,6 +19,7 @@ public class EndedEvent extends Event {
      * Creates a new Event Object
      *
      * @param source      the source of the Event, most likely a this reference.
+     * @param addOnModule the addOnModule which will responsible for firing
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     protected EndedEvent(AddOnModule addOnModule, Identification source)

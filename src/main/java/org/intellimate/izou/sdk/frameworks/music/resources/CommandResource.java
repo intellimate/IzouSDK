@@ -48,6 +48,7 @@ public class CommandResource extends Resource<String> {
      * @param command          the resource
      * @param capabilities the capabilities of the player
      * @param context used for logging
+     * @return the commandResource if nothing illegal was passed
      */
     public static Optional<CommandResource> createCommandResource(Identification provider, String command, Capabilities capabilities, Context context) {
         CommandResource commandResource = new CommandResource(provider, command, capabilities);

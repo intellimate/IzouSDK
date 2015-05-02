@@ -37,6 +37,7 @@ public class PlayerUpdate extends Event {
      *
      * @param addOnModule        the addonModule which is creating the Event
      * @param source      the source of the Event, most likely a this reference.
+     * @return the optional PlayerUpdate (if no illegal arguments got passed)
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     public static Optional<PlayerUpdate> createPlayerUpdate(AddOnModule addOnModule, Identification source) {
@@ -53,7 +54,8 @@ public class PlayerUpdate extends Event {
      *
      * @param addOnModule        the addonModule which is creating the Event
      * @param source      the source of the Event, most likely a this reference.
-     * @param volume the current volume
+     * @param volume the current volume, not null
+     * @return the optional PlayerUpdate (if no illegal arguments got passed)
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     public static Optional<PlayerUpdate> createPlayerUpdate(AddOnModule addOnModule, Identification source, Volume volume) {
@@ -74,6 +76,7 @@ public class PlayerUpdate extends Event {
      * @param addOnModule        the addonModule which is creating the Event
      * @param source      the source of the Event, most likely a this reference.
      * @param playlist the current playing tracks
+     * @return the optional PlayerUpdate (if no illegal arguments got passed)
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     public static Optional<PlayerUpdate> createPlayerUpdate(AddOnModule addOnModule, Identification source, Playlist playlist) {
@@ -94,6 +97,7 @@ public class PlayerUpdate extends Event {
      * @param addOnModule        the addonModule which is creating the Event
      * @param source      the source of the Event, most likely a this reference.
      * @param trackInfo the current song
+     * @return the optional PlayerUpdate (if no illegal arguments got passed)
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     public static Optional<PlayerUpdate> createPlayerUpdate(AddOnModule addOnModule, Identification source, TrackInfo trackInfo) {

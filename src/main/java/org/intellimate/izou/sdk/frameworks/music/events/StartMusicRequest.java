@@ -26,6 +26,7 @@ public class StartMusicRequest extends Event {
      * Creates a new Event Object
      *
      * @param source      the source of the Event, most likely a this reference.
+     * @param addOnModule the addOnModule which will fire the StartMusicRequest
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     protected StartMusicRequest(AddOnModule addOnModule, Identification source)
