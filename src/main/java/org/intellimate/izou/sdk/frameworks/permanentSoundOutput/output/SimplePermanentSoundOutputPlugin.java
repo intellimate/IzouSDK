@@ -73,13 +73,13 @@ public abstract class SimplePermanentSoundOutputPlugin<T> extends OutputPlugin<T
     public Optional<CompletableFuture<Void>> startPlaying(Runnable function) {
         if (isCurrentlyPlayingSound)
             return Optional.empty();
-        CompletableFuture<Void> voidCompletableFuture = submit((Runnable) () -> startSound(this))
+        CompletableFuture<Void> voidCompletableFuture = submit((Runnable) this::startSound)
                 .thenRun(() -> {
                     try {
                         isCurrentlyPlayingSound = true;
                         function.run();
                     } finally {
-                        submit((Runnable) () -> endSound(this));
+                        submit((Runnable) this::endSound);
                         isCurrentlyPlayingSound = false;
                     }
                 });

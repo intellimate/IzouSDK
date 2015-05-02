@@ -51,7 +51,7 @@ public abstract class PlayerController extends Activator {
             error("unable to obtain identification");
             return;
         }
-        StartMusicRequest.createStartMusicRequest(this, ownIdentification.get(), playerIdentification.get(), trackInfo)
+        StartMusicRequest.createStartMusicRequest(ownIdentification.get(), playerIdentification.get(), trackInfo)
                 .ifPresent(event -> fire(event, 5));
 
     }
@@ -68,7 +68,7 @@ public abstract class PlayerController extends Activator {
             error("unable to obtain id");
             return;
         }
-        StopMusic.createStopMusic(this, ownIdentification.get(), playerIdentification.get())
+        StopMusic.createStopMusic(ownIdentification.get(), playerIdentification.get())
                 .ifPresent(event -> fire(event, 5));
     }
 
@@ -89,8 +89,8 @@ public abstract class PlayerController extends Activator {
             error("unable to obtain id");
             return;
         }
-        Optional<PlayerCommand> playerCommand = PlayerCommand.createPlayerCommand(this, ownIdentification.get(),
-                playerIdentification.get(), command, player.getCapabilities());
+        Optional<PlayerCommand> playerCommand = PlayerCommand.createPlayerCommand(ownIdentification.get(),
+                playerIdentification.get(), command, player.getCapabilities(), getContext());
         if (playlist != null) {
             playerCommand.get().addResource(new PlaylistResource(ownIdentification.get(), playlist));
         }
