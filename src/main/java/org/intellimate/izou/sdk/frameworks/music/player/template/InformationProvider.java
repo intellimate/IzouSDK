@@ -10,8 +10,8 @@ import org.intellimate.izou.sdk.util.AddOnModule;
  * @author LeanderK
  * @version 1.0
  */
-public abstract class InformationProvider extends AddOnModule implements MusicResourceGenerator {
-    private MusicProvider musicProvider;
+public class InformationProvider extends AddOnModule implements MusicResourceGenerator {
+    private final MusicProvider musicProvider;
     /**
      * initializes the Module
      *
@@ -71,5 +71,15 @@ public abstract class InformationProvider extends AddOnModule implements MusicRe
     @Override
     public boolean isOutputRunning() {
         return musicProvider.isOutputRunning();
+    }
+
+    /**
+     * true if playing and false if not
+     *
+     * @return tre if playing
+     */
+    @Override
+    public boolean isPlaying() {
+        return musicProvider.isPlaying();
     }
 }

@@ -34,8 +34,8 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     private Playlist playlist = null;
     private Volume volume = null;
     private Progress progress = null;
-    private Capabilities capabilities;
-    private InformationProvider informationProvider = null;
+    private final Capabilities capabilities;
+    private final InformationProvider informationProvider = new InformationProvider(getContext(), getID(), this);
     private CompletableFuture<?> playingThread = null;
     private final boolean runsInPlay;
     private boolean isRunning = false;
@@ -52,7 +52,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      *                   music (STOP not PAUSE)
      * @param activators the activators which are able to start the Player if the Player is not able to start from
      *                   request from other addons
-     * @param providesTrackInfo whether the Player provides TrackInfos
+     * @param providesTrackInfo whether the Player provides TrackInfo
      * @param playbackShuffle whether the player is able to provide the info that the playback is shuffling
      * @param playbackRepeat whether the player is able to provide the info that the playback is repeating
      * @param playbackRepeatSong whether the player is able to provide the info that the playback is repeating the song
@@ -82,7 +82,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      *                   music (STOP not PAUSE)
      * @param activator the activator which is able to start the Player if the Player is not able to start from
      *                   request from other addons
-     * @param providesTrackInfo whether the Player provides TrackInfos
+     * @param providesTrackInfo whether the Player provides TrackInfo
      * @param playbackShuffle whether the player is able to provide the info that the playback is shuffling
      * @param playbackRepeat whether the player is able to provide the info that the playback is repeating
      * @param playbackRepeatSong whether the player is able to provide the info that the playback is repeating the song
@@ -100,8 +100,8 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * @param id      the id of the new output-plugin
      * @param runsInPlay whether the termination of the play method should be treated as the termination of playing the
      *                   music
-     * @param playRequestTrackInfo whether the player is able to process PlayRequests with TrackInfos
-     * @param providesTrackInfo whether the Player provides TrackInfos
+     * @param playRequestTrackInfo whether the player is able to process PlayRequests with TrackInfo
+     * @param providesTrackInfo whether the Player provides TrackInfo
      * @param playbackShuffle whether the player is able to provide the info that the playback is shuffling
      * @param playbackRepeat whether the player is able to provide the info that the playback is repeating
      * @param playbackRepeatSong whether the player is able to provide the info that the playback is repeating the song
@@ -229,12 +229,12 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     }
 
     /**
-     * updates the Infos about the current sond
+     * updates the Info about the current song
      * @param playlist the playlist, or null
      * @param progress the progress, or null
      * @param volume the volume, or null
      */
-    public void updateInfos(Playlist playlist, Progress progress, Volume volume) {
+    public void updateInfo(Playlist playlist, Progress progress, Volume volume) {
         if (playlist != null)
             this.playlist = playlist;
         if (progress != null)
@@ -245,12 +245,12 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     }
 
     /**
-     * call this method if the trackinfo object in the playlist was updated. Only the trackinfo object will be sent via
+     * call this method if the trackInfo object in the playlist was updated. Only the trackinfo object will be sent via
      * Event
      * @param playlist the playlist
-     * @param info the new trackinfo object
+     * @param info the new trackInfo object
      */
-    public void trackinfoUpdate(Playlist playlist, TrackInfo info) {
+    public void trackInfoUpdate(Playlist playlist, TrackInfo info) {
         this.playlist = playlist;
         updatePlayInfo(this, info);
     }
@@ -320,6 +320,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
                 playerError(PlayerError.ERROR_ALREADY_PLAYING, this);
             }
             playingThread = submit((Runnable) () -> {
+                //noinspection RedundantIfStatement
                 if (runsInPlay) {
                     isRunning = false;
                 } else {
@@ -366,9 +367,9 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     protected void fireStartMusicRequest(EventModel eventModel) {
         Optional<Playlist> playlist = PlaylistResource.getPlaylist(eventModel);
         Optional<Progress> progress = ProgressResource.getProgress(eventModel);
-        Optional<TrackInfo> trackinfo = TrackInfoResource.getTrackinfo(eventModel);
+        Optional<TrackInfo> trackInfo = TrackInfoResource.getTrackInfo(eventModel);
         Optional<Volume> volume = VolumeResource.getVolume(eventModel);
-        startSound(this, playlist.orElse(null), progress.orElse(null), trackinfo.orElse(null), volume.orElse(null));
+        startSound(this, playlist.orElse(null), progress.orElse(null), trackInfo.orElse(null), volume.orElse(null));
     }
 
     @Override

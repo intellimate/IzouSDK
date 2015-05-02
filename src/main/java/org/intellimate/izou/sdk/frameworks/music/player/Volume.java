@@ -14,6 +14,13 @@ public class Volume {
         this.volume = volume;
     }
 
+    /**
+     * returns the volume
+     * @return the volume
+     */
+    public int getVolume() {
+        return volume;
+    }
 
     private static Optional<Volume> createVolume(int volume) {
         if ((volume >= 0 && volume <= 100) || volume == -1) {

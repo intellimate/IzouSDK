@@ -11,10 +11,7 @@ import org.intellimate.izou.sdk.frameworks.music.player.TrackInfo;
 import org.intellimate.izou.sdk.frameworks.music.resources.TrackInfoResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * this events request the start of the music-playing
@@ -22,6 +19,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class StartMusicRequest extends Event {
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String ID = "izou.music.events.startrequest";
 
     /**
@@ -32,7 +30,7 @@ public class StartMusicRequest extends Event {
      */
     protected StartMusicRequest(AddOnModule addOnModule, Identification source)
                                                                         throws IllegalArgumentException {
-        super(CommonEvents.get(addOnModule).getType().responseType(), source, new ArrayList<>(Arrays.asList(ID)));
+        super(CommonEvents.get(addOnModule).getType().responseType(), source, Collections.singletonList(ID));
     }
 
     /**

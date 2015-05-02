@@ -81,11 +81,7 @@ public interface ThreadPoolUser extends ContextProvider {
             notFinished = futures.stream()
                     .anyMatch(future -> !future.isDone());
             start = start + 10;
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw e;
-            }
+            Thread.sleep(10);
         }
         //cancel all running tasks
         if(notFinished) {

@@ -6,7 +6,7 @@ import org.intellimate.izou.identification.IdentificationManager;
 import org.intellimate.izou.identification.IllegalIDException;
 import org.intellimate.izou.sdk.events.Event;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +26,7 @@ public interface FireEvent extends ContextProvider, Identifiable {
      * @return true if fired, false if unable
      */
     default boolean fire(String type, String descriptor) {
-        return fire(type, Arrays.asList(descriptor), 5);
+        return fire(type, Collections.singletonList(descriptor), 5);
     }
 
     /**

@@ -33,7 +33,7 @@ public abstract class OutputExtensionArgument<T, X> extends AddOnModule implemen
     /**
      * a list of all the resource's which the outputExtension would like to receive theoretically to work with
      */
-    private List<String> resourceIdWishList;
+    private final List<String> resourceIdWishList;
 
     /**
      * creates a new outputExtension with a new id

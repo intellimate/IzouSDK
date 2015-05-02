@@ -10,6 +10,7 @@ import org.intellimate.izou.sdk.resource.Resource;
  * @version 1.0
  */
 public class NowPlayingResource extends Resource<Playlist> {
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String ID = "izou.music.resource.nowplaying";
 
     /**

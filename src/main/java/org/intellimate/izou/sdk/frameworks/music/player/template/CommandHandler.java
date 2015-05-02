@@ -40,7 +40,7 @@ public class CommandHandler {
      * @param musicHelper the musicHelper
      * @param musicProvider the musicProvider
      * @param stopCallback the callback for the stop-command
-     * @param capabilities the capabilites
+     * @param capabilities the capabilities
      * @param addOnModule the addonModule
      */
     public CommandHandler(MusicHelper musicHelper, MusicProvider musicProvider, AddOnModule addOnModule,
@@ -100,7 +100,7 @@ public class CommandHandler {
      * adds the ability to change the playback
      * @param controller  the controller for callback
      */
-    public void setPlaybackChangableController(Consumer<String> controller) {
+    public void setPlaybackChangeableController(Consumer<String> controller) {
         if (controller == null)
             return;
         changePlayback = controller;
@@ -111,7 +111,7 @@ public class CommandHandler {
      * adds the ability to change the volume from outside the player
      * @param controller  the controller for callback
      */
-    public void setVolumeChangableController(Consumer<Volume> controller) {
+    public void setVolumeChangeableController(Consumer<Volume> controller) {
         if (controller == null)
             return;
         changeVolume = controller;
@@ -204,11 +204,11 @@ public class CommandHandler {
      * @param resourceModel the resource
      */
     private void handleSelectTrack(EventModel eventModel, ResourceModel<String> resourceModel) {
-        Optional<TrackInfo> trackinfo = TrackInfoResource.getTrackinfo(eventModel);
-        if (!trackinfo.isPresent()) {
+        Optional<TrackInfo> trackInfo = TrackInfoResource.getTrackInfo(eventModel);
+        if (!trackInfo.isPresent()) {
             musicHelper.playerError(PlayerError.ERROR_ILLEGAL + "command: " + resourceModel.getResource() + "missing resource",
                     addOnModule, resourceModel.getProvider());
         }
-        selectTrack.accept(trackinfo.get());
+        selectTrack.accept(trackInfo.get());
     }
 }

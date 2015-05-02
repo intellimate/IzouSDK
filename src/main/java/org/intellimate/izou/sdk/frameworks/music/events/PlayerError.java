@@ -6,7 +6,6 @@ import org.intellimate.izou.sdk.events.Event;
 import org.intellimate.izou.sdk.frameworks.music.resources.MusicErrorResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -27,7 +26,7 @@ public class PlayerError extends Event {
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     protected PlayerError(AddOnModule addOnModule, Identification source) throws IllegalArgumentException {
-        super(CommonEvents.get(addOnModule).getType().responseType(), source, new ArrayList<>(Collections.singletonList(ID)));
+        super(CommonEvents.get(addOnModule).getType().responseType(), source, Collections.singletonList(ID));
     }
 
     /**

@@ -21,7 +21,9 @@ public class CommandResource extends Resource<String> {
     public final static String NEXT = "next";
     public static final String PREVIOUS = "previous";
     public static final String JUMP = "jump";
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String CHANGE_PLAYBACK = "changeplayback";
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String CHANGE_VOLUME = "changevolume";
 
     /**
@@ -31,7 +33,7 @@ public class CommandResource extends Resource<String> {
      * @param command          the resource
      * @param capabilities the capabilities of the player
      */
-    CommandResource(Identification provider, String command, Capabilities capabilities) {
+    private CommandResource(Identification provider, String command, Capabilities capabilities) {
         super(ResourceID, provider, command);
         if (!verifyCommand(command))
             throw new IllegalArgumentException("IllegalCommand!");
@@ -100,7 +102,7 @@ public class CommandResource extends Resource<String> {
     /**
      * verifies tha the command is legal and able to be executed
      * @param command the command
-     * @param capabilities the capabilites
+     * @param capabilities the capabilities
      * @return true if able, false if not
      */
     public static boolean verify(String command, Capabilities capabilities) {

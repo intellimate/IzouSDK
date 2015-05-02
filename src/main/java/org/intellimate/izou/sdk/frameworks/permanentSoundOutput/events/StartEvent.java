@@ -5,8 +5,7 @@ import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -24,7 +23,7 @@ public class StartEvent extends Event {
      */
     protected StartEvent(AddOnModule addOnModule, Identification source)
             throws IllegalArgumentException {
-        super(CommonEvents.get(addOnModule).getType().responseType(), source, new ArrayList<>(Arrays.asList(ID)));
+        super(CommonEvents.get(addOnModule).getType().responseType(), source, Collections.singletonList(ID));
     }
 
     /**

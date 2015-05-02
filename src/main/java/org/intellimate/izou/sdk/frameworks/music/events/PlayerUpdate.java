@@ -11,8 +11,7 @@ import org.intellimate.izou.sdk.frameworks.music.resources.TrackInfoResource;
 import org.intellimate.izou.sdk.frameworks.music.resources.VolumeResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -20,6 +19,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class PlayerUpdate extends Event {
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String ID = "izou.music.events.playerupdate";
     /**
      * Creates a new Event Object
@@ -29,7 +29,7 @@ public class PlayerUpdate extends Event {
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     protected PlayerUpdate(AddOnModule addOnModule, Identification source) throws IllegalArgumentException {
-        super(CommonEvents.get(addOnModule).getType().responseType(), source, new ArrayList<>(Arrays.asList(ID)));
+        super(CommonEvents.get(addOnModule).getType().responseType(), source, Collections.singletonList(ID));
     }
 
     /**

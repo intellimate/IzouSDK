@@ -16,6 +16,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class UnMuteEvent extends Event {
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String ID = "izou.sound.events.unmute";
     /**
      * Creates a new Event Object

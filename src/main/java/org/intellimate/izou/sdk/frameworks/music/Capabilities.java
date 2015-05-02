@@ -5,21 +5,28 @@ import org.intellimate.izou.sdk.Context;
 import java.util.HashMap;
 
 /**
- * This class has informations about the capabilities of the Music-Player. The default is always false.
+ * This class has information about the capabilities of the Music-Player. The default is always false.
  * @author LeanderK
  * @version 1.0
  */
+@SuppressWarnings("WeakerAccess")
 public class Capabilities {
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String playPauseControlDescriptor = "izou.music.capabilities.playpausecontrol";
     private boolean playPauseControl = false;
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String playRequestOutsideDescriptor = "izou.music.capabilities.playrequestoutside";
     private boolean playRequestOutside = false;
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String playRequestTrackInfoDescriptor = "izou.music.capabilities.playrequesttrackinfo";
     private boolean playRequestTrackInfo = false;
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String providesTrackInfoDescriptor = "izou.music.capabilities.providestrackinfo";
     private boolean providesTrackInfo = false;
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String ableToSelectTrackDescriptor = "izou.music.capabilities.abletoselecttrack";
     private boolean ableToSelectTrack = false;
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String nextPreviousDescriptor = "izou.music.capabilities.nextprevious";
     private boolean nextPrevious = false;
     public static final String ableToJumpDescriptor = "izou.music.capabilities.jump";
@@ -28,8 +35,10 @@ public class Capabilities {
     private boolean playbackShuffle = false;
     public static final String playbackRepeatDescriptor = "izou.music.capabilities.playback.repeat";
     private boolean playbackRepeat = false;
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String playbackRepeatSongDescriptor = "izou.music.capabilities.playback.repeatsong";
     private boolean playbackRepeatSong = false;
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String playbackChangeableDescriptor = "izou.music.capabilities.playback.changable";
     private boolean playbackChangeable = false;
     public static final String changeVolumeDescriptor = "izou.music.capabilities.volume";

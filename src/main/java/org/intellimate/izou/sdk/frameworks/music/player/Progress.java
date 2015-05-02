@@ -13,7 +13,7 @@ public class Progress {
     public static long NO_PROGRESS = -1;
 
     /**
-     * the length of the track in miliseconds.
+     * the length of the track in milliseconds.
      */
     private final long length;
     private final long knownPosition;
@@ -43,7 +43,7 @@ public class Progress {
      * returns the current position in milliseconds
      * @return the position
      */
-    public long getPostion() {
+    public long getPosition() {
         return knownPosition + (System.currentTimeMillis() - knownMillisTimeStamp);
     }
 }

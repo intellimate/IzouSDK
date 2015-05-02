@@ -13,7 +13,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class PlaylistResource extends Resource<Playlist> {
-    public static String ID = "izou.music.resource.playlist";
+    public static final String ID = "izou.music.resource.playlist";
     /**
      * creates a new Resource.
      * This method is thread-safe.

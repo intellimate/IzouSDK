@@ -51,7 +51,7 @@ public interface PermanentSoundResources extends ResourceBuilderModel, Permanent
             return list.stream()
                     .map(resourceModel -> generateResource(resourceModel, event))
                     .filter(Optional::isPresent)
-                    .map(Optional::get)
+                    .map(optional -> (ResourceModel) optional.get())
                     .collect(Collectors.toList());
         } else {
             return new LinkedList<>();

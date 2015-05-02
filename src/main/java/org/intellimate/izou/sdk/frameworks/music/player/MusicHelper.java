@@ -28,7 +28,7 @@ public interface MusicHelper extends PermanentSoundHelper {
      */
     @Override
     default void startSound(AddOnModule addOnModule) {
-        getContext().getLogger().warn("creating start music event without Informations");
+        getContext().getLogger().warn("creating start music event without Information");
         startSound(addOnModule, null, null, null, null);
     }
 
@@ -100,7 +100,7 @@ public interface MusicHelper extends PermanentSoundHelper {
      * @param addOnModule the AddonModule responsible
      * @param playlist the optional playlist
      * @param progress the optional progress
-     * @param trackInfo the optional trackinfo
+     * @param trackInfo the optional trackInfo
      * @param volume the optional volume
      */
     default void updatePlayInfo(AddOnModule addOnModule, Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
@@ -148,7 +148,7 @@ public interface MusicHelper extends PermanentSoundHelper {
     /**
      * fires an update event which notifies that parameters have changed
      * @param addOnModule the AddonModule responsible
-     * @param trackInfo the optional trackinfo
+     * @param trackInfo the optional trackInfo
      */
     default void updatePlayInfo(AddOnModule addOnModule, TrackInfo trackInfo) {
         updatePlayInfo(addOnModule, null, null, trackInfo, null);

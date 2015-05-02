@@ -148,6 +148,7 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule implements 
         if(!resource.isPresent()) return;
         if(resource.get().getResource() instanceof Consumer) {
             Consumer consumer = (Consumer) resource.get().getResource();
+            //noinspection unchecked
             consumer.accept(null);
         }
     }

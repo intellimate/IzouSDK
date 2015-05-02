@@ -66,7 +66,7 @@ public class Event implements EventModel<Event> {
      * Creates a new Event Object
      * @param type the Type of the Event, try to use the predefined Event types
      * @param source the source of the Event, most likely a this reference.
-     * @param descriptors the descriptors to intialize the Event with
+     * @param descriptors the descriptors to initialize the Event with
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     protected Event(String type, Identification source, List<String> descriptors) throws IllegalArgumentException {
@@ -74,7 +74,7 @@ public class Event implements EventModel<Event> {
         if(source == null) throw new IllegalArgumentException("source is null");
         this.type = type;
         this.source = source;
-        this.descriptors = Collections.synchronizedList(descriptors);
+        this.descriptors = Collections.synchronizedList(new ArrayList<>(descriptors));
     }
 
     /**
@@ -85,7 +85,7 @@ public class Event implements EventModel<Event> {
      */
     public static Optional<Event> createEvent(String type, Identification source) {
         try {
-            return Optional.of(new Event(type, source, new ArrayList<String>()));
+            return Optional.of(new Event(type, source, new ArrayList<>()));
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }

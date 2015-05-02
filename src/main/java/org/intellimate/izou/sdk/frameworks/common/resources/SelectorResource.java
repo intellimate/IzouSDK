@@ -15,7 +15,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class SelectorResource extends Resource<Identification> {
-    public static final String RESOURCE_ID = "izou.common.resource.playerselecor";
+    public static final String RESOURCE_ID = "izou.common.resource.selector";
 
     /**
      * creates a new Resource.

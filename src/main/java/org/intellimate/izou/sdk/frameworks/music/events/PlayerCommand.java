@@ -10,8 +10,7 @@ import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.frameworks.music.resources.CommandResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -19,6 +18,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class PlayerCommand extends Event {
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String ID = "izou.music.events.playercommand";
     /**
      * Creates a new Event Object
@@ -28,7 +28,7 @@ public class PlayerCommand extends Event {
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     protected PlayerCommand(AddOnModule addOnModule, Identification source) throws IllegalArgumentException {
-        super(CommonEvents.get(addOnModule).getType().responseType(), source, new ArrayList<>(Arrays.asList(ID)));
+        super(CommonEvents.get(addOnModule).getType().responseType(), source, Collections.singletonList(ID));
     }
 
     /**
@@ -37,7 +37,7 @@ public class PlayerCommand extends Event {
      * @param addOnModule        the addonModule which is creating the Event
      * @param source      the source of the Event, most likely a this reference.
      * @param target the target who should start playing
-     * @param capabilities the capabilites of the player
+     * @param capabilities the capabilities of the player
      * @param command the command
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */

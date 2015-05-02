@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * a playlist is a list of TrackInfos, it is immutable!
+ * a playlist is a list of TrackInfo-objects, it is immutable!
  * @author LeanderK
  * @version 1.0
  */
@@ -32,7 +32,7 @@ public class Playlist {
 
     /**
      * returns the queue
-     * @return the List of TrackInfos
+     * @return the List of TrackInfo-objects
      */
     public List<TrackInfo> getQueue() {
         return queue;
@@ -90,7 +90,7 @@ public class Playlist {
     }
 
     /**
-     * updates the Trackinfo-Object
+     * updates the TrackInfo-Object
      * @param old the old TrackInfo
      * @param newTrackInfo the new TrackInfo
      * @return the resulting new Playlist

@@ -9,6 +9,7 @@ import org.intellimate.izou.sdk.resource.Resource;
  * @version 1.0
  */
 public class PlayerResource extends Resource<Identification> {
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String RESOURCE_ID = "izou.music.resource.playerselecor";
 
     /**

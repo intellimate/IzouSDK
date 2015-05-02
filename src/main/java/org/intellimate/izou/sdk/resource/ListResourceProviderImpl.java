@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * A ResourceContainer which holds all the Resources in an List internally
  */
 public class ListResourceProviderImpl implements ListResourceProvider {
-    List<ResourceModel> resources = new ArrayList<>();
+    final List<ResourceModel> resources = new ArrayList<>();
 
     /**
      * adds a Resource to the Container

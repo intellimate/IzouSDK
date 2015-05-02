@@ -82,7 +82,7 @@ public class CommonEvents {
      * reaction should be consistent ignoring environment variables
      * @return the descriptor
      */
-    public String alarmDescriptor() {
+    public static String alarmDescriptor() {
         return "izou.alarm";
     }
 

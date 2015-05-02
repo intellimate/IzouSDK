@@ -14,6 +14,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class TrackInfoResource extends Resource<TrackInfo> {
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String RESOURCE_ID = "izou.music.resource.trackinfo";
 
     /**
@@ -73,7 +74,7 @@ public class TrackInfoResource extends Resource<TrackInfo> {
      * @param eventModel the EventModel
      * @return return the optional TrackInfo
      */
-    public static Optional<TrackInfo> getTrackinfo(EventModel eventModel) {
+    public static Optional<TrackInfo> getTrackInfo(EventModel eventModel) {
         if (eventModel.getListResourceContainer().containsResourcesFromSource(RESOURCE_ID)) {
             return eventModel
                     .getListResourceContainer()
