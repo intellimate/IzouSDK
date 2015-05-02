@@ -22,6 +22,7 @@ public class CommandResource extends Resource<String> {
     public static final String PREVIOUS = "previous";
     public static final String JUMP = "jump";
     public static final String CHANGE_PLAYBACK = "changeplayback";
+    public static final String CHANGE_VOLUME = "changevolume";
 
     /**
      * creates a new Resource.
@@ -64,14 +65,15 @@ public class CommandResource extends Resource<String> {
      * @param command the Command
      * @return false if malformed
      */
-    private static boolean verifyCommand(String command) {
+    public static boolean verifyCommand(String command) {
         return command.equals(PLAY) ||
                 command.equals(PAUSE) ||
                 command.equals(STOP) ||
                 command.equals(SELECT_TRACK) ||
                 command.equals(NEXT) ||
                 command.equals(PREVIOUS) ||
-                command.equals(CHANGE_PLAYBACK);
+                command.equals(CHANGE_PLAYBACK) ||
+                command.equals(CHANGE_VOLUME);
     }
 
     /**
@@ -80,7 +82,7 @@ public class CommandResource extends Resource<String> {
      * @param capabilities the capabilities
      * @return true if capable, false if not
      */
-    private static boolean verifyCapabilities(String command, Capabilities capabilities) {
+    public static boolean verifyCapabilities(String command, Capabilities capabilities) {
         switch (command) {
             case PLAY: return capabilities.hasPlayPauseControl();
             case PAUSE: return capabilities.hasPlayPauseControl();
@@ -89,8 +91,19 @@ public class CommandResource extends Resource<String> {
             case PREVIOUS: return capabilities.hasNextPrevious();
             case JUMP: return capabilities.isAbleToJump();
             case CHANGE_PLAYBACK: return capabilities.isPlaybackChangeable();
+            case CHANGE_VOLUME: return capabilities.canChangeVolume();
             case STOP: return true;
         }
         return false;
+    }
+
+    /**
+     * verifies tha the command is legal and able to be executed
+     * @param command the command
+     * @param capabilities the capabilites
+     * @return true if able, false if not
+     */
+    public static boolean verify(String command, Capabilities capabilities) {
+        return verifyCommand(command) && verifyCapabilities(command, capabilities);
     }
 }

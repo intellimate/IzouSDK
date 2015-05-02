@@ -1,15 +1,19 @@
 package org.intellimate.izou.sdk.frameworks.music.events;
 
+import org.intellimate.izou.events.EventModel;
+import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
-import org.intellimate.izou.sdk.frameworks.common.resources.OutputPluginSelectorResource;
+import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
+import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.frameworks.music.player.TrackInfo;
 import org.intellimate.izou.sdk.frameworks.music.resources.TrackInfoResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -39,15 +43,7 @@ public class StartMusicRequest extends Event {
      * @return the optional StartMusicRequest
      */
     public static Optional<StartMusicRequest> createStartMusicRequest(AddOnModule addOnModule, Identification source, Identification target) {
-        if (target == null || target.equals(source))
-            return Optional.empty();
-        try {
-            StartMusicRequest request = new StartMusicRequest(addOnModule, source);
-            request.addResource(new OutputPluginSelectorResource(source, target));
-            return Optional.of(request);
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
-        }
+        return createStartMusicRequest(addOnModule, source, target, null);
     }
 
     /**
@@ -63,11 +59,32 @@ public class StartMusicRequest extends Event {
             return Optional.empty();
         try {
             StartMusicRequest request = new StartMusicRequest(addOnModule, source);
-            request.addResource(new OutputPluginSelectorResource(source, target));
-            request.addResource(new TrackInfoResource(target, trackInfo, source));
+            request.addResource(new SelectorResource(source, target));
+            if (trackInfo != null)
+                request.addResource(new TrackInfoResource(target, trackInfo, source));
             return Optional.of(request);
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
+    }
+
+    /**
+     * verifies that the StartMusicRequest is correct and checks whether the you are meant to react to it
+     * @param eventModel the EventModel to check against
+     * @param player the identifiable
+     * @param capabilities the capabilities
+     * @param activators the activators which are able to start the player if it is not able to start from outside commands
+     * @return true if verified, false if not
+     */
+    public static boolean verify(EventModel eventModel, Capabilities capabilities, Identifiable player, List<Identifiable> activators) {
+        if (!eventModel.containsDescriptor(StartMusicRequest.ID))
+            return false;
+        if (!capabilities.handlesPlayRequestFromOutside()) {
+            if (activators.stream()
+                    .noneMatch(identifiable -> identifiable.isOwner(eventModel.getSource())))
+                return false;
+        }
+        return SelectorResource.isTarget(eventModel, player)
+                .orElse(false);
     }
 }

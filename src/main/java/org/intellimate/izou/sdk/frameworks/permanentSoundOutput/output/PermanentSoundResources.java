@@ -47,7 +47,7 @@ public interface PermanentSoundResources extends ResourceBuilderModel, Permanent
 
     @Override
     default List<ResourceModel> provideResource(List<? extends ResourceModel> list, Optional<EventModel> event) {
-        if (isPlaying()) {
+        if (isOutputRunning()) {
             return list.stream()
                     .map(resourceModel -> generateResource(resourceModel, event))
                     .filter(Optional::isPresent)

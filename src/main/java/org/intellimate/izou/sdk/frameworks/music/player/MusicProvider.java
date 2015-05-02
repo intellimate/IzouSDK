@@ -9,11 +9,18 @@ import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.output.Permanent
  */
 public interface MusicProvider extends PermanentSoundUsed {
     /**
+     * true if using the sound output and false if not
+     * @return true if  using the sound output
+     */
+    @Override
+    boolean isOutputRunning();
+
+    /**
      * true if playing and false if not
      * @return tre if playing
      */
-    @Override
     boolean isPlaying();
+
 
     /**
      * gets the current Playlist

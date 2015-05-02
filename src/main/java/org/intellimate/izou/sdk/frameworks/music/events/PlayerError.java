@@ -7,7 +7,7 @@ import org.intellimate.izou.sdk.frameworks.music.resources.MusicErrorResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -16,6 +16,9 @@ import java.util.Optional;
  */
 public class PlayerError extends Event {
     public static final String ID = "izou.music.events.error";
+    public static final String ERROR_ALREADY_PLAYING = "1. music-player is already playing";
+    public static final String ERROR_NOT_ABLE = "2. music-player is not able to do: ";
+    public static final String ERROR_ILLEGAL = "2. music-player is receiving an illegal command: ";
 
     /**
      * Creates a new Event Object
@@ -24,7 +27,7 @@ public class PlayerError extends Event {
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     protected PlayerError(AddOnModule addOnModule, Identification source) throws IllegalArgumentException {
-        super(CommonEvents.get(addOnModule).getType().responseType(), source, new ArrayList<>(Arrays.asList(ID)));
+        super(CommonEvents.get(addOnModule).getType().responseType(), source, new ArrayList<>(Collections.singletonList(ID)));
     }
 
     /**

@@ -12,6 +12,8 @@ import java.util.HashMap;
 public class Capabilities {
     public static final String playPauseControlDescriptor = "izou.music.capabilities.playpausecontrol";
     private boolean playPauseControl = false;
+    public static final String playRequestOutsideDescriptor = "izou.music.capabilities.playrequestoutside";
+    private boolean playRequestOutside = false;
     public static final String playRequestTrackInfoDescriptor = "izou.music.capabilities.playrequesttrackinfo";
     private boolean playRequestTrackInfo = false;
     public static final String providesTrackInfoDescriptor = "izou.music.capabilities.providestrackinfo";
@@ -30,6 +32,8 @@ public class Capabilities {
     private boolean playbackRepeatSong = false;
     public static final String playbackChangeableDescriptor = "izou.music.capabilities.playback.changable";
     private boolean playbackChangeable = false;
+    public static final String changeVolumeDescriptor = "izou.music.capabilities.volume";
+    private boolean changeVolume = false;
     private final Context context;
 
     public static Capabilities constructCapabilites(HashMap<String, Boolean> data, Context context) {
@@ -54,6 +58,12 @@ public class Capabilities {
                     break;
                 case playbackShuffleDescriptor: capabilities.setPlaybackShuffle(data.get(descriptor));
                     break;
+                case playRequestOutsideDescriptor: capabilities.setPlayRequestOutside(data.get(descriptor));
+                    break;
+                case changeVolumeDescriptor: capabilities.setChangeVolume(data.get(descriptor));
+                    break;
+                case ableToJumpDescriptor: capabilities.setAbleToJump(data.get(descriptor));
+                    break;
                 default: context.getLogger().error("unkown command: " + descriptor);
                     break;
             }
@@ -64,6 +74,38 @@ public class Capabilities {
     public Capabilities(Context context) {
         if (context == null) throw new NullPointerException("context is null");
         this.context = context;
+    }
+
+    /**
+     * whether you can change the Volume from outside the player
+     * @return true if able to, false if not
+     */
+    public boolean canChangeVolume() {
+        return changeVolume;
+    }
+
+    /**
+     * sets whether you can change the Volume from outside the player
+     * @param changeVolume true if the player is capable, false if not
+     */
+    public void setChangeVolume(boolean changeVolume) {
+        this.changeVolume = changeVolume;
+    }
+
+    /**
+     * whether you can request playing from outside addons
+     * @return true if able to, false if not
+     */
+    public boolean handlesPlayRequestFromOutside() {
+        return playRequestOutside;
+    }
+
+    /**
+     * sets whether you can request playing from outside addons
+     * @param playRequestOutside true if the player is capable, false if not
+     */
+    public void setPlayRequestOutside(boolean playRequestOutside) {
+        this.playRequestOutside = playRequestOutside;
     }
 
     /**
@@ -246,6 +288,8 @@ public class Capabilities {
         data.put(playbackRepeatDescriptor, playbackRepeat);
         data.put(playbackRepeatSongDescriptor, playbackRepeatSong);
         data.put(playbackShuffleDescriptor, playbackShuffle);
+        data.put(playRequestOutsideDescriptor, playRequestOutside);
+        data.put(changeVolumeDescriptor, changeVolume);
         return data;
     }
 }

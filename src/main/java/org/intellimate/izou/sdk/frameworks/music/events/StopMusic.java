@@ -1,9 +1,11 @@
 package org.intellimate.izou.sdk.frameworks.music.events;
 
+import org.intellimate.izou.events.EventModel;
+import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
-import org.intellimate.izou.sdk.frameworks.common.resources.OutputPluginSelectorResource;
+import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.ArrayList;
@@ -41,10 +43,23 @@ public class StopMusic extends Event {
             return Optional.empty();
         try {
             StopMusic stopRequest = new StopMusic(addOnModule, source);
-            stopRequest.addResource(new OutputPluginSelectorResource(source, target));
+            stopRequest.addResource(new SelectorResource(source, target));
             return Optional.of(stopRequest);
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
+    }
+
+    /**
+     * verifies that the StopMusicRequest is correct and checks whether the you are meant to react to it
+     * @param eventModel the EventModel to check against
+     * @param player the identifiable
+     * @return true if verified, false if not
+     */
+    public static boolean verify(EventModel eventModel, Identifiable player) {
+        if (!eventModel.containsDescriptor(StopMusic.ID))
+            return false;
+        return SelectorResource.isTarget(eventModel, player)
+                .orElse(true);
     }
 }

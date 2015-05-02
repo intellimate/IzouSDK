@@ -26,7 +26,6 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
                 .ifPresent(id -> {
                     list.add(new CapabilitiesResource(id));
                     list.add(new NowPlayingResource(id));
-                    list.add(new PlaylistResource(id));
                     list.add(new ProgressResource(id));
                     list.add(new TrackInfoResource(id));
                     list.add(new VolumeResource(id));
@@ -60,6 +59,10 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
      * @return the Resource
      */
     default Optional<? extends ResourceModel> createVolumeResource() {
+        if (getVolume() == null) {
+            getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "VolumeResource: returned null");
+            return Optional.empty();
+        }
         Optional<VolumeResource> playerResource = IdentificationManager.getInstance()
                 .getIdentification(this)
                 .map(id -> new VolumeResource(id, getVolume()));
@@ -76,6 +79,9 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
     default Optional<? extends ResourceModel> createTrackInfoResource() {
         if (!getCapabilities().providesTrackInfo()) {
             getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_NOT_CAPABLE + "TrackInfo");
+            return Optional.empty();
+        } else if (getCurrentPlaylist() == null || getCurrentPlaylist().getCurrent() == null) {
+            getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "TrackInfo: returned null");
             return Optional.empty();
         } else {
             Optional<TrackInfoResource> nowPlayingResource = IdentificationManager.getInstance()
@@ -95,6 +101,9 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
     default Optional<? extends ResourceModel> createProgressResource() {
         if (!getCapabilities().providesTrackInfo()) {
             getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_NOT_CAPABLE + "ProgressResource");
+            return Optional.empty();
+        } else if (getCurrentProgress() == null) {
+            getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "ProgressResource: returned null");
             return Optional.empty();
         } else {
             Optional<ProgressResource> nowPlayingResource = IdentificationManager.getInstance()
@@ -129,6 +138,9 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
         if (!getCapabilities().providesTrackInfo()) {
             getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_NOT_CAPABLE + "NowPlayingResource");
             return Optional.empty();
+        } else if (getCurrentPlaylist() == null) {
+            getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "NowPlayingResource: returned null");
+            return Optional.empty();
         } else {
             Optional<NowPlayingResource> nowPlayingResource = IdentificationManager.getInstance()
                     .getIdentification(this)
@@ -145,6 +157,10 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
      * @return an optional which should contain the CapabilitiesResource
      */
     default Optional<? extends ResourceModel> createCapabilitiesResource() {
+        if (getCurrentPlaylist() == null) {
+            getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "Capabilities: returned null");
+            return Optional.empty();
+        }
         return IdentificationManager.getInstance().getIdentification(this)
                 .map(id -> new CapabilitiesResource(id, getCapabilities()));
     }

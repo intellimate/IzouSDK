@@ -1,8 +1,12 @@
 package org.intellimate.izou.sdk.frameworks.music.resources;
 
+import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identification;
+import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.frameworks.music.player.Progress;
 import org.intellimate.izou.sdk.resource.Resource;
+
+import java.util.Optional;
 
 /**
  * @author LeanderK
@@ -53,5 +57,25 @@ public class ProgressResource extends Resource<Progress> {
      */
     public ProgressResource(Identification provider, Progress progress, Identification consumer) {
         super(ID, provider, progress, consumer);
+    }
+
+    /**
+     * gets the first Progress if found in the EventModel
+     * @param eventModel the EventModel
+     * @return return the optional Progress
+     */
+    public static Optional<Progress> getProgress(EventModel eventModel) {
+        if (eventModel.getListResourceContainer().containsResourcesFromSource(ID)) {
+            return eventModel
+                    .getListResourceContainer()
+                    .provideResource(ID)
+                    .stream()
+                    .map(ResourceModel::getResource)
+                    .filter(ob -> ob instanceof Progress)
+                    .map(ob -> (Progress) ob)
+                    .findAny();
+        } else {
+            return Optional.empty();
+        }
     }
 }

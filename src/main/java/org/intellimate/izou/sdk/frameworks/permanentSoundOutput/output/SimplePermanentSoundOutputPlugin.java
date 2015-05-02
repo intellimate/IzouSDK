@@ -61,7 +61,7 @@ public abstract class SimplePermanentSoundOutputPlugin<T> extends OutputPlugin<T
      * @return tre if playing
      */
     @Override
-    public boolean isPlaying() {
+    public boolean isOutputRunning() {
         return isCurrentlyPlayingSound;
     }
 
@@ -73,13 +73,13 @@ public abstract class SimplePermanentSoundOutputPlugin<T> extends OutputPlugin<T
     public Optional<CompletableFuture<Void>> startPlaying(Runnable function) {
         if (isCurrentlyPlayingSound)
             return Optional.empty();
-        CompletableFuture<Void> voidCompletableFuture = submit((Runnable) () -> startSound(getContext(), this))
+        CompletableFuture<Void> voidCompletableFuture = submit((Runnable) () -> startSound(this))
                 .thenRun(() -> {
                     try {
                         isCurrentlyPlayingSound = true;
                         function.run();
                     } finally {
-                        submit((Runnable) () -> endSound(getContext(), this));
+                        submit((Runnable) () -> endSound(this));
                         isCurrentlyPlayingSound = false;
                     }
                 });

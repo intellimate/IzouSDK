@@ -1,8 +1,12 @@
 package org.intellimate.izou.sdk.frameworks.music.resources;
 
+import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identification;
+import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.frameworks.music.player.Playlist;
 import org.intellimate.izou.sdk.resource.Resource;
+
+import java.util.Optional;
 
 /**
  * @author LeanderK
@@ -52,5 +56,25 @@ public class PlaylistResource extends Resource<Playlist> {
      */
     public PlaylistResource(Identification provider, Playlist playlist, Identification consumer) {
         super(ID, provider, playlist, consumer);
+    }
+
+    /**
+     * gets the first playlist if found in the EventModel
+     * @param eventModel the EventModel
+     * @return return the optional Playlist
+     */
+    public static Optional<Playlist> getPlaylist(EventModel eventModel) {
+        if (eventModel.getListResourceContainer().containsResourcesFromSource(ID)) {
+            return eventModel
+                    .getListResourceContainer()
+                    .provideResource(ID)
+                    .stream()
+                    .map(ResourceModel::getResource)
+                    .filter(ob -> ob instanceof Playlist)
+                    .map(ob -> (Playlist) ob)
+                    .findAny();
+        } else {
+            return Optional.empty();
+        }
     }
 }

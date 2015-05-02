@@ -7,8 +7,8 @@ package org.intellimate.izou.sdk.frameworks.permanentSoundOutput.output;
  */
 public interface PermanentSoundUsed {
     /**
-     * true if playing and false if not
-     * @return tre if playing
+     * true if using the sound output and false if not
+     * @return true if  using the sound output
      */
-    boolean isPlaying();
+    boolean isOutputRunning();
 }

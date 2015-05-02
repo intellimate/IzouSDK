@@ -3,7 +3,7 @@ package org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
-import org.intellimate.izou.sdk.frameworks.common.resources.OutputPluginSelectorResource;
+import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class UnMuteEvent extends Event {
             return Optional.empty();
         try {
             UnMuteEvent unmuteRequest = new UnMuteEvent(addOnModule, source);
-            unmuteRequest.addResource(new OutputPluginSelectorResource(source, target));
+            unmuteRequest.addResource(new SelectorResource(source, target));
             return Optional.of(unmuteRequest);
         } catch (IllegalArgumentException e) {
             return Optional.empty();
