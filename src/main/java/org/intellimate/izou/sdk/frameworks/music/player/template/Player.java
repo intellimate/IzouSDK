@@ -186,9 +186,15 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         return playlist;
     }
 
-    public void updatePlaylist(Playlist playlist) {
+    /**
+     * fires an update event which notifies that parameters have changed
+     *
+     * @param playlist the optional playlist
+     */
+    @Override
+    public void updatePlayInfo(Playlist playlist) {
         this.playlist = playlist;
-        updatePlayInfo(playlist);
+        MusicHelper.super.updatePlayInfo(playlist);
     }
 
     /**
@@ -202,12 +208,14 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     }
 
     /**
-     * sets an new Volume
-     * @param volume the Volume
+     * fires an update event which notifies that parameters have changed
+     *
+     * @param volume the optional volume
      */
-    public void updateVolume(Volume volume) {
+    @Override
+    public void updatePlayInfo(Volume volume) {
         this.volume = volume;
-        updatePlayInfo(volume);
+        MusicHelper.super.updatePlayInfo(volume);
     }
 
     /**
@@ -221,12 +229,14 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     }
 
     /**
-     * sets the new Progress
-     * @param progress the progress
+     * fires an update event which notifies that parameters have changed
+     *
+     * @param progress the optional progress
      */
-    public void updateProgress(Progress progress) {
+    @Override
+    public void updatePlayInfo(Progress progress) {
         this.progress = progress;
-        updatePlayInfo(progress);
+        MusicHelper.super.updatePlayInfo(progress);
     }
 
     /**
@@ -235,7 +245,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * @param progress the progress, or null
      * @param volume the volume, or null
      */
-    public void updateInfo(Playlist playlist, Progress progress, Volume volume) {
+    public void updatePlayInfo(Playlist playlist, Progress progress, Volume volume) {
         if (playlist != null)
             this.playlist = playlist;
         if (progress != null)
@@ -243,6 +253,25 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         if (volume != null)
             this.volume = volume;
         updatePlayInfo(playlist, progress, null, volume);
+    }
+
+    /**
+     * fires an update event which notifies that parameters have changed
+     *
+     * @param playlist  the optional playlist
+     * @param progress  the optional progress
+     * @param trackInfo the optional trackInfo
+     * @param volume    the optional volume
+     */
+    @Override
+    public void updatePlayInfo(Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
+        if (playlist != null)
+            this.playlist = playlist;
+        if (progress != null)
+            this.progress = progress;
+        if (volume != null)
+            this.volume = volume;
+        MusicHelper.super.updatePlayInfo(playlist, progress, null, volume);
     }
 
     /**
