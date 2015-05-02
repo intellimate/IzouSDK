@@ -35,6 +35,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     private Playlist playlist = new Playlist(new ArrayList<>());
     private Volume volume = Volume.createVolume(50).orElse(null);
     private Progress progress = new Progress(0,0);
+    private PlaybackState playbackState = PlaybackState.PLAY;
     private final Capabilities capabilities;
     private final InformationProvider informationProvider = new InformationProvider(getContext(), getID(), this);
     private CompletableFuture<?> playingThread = null;
@@ -229,6 +230,38 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     public void updatePlayInfo(Progress progress) {
         this.progress = progress;
         MusicHelper.super.updatePlayInfo(progress);
+    }
+
+    /**
+     * gets the PlaybackState of the Player
+     *
+     * @return the PlaybackState
+     */
+    @Override
+    public PlaybackState getPlaybackState() {
+        return playbackState;
+    }
+
+    /**
+     * signals that the playing paused
+     */
+    public void pausePlaying() {
+        switch (playbackState) {
+            case PAUSE: return;
+            default: playbackState = PlaybackState.PAUSE;
+                updateStateInfo(playbackState);
+        }
+    }
+
+    /**
+     * signals that the playing resumed
+     */
+    public void resumePlaying() {
+        switch (playbackState) {
+            case PLAY: return;
+            default: playbackState = PlaybackState.PLAY;
+                updateStateInfo(playbackState);
+        }
     }
 
     /**

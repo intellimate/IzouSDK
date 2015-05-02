@@ -45,4 +45,10 @@ public interface MusicProvider extends PermanentSoundUsed {
      * @return and instance of Capabilities
      */
     Capabilities getCapabilities();
+
+    /**
+     * gets the PlaybackState of the Player
+     * @return the PlaybackState
+     */
+    PlaybackState getPlaybackState();
 }

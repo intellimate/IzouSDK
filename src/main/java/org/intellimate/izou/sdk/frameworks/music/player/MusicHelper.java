@@ -6,10 +6,7 @@ import org.intellimate.izou.sdk.events.Event;
 import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
 import org.intellimate.izou.sdk.frameworks.music.events.PlayerError;
 import org.intellimate.izou.sdk.frameworks.music.events.PlayerUpdate;
-import org.intellimate.izou.sdk.frameworks.music.resources.PlaylistResource;
-import org.intellimate.izou.sdk.frameworks.music.resources.ProgressResource;
-import org.intellimate.izou.sdk.frameworks.music.resources.TrackInfoResource;
-import org.intellimate.izou.sdk.frameworks.music.resources.VolumeResource;
+import org.intellimate.izou.sdk.frameworks.music.resources.*;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.StartEvent;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.output.PermanentSoundHelper;
 
@@ -108,7 +105,6 @@ public interface MusicHelper extends PermanentSoundHelper {
         if (!updateEvent.isPresent() || !id.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerUpdate");
         } else {
-            updateEvent.get().addDescriptor(StartEvent.ID);
             if (playlist != null) {
                 updateEvent.get().addResource(new PlaylistResource(id.get(), playlist));
             }
@@ -155,5 +151,23 @@ public interface MusicHelper extends PermanentSoundHelper {
      */
     default void updatePlayInfo(Volume volume) {
         updatePlayInfo(null, null, null, volume);
+    }
+
+    /**
+     * updates the PlaybackState
+     * @param playbackState the playbackState
+     */
+    default void updateStateInfo(PlaybackState playbackState) {
+        if (playbackState == null)
+            return;
+        Optional<PlayerUpdate> updateEvent = IdentificationManager.getInstance().getIdentification(this)
+                .flatMap(PlayerUpdate::createPlayerUpdate);
+        Optional<Identification> id = IdentificationManager.getInstance().getIdentification(this);
+        if (!updateEvent.isPresent() || !id.isPresent()) {
+            getContext().getLogger().error("unable to fire PlayerUpdate");
+        } else {
+            updateEvent.get().addResource(new PlaybackStateResource(id.get(), playbackState));
+            fire(updateEvent.get(), 5);
+        }
     }
 }

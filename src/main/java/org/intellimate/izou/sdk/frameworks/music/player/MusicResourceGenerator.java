@@ -44,6 +44,7 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
     @Override
     default Optional<? extends ResourceModel> generateResource(ResourceModel resourceModel, Optional<EventModel> event) {
         switch (resourceModel.getResourceID()) {
+            case PlaybackStateResource.ID: return createPlaybackStateResource();
             case CapabilitiesResource.RESOURCE_ID : return createCapabilitiesResource();
             case NowPlayingResource.ID: return createNowPlayingResource();
             case PlayerResource.RESOURCE_ID : return createPlayerResource();
@@ -52,6 +53,24 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
             case VolumeResource.ID: return createVolumeResource();
             default: return PermanentSoundResources.super.generateResource(resourceModel, event);
         }
+    }
+
+    /**
+     * generates the PlaybackState Resource
+     * @return the Resource
+     */
+    default Optional<? extends ResourceModel> createPlaybackStateResource() {
+        if (getPlaybackState() == null) {
+            getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "PlaybackState: returned null");
+            return Optional.empty();
+        }
+        Optional<PlaybackStateResource> playbackStateResource = IdentificationManager.getInstance()
+                .getIdentification(this)
+                .map(id -> new PlaybackStateResource(id, getPlaybackState()));
+        if (!playbackStateResource.isPresent()) {
+            getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "PlaybackStateResource");
+        }
+        return playbackStateResource;
     }
 
     /**
