@@ -8,6 +8,7 @@ import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.resource.ListResourceProviderImpl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,13 +22,13 @@ public class Event implements EventModel<Event> {
      * @deprecated use {@link CommonEvents}
      */
     @Deprecated
-    public static final String RESPONSE = "Response";
+    public static final String RESPONSE = "response";
     /**
      * Use this type when only our Addon reacts to this Event
      * @deprecated use {@link CommonEvents}
      */
     @Deprecated
-    public static final String NOTIFICATION = "Notification";
+    public static final String NOTIFICATION = "notification";
     //common Events-Descriptors:
     /**
      * Event for a Welcome with maximum response.
@@ -65,11 +66,15 @@ public class Event implements EventModel<Event> {
      * Creates a new Event Object
      * @param type the Type of the Event, try to use the predefined Event types
      * @param source the source of the Event, most likely a this reference.
+     * @param descriptors the descriptors to initialize the Event with
+     * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    private Event(String type, Identification source, List<String> descriptors) {
+    protected Event(String type, Identification source, List<String> descriptors) throws IllegalArgumentException {
+        if(type == null || type.isEmpty()) throw new IllegalArgumentException("illegal type");
+        if(source == null) throw new IllegalArgumentException("source is null");
         this.type = type;
         this.source = source;
-        this.descriptors = descriptors;
+        this.descriptors = Collections.synchronizedList(new ArrayList<>(descriptors));
     }
 
     /**
@@ -79,9 +84,11 @@ public class Event implements EventModel<Event> {
      * @return an Optional, that may be empty if type is null or empty or source is null
      */
     public static Optional<Event> createEvent(String type, Identification source) {
-        if(type == null || type.isEmpty()) return Optional.empty();
-        if(source == null) return Optional.empty();
-        return Optional.of(new Event(type, source, new ArrayList<String>()));
+        try {
+            return Optional.of(new Event(type, source, new ArrayList<>()));
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 
     /**
@@ -92,9 +99,11 @@ public class Event implements EventModel<Event> {
      * @return an Optional, that may be empty if type is null or empty or source is null
      */
     public static Optional<Event> createEvent(String type, Identification source, List<String> descriptors) {
-        if(type == null || type.isEmpty()) return Optional.empty();
-        if(source == null) return Optional.empty();
-        return Optional.of(new Event(type, source, descriptors));
+        try {
+            return Optional.of(new Event(type, source, descriptors));
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 
     /**

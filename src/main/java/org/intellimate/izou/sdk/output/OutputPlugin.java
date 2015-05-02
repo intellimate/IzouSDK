@@ -1,6 +1,7 @@
 package org.intellimate.izou.sdk.output;
 
 import com.google.common.reflect.TypeToken;
+import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.sdk.Context;
 
 import java.util.List;
@@ -45,10 +46,11 @@ public abstract class OutputPlugin<T> extends OutputPluginArgument<Object, T> {
     }
 
     /**
-     * method that uses tDoneList to generate a final output that will then be rendered.
+     * method that uses the data from the OutputExtensions to generate a final output that will then be rendered.
      *
      * @param data the data generated
+     * @param eventModel the Event which caused the whole thing
      */
     @Override
-    public abstract void renderFinalOutput(List<T> data);
+    public abstract void renderFinalOutput(List<T> data, EventModel eventModel);
 }

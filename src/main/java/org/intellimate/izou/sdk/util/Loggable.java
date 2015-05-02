@@ -9,7 +9,7 @@ import org.apache.logging.log4j.spi.AbstractLogger;
  * @version 1.0
  */
 public interface Loggable extends ContextProvider {
-    public static final String FQCN = Loggable.class.getName();
+    String FQCN = Loggable.class.getName();
     /**
      * Used to log messages at debug level
      * @param msg the message

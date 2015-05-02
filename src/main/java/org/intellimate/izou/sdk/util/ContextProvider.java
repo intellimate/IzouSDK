@@ -14,7 +14,7 @@ public interface ContextProvider {
      *
      * @return the instance of Context
      */
-    public Context getContext();
+    Context getContext();
 
     /**
      * Used to log messages at debug level

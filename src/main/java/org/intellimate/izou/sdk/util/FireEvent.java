@@ -6,7 +6,7 @@ import org.intellimate.izou.identification.IdentificationManager;
 import org.intellimate.izou.identification.IllegalIDException;
 import org.intellimate.izou.sdk.events.Event;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +26,7 @@ public interface FireEvent extends ContextProvider, Identifiable {
      * @return true if fired, false if unable
      */
     default boolean fire(String type, String descriptor) {
-        return fire(type, Arrays.asList(descriptor), 5);
+        return fire(type, Collections.singletonList(descriptor), 5);
     }
 
     /**
@@ -58,11 +58,25 @@ public interface FireEvent extends ContextProvider, Identifiable {
         if (!event.isPresent()) {
             getContext().getLogger().error("unable to obtain ID");
             return false;
+        } else {
+            return fire(event.get(), retry);
         }
+    }
+
+    /**
+     * tries to fire an an Event specified times, returns true if succeed.
+     * <p>
+     * If there is currently another Event getting processed, it will wait for 100 milliseconds and try for retry-times.
+     * </p>
+     * @param event the event to fire
+     * @param retry how many times it should try
+     * @return true if fired, false if unable
+     */
+    default boolean fire(Event event, int retry) {
         int counter = 0;
         while (counter < retry) {
             try {
-                getContext().getEvents().fireEvent(event.get());
+                getContext().getEvents().fireEvent(event);
                 return true;
             } catch (MultipleEventsException e) {
                 try {

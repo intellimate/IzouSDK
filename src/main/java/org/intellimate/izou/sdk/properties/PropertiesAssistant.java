@@ -15,11 +15,11 @@ import java.util.Properties;
  * <p>Unlike most manager classes in Izou, the PropertiesManager is included in every {@code AddOn} instance</p>
  */
 public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
-    private Context context;
+    private final Context context;
     private String propertiesPath;
     private String defaultPropertiesPath;
     private Properties properties;
-    private EventPropertiesAssistant assistant;
+    private final EventPropertiesAssistant assistant;
 
     public PropertiesAssistant(Context context, String addOnID) {
         super(context, addOnID + ".PropertiesAssistant");
@@ -162,11 +162,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
                 }
 
                 if (new File(defaultPropertiesPath).exists() && !writeToPropertiesFile(defaultPropertiesPath)) return;
-                try {
-                    reloadProperties();
-                } catch (IOException e) {
-                    context.getLogger().error("Error while trying to reload the Properties-Files", e);
-                }
+                reloadProperties();
             }
         }
     }
@@ -199,10 +195,8 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
 
     /**
      * reloads the propertiesFile into the propertiesContainer
-     *
-     * @throws java.io.IOException thrown by inputStream
      */
-    private void reloadProperties() throws IOException {
+    private void reloadProperties() {
         Properties temp = new Properties();
         InputStream inputStream = null;
         try {
@@ -289,10 +283,6 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
 
     @Override
     public void reloadFile(String eventType) {
-        try {
-            reloadProperties();
-        } catch (IOException e) {
-            context.getLogger().error("Error reloading property file for" + getID(), e);
-        }
+        reloadProperties();
     }
 }

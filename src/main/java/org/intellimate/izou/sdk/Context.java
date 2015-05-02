@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutorService;
  */
 public class Context implements org.intellimate.izou.system.Context {
     private final PropertiesAssistant propertiesAssistant;
-    private org.intellimate.izou.system.Context context;
+    private final org.intellimate.izou.system.Context context;
     private final org.intellimate.izou.sdk.specification.context.ThreadPool threadPool;
     private final ContentGenerators contentGenerators;
 

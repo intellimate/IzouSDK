@@ -3,7 +3,7 @@ package org.intellimate.izou.sdk.resource;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.resource.ResourceModel;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -91,7 +91,7 @@ public class Resource<T> implements ResourceModel<T> {
      * @return the Resource
      */
     public Resource<T> setResource(T resource) {
-        return new Resource<T>(resourceID, provider, resource, consumer);
+        return new Resource<>(resourceID, provider, resource, consumer);
     }
 
     /**
@@ -132,7 +132,7 @@ public class Resource<T> implements ResourceModel<T> {
      * @return the Resource
      */
     public Resource<T> setProvider(Identification provider) {
-        return new Resource<T>(resourceID, provider, resource, consumer);
+        return new Resource<>(resourceID, provider, resource, consumer);
     }
 
     /**
@@ -153,7 +153,7 @@ public class Resource<T> implements ResourceModel<T> {
      * @return new Resource
      */
     public Resource<T> setConsumer(Identification consumer) {
-        return new Resource<T>(resourceID, provider, resource, consumer);
+        return new Resource<>(resourceID, provider, resource, consumer);
     }
 
     /**
@@ -161,7 +161,9 @@ public class Resource<T> implements ResourceModel<T> {
      * @return a list
      */
     public List<Resource> toList() {
-        return Arrays.asList(this);
+        List<Resource> resourceList = new ArrayList<>();
+        resourceList.add(this);
+        return resourceList;
     }
 
     /**

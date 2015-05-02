@@ -20,6 +20,15 @@ public interface ThreadPoolUser extends ContextProvider {
      * @return the new CompletableFuture
      */
     default CompletableFuture<Void> submit(Runnable runnable) {
+        return submitRun(runnable);
+    }
+
+    /**
+     * submits the Runnable to the AddOns Thread-Pool
+     * @param runnable the runnable to submit
+     * @return the new CompletableFuture
+     */
+    default CompletableFuture<Void> submitRun(Runnable runnable) {
         return CompletableFuture.runAsync(runnable, getContext().getThreadPool().getThreadPool())
                 .whenComplete((u, ex) -> {
                     if (ex != null) {
@@ -72,11 +81,7 @@ public interface ThreadPoolUser extends ContextProvider {
             notFinished = futures.stream()
                     .anyMatch(future -> !future.isDone());
             start = start + 10;
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw e;
-            }
+            Thread.sleep(10);
         }
         //cancel all running tasks
         if(notFinished) {

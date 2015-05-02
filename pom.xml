@@ -6,13 +6,13 @@
 
     <groupId>org.intellimate.izou</groupId>
     <artifactId>sdk</artifactId>
-    <version>0.5.20</version>
+    <version>0.8.0</version>
     <name>IzouSDK</name>
     <description>the sdk used to program for izou</description>
     <url>https://github.com/intellimate/IzouSDK</url>
 
     <properties>
-        <plugin.id>Izou SDK</plugin.id>
+        <plugin.id>org.intellimate.izou.sdk</plugin.id>
         <plugin.class>org.intellimate.izou.sdk.ZipFileManagerImpl</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>intellimate</plugin.provider>

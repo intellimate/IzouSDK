@@ -14,6 +14,7 @@ import java.util.Optional;
 public class CommonEvents {
     private final Presence presence = new Presence();
     private final Response response = new Response();
+    private final Descriptors descriptors = new Descriptors();
     private final Type type = new Type();
     private final AddOnModule addOnModule;
 
@@ -22,7 +23,11 @@ public class CommonEvents {
     }
 
     public static CommonEvents get(AddOnModule addOnModule) {
-        return new CommonEvents(addOnModule);
+        if (addOnModule !=  null) {
+            return new CommonEvents(addOnModule);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -50,6 +55,14 @@ public class CommonEvents {
     }
 
     /**
+     * returns common descriptors
+     * @return an object containing methods that return the instances
+     */
+    public Descriptors getDescriptors() {
+        return descriptors;
+    }
+
+    /**
      * if the type of event is based on comparing the current time a fixed or dynamic time AND the of the other systems
      * reaction should be consistent ignoring environment variables
      * @return an optional which may contain an EventListener
@@ -69,7 +82,7 @@ public class CommonEvents {
      * reaction should be consistent ignoring environment variables
      * @return the descriptor
      */
-    public String alarmDescriptor() {
+    public static String alarmDescriptor() {
         return "izou.alarm";
     }
 
@@ -235,7 +248,7 @@ public class CommonEvents {
          * @return the descriptor
          */
         public String responseType() {
-            return "Response";
+            return "response";
         }
 
         /**
@@ -256,7 +269,30 @@ public class CommonEvents {
          * @return the descriptor
          */
         public String notificationType() {
-            return "izou.alarm";
+            return "notification";
+        }
+    }
+
+    public class Descriptors {
+        /**
+         * Event-Type which indicates that this events stops an already running addon
+         * @return an optional which may contain an EventListener
+         */
+        public Optional<EventListener> stopListener() {
+            return EventListener.createEventListener(
+                    stopDescriptor(),
+                    "Event-Type which indicates that that this events stops an already running addon",
+                    "izou_stop",
+                    addOnModule
+            );
+        }
+
+        /**
+         * Event-Type which indicates that only your AddOn should react to an Event
+         * @return the descriptor
+         */
+        public String stopDescriptor() {
+            return "stop";
         }
     }
 }

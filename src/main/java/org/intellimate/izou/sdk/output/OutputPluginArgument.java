@@ -46,6 +46,11 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule implements 
     private boolean stop = false;
 
     /**
+     * signals whether the OutputPlugin is working
+     */
+    private boolean isWorking = false;
+
+    /**
      * creates a new output-plugin with a new id
      *
      * @param context context
@@ -122,6 +127,16 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule implements 
         eventBlockingQueue.add(event);
     }
 
+    @Override
+    public boolean isRunning() {
+        return isWorking;
+    }
+
+    @Override
+    public void stop() {
+        Thread.currentThread().interrupt();
+    }
+
     /**
      * @param event the current processed Event
      */
@@ -133,19 +148,20 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule implements 
         if(!resource.isPresent()) return;
         if(resource.get().getResource() instanceof Consumer) {
             Consumer consumer = (Consumer) resource.get().getResource();
+            //noinspection unchecked
             consumer.accept(null);
         }
     }
 
     /**
-     * stops the outputPlugin
+     * terminates the outputPlugin (will not listen to events anymore)
      */
-    public void stop() {
+    public void terminate() {
         stop = true;
         eventBlockingQueue.notify();
     }
 
-    public void handleFutures(List<CompletableFuture<X>> futures) {
+    public void handleFutures(List<CompletableFuture<X>> futures, EventModel eventModel) {
         List<X> result = futures.stream()
                 .map(future -> {
                     try {
@@ -159,7 +175,9 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule implements 
                     }
                 })
                 .collect(Collectors.toList());
-        renderFinalOutput(result);
+        isWorking = true;
+        renderFinalOutput(result, eventModel);
+        isWorking = false;
     }
 
     /**
@@ -188,7 +206,7 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule implements 
                 getContext().getLogger().warn(e);
             }
 
-            handleFutures(outputExtensions);
+            handleFutures(outputExtensions, event);
 
             //notifies output-manager when done processing
             isDone(event);
@@ -218,8 +236,9 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule implements 
     /**
      * method that uses tDoneList to generate a final output that will then be rendered.
      * @param data the data generated
+     * @param eventModel the Event which caused the whole thing
      */
-    public abstract void renderFinalOutput(List<X> data);
+    public abstract void renderFinalOutput(List<X> data, EventModel eventModel);
 
     /**
      * returns the argument for the OutputExtensions

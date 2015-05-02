@@ -70,7 +70,7 @@ public abstract class ContentGenerator extends AddOnModule implements ContentGen
      */
     @Override
     public List<ResourceModel> provideResource(List<? extends ResourceModel> list, Optional<EventModel> optional) {
-        //TODO: check arguemnts and return type here! Missing ID etc. Fail fast!
+        //TODO: check arguments and return type here! Missing ID etc. Fail fast!
         return new ArrayList<>(triggered(list, optional));
     }
 
