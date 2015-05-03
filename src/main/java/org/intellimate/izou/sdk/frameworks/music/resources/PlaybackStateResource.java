@@ -8,6 +8,7 @@ import org.intellimate.izou.sdk.resource.Resource;
 import java.util.Optional;
 
 /**
+ * this class simply holds the playback-state for events,can also be obtained via the resourceManager
  * @author LeanderK
  * @version 1.0
  */

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 /**
- * A resource which holds a trackInfo
+ * A resource which holds a trackInfo for events, can also be obtained via the resourceManager (retruns the current)
  * @author LeanderK
  * @version 1.0
  */

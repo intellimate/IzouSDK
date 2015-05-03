@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 /**
+ * this resource is simply used hold the playlist
  * @author LeanderK
  * @version 1.0
  */

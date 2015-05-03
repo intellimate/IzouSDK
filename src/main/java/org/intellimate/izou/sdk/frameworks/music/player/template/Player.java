@@ -27,7 +27,15 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * use this class to actually play music
+ * use this class to actually play music.
+ * <p>
+ * <b>How to use it:</b><br>
+ * to register further commands, use the getCommandHandler() method in the constructor.
+ * to start playing, use the PlayerController.startPlaying() methods, never call the play() method directly!.
+ * Also, don't call the stopSound() method directly!.
+ * All basic methods are implemented in this class,but to code special behaviour fell free to explore the other
+ * classes & interfaces.
+ * </p>
  * @author LeanderK
  * @version 1.0
  */
@@ -164,14 +172,16 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     }
 
     /**
-     * this method has no effect if runsInPlay is enabled in the constructor
+     * this method has no effect if runsInPlay is enabled in the constructor.
+     * stops the playing
      */
     @SuppressWarnings("unused")
     public void setPlayingStopped() {
         if (runsInPlay)
             return;
         isPlaying = false;
-        endSound();
+        stopSound();
+        endedSound();
         super.stop();
     }
 
@@ -395,7 +405,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
                     .thenRun(() -> {
                         if (runsInPlay) {
                             isRunning = false;
-                            endSound();
+                            endedSound();
                         }
                     });
         }
@@ -406,10 +416,10 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
             unMute();
         }
         if (eventModel.containsDescriptor(StopEvent.ID)) {
-            stopSound();
+            setPlayingStopped();
         }
         if (StopMusic.verify(eventModel, this)) {
-            stopSound();
+            setPlayingStopped();
         }
         if (PlayerCommand.verify(eventModel, this)) {
             getCommandHandler().handleCommandResources(eventModel);
@@ -433,27 +443,27 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         Optional<Progress> progress = ProgressResource.getProgress(eventModel);
         Optional<TrackInfo> trackInfo = TrackInfoResource.getTrackInfo(eventModel);
         Optional<Volume> volume = VolumeResource.getVolume(eventModel);
-        startSound(playlist.orElse(null), progress.orElse(null), trackInfo.orElse(null), volume.orElse(null));
+        startedSound(playlist.orElse(null), progress.orElse(null), trackInfo.orElse(null), volume.orElse(null));
     }
 
     @Override
     public void stop() {
-        stopSound();
-        super.stop();
+        setPlayingStopped();
     }
 
     /**
-     * this method call must mute the plugin
+     * this method call must mute the plugin.
      */
     public abstract void mute();
 
     /**
-     * this method call must un-mute the plugin
+     * this method call must un-mute the plugin.
      */
     public abstract void unMute();
 
     /**
-     * this method call must stop the sound
+     * this method call must stop the sound.
+     * NEVER CALL THIS METHOD DIRECTLY, USED {@link #setPlayingStopped()}.
      */
     public abstract void stopSound();
 

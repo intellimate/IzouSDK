@@ -6,7 +6,10 @@ import org.intellimate.izou.sdk.frameworks.music.player.*;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
 /**
- * this class is responsible for communication information
+ * this class is responsible for communication information on request.
+ * Essentially it is responsible for answering the the resource-requests.
+ * The code for answering lies in the Interface (it is implemented this way to allow better composition if you don't want
+ * to use the templates)
  * @author LeanderK
  * @version 1.0
  */

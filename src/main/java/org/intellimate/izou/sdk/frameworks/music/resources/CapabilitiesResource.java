@@ -7,6 +7,7 @@ import org.intellimate.izou.sdk.resource.Resource;
 import java.util.HashMap;
 
 /**
+ * this class is used to hold the capabilities-resource for events,can also be obtained via the resourceManager
  * @author LeanderK
  * @version 1.0
  */

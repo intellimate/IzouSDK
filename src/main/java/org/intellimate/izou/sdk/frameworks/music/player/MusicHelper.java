@@ -13,6 +13,7 @@ import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.output.Permanent
 import java.util.Optional;
 
 /**
+ * here lies some utility-methods for the music-player
  * @author LeanderK
  * @version 1.0
  */
@@ -22,9 +23,9 @@ public interface MusicHelper extends PermanentSoundHelper {
      *
      */
     @Override
-    default void startSound() {
+    default void startedSound() {
         getContext().getLogger().warn("creating start music event without Information");
-        startSound(null, null, null, null);
+        startedSound(null, null, null, null);
     }
 
     /**
@@ -35,7 +36,7 @@ public interface MusicHelper extends PermanentSoundHelper {
      * @param trackInfo the trackInfo or null
      * @param volume the volume or null
      */
-    default void startSound(Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
+    default void startedSound(Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
         Optional<Event> startEvent = IdentificationManager.getInstance().getIdentification(this)
                 .flatMap(PlayerUpdate::createPlayerUpdate)
                 .map(event -> event.addDescriptor(StartEvent.ID));

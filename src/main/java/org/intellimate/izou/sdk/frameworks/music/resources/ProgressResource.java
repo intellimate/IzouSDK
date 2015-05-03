@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 /**
+ * this resource is simply used hold the progress for events,can also be obtained via the resourceManager
  * @author LeanderK
  * @version 1.0
  */

@@ -19,7 +19,7 @@ public interface PermanentSoundHelper extends Identifiable, FireEvent, ContextPr
     /**
      * fires an StartEvent
      */
-    default void startSound() {
+    default void startedSound() {
         Optional<StartEvent> startEvent = IdentificationManager.getInstance().getIdentification(this)
                 .flatMap(StartEvent::createStartEvent);
         if (!startEvent.isPresent()) {
@@ -32,7 +32,7 @@ public interface PermanentSoundHelper extends Identifiable, FireEvent, ContextPr
     /**
      * fires an EndedEvent
      */
-    default void endSound() {
+    default void endedSound() {
         Optional<EndedEvent> startEvent = IdentificationManager.getInstance().getIdentification(this)
                 .flatMap(EndedEvent::createEndedEvent);
         if (!startEvent.isPresent()) {

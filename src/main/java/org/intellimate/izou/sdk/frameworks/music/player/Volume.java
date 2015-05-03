@@ -3,7 +3,7 @@ package org.intellimate.izou.sdk.frameworks.music.player;
 import java.util.Optional;
 
 /**
- * this class represents a symbolic volume (int from 0 to 100 or -1 for mute)
+ * this class represents a symbolic volume (int from 0(=silent) to 100(=loudest) or -1 for mute)
  * @author LeanderK
  * @version 1.0
  */

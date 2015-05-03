@@ -4,6 +4,7 @@ import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.output.PermanentSoundUsed;
 
 /**
+ * here are the methods for the interfaces to access all needed states.
  * @author LeanderK
  * @version 1.0
  */

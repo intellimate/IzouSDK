@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * generates the Resources
+ * this interface is used to generate the resources.
  * @author LeanderK
  * @version 1.0
  */
@@ -19,6 +19,7 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
     String PROVIDE_RESOURCE_ERROR = "Error while trying to provide resource: ";
     String PROVIDE_RESOURCE_ERROR_NOT_CAPABLE = PROVIDE_RESOURCE_ERROR + " not Capable to generate ";
     String PROVIDE_RESOURCE_ERROR_GENERATING = PROVIDE_RESOURCE_ERROR + " an Error occurred while trying to generate ";
+
     @Override
     default List<? extends ResourceModel> announceResources() {
         List<ResourceModel> list = new ArrayList<>();
@@ -29,6 +30,7 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
                     list.add(new ProgressResource(id));
                     list.add(new TrackInfoResource(id));
                     list.add(new VolumeResource(id));
+                    list.add(new PlaybackStateResource(id));
                 });
         list.addAll(PermanentSoundResources.super.announceResources());
         return list;

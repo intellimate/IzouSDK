@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 /**
- * returns the current played playlist
+ * returns the current played playlist if asked via the resourceManager
  * @author LeanderK
  * @version 1.0
  */

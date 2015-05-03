@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * this class is used to handle the Commands
+ * this class is used to handle the Commands and directs them to the registered methods.
  * @author LeanderK
  * @version 1.0
  */

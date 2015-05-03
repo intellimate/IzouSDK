@@ -19,7 +19,10 @@ import org.intellimate.izou.sdk.frameworks.music.resources.VolumeResource;
 import java.util.Optional;
 
 /**
- * you should use this class to control your Player
+ * you should use this class to control your Player.
+ * Use this class even if you don't start/stop in this class. For example if you want to use a 3rd. party library which
+ * starts/stops without your interference communicate this with this class. The purpose of this class is not only to
+ * stop the Player, but communicate this behaviour to other classes!
  * @author LeanderKfini
  * @version 1.0
  */

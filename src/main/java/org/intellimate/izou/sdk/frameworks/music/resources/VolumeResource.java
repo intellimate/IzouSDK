@@ -9,7 +9,7 @@ import org.intellimate.izou.sdk.resource.Resource;
 import java.util.Optional;
 
 /**
- * Resource used to obtain the Volume
+ * this resource is simply used hold the playlist, can be obtained via the resourceManager
  * @author LeanderK
  * @version 1.0
  */

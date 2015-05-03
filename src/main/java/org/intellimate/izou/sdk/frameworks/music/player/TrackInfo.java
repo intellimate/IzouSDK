@@ -110,6 +110,21 @@ public class TrackInfo {
     /**
      * retruns true if any of these arguments is already existing and would be overwritten, otherwise retruns false.
      * The method also returns true if everything is null except the albumCover-Format (maybe known in advance).
+     * @param trackInfo the trackInfo to compare against
+     * @return true if new
+     */
+    public boolean isNew(TrackInfo trackInfo) {
+        return isNew(trackInfo.name,
+                trackInfo.artist,
+                trackInfo.album,
+                trackInfo.albumCover,
+                trackInfo.albumCoverFormat,
+                trackInfo.id);
+    }
+
+    /**
+     * retruns true if any of these arguments is already existing and would be overwritten, otherwise retruns false.
+     * The method also returns true if everything is null except the albumCover-Format (maybe known in advance).
      * @param name the name
      * @param artist the artist
      * @param album the album
@@ -143,6 +158,20 @@ public class TrackInfo {
                 return true;
         }
         return false;
+    }
+
+    /**
+     * returns a trackinfo if some information was added and not overwritten
+     * @param trackInfo the data to compare
+     * @return a trackinfo if some information was updated
+     */
+    public Optional<TrackInfo> update(TrackInfo trackInfo) {
+        return update(trackInfo.name,
+                trackInfo.artist,
+                trackInfo.album,
+                trackInfo.albumCover,
+                trackInfo.albumCoverFormat,
+                trackInfo.id);
     }
 
     /**

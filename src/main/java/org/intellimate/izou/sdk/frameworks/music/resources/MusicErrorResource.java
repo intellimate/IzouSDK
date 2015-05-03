@@ -4,6 +4,7 @@ import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.resource.Resource;
 
 /**
+ * this class is used to hold the error-message
  * @author LeanderK
  * @version 1.0
  */
