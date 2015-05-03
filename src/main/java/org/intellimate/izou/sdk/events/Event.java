@@ -238,4 +238,14 @@ public class Event implements EventModel<Event> {
     public EventBehaviourControllerModel getEventBehaviourController() {
         return eventBehaviourController;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "type='" + type + '\'' +
+                ", source=" + source +
+                ", descriptors=" + descriptors +
+                ", listResourceContainer=" + listResourceContainer +
+                '}';
+    }
 }

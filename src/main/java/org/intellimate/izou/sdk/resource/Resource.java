@@ -178,4 +178,14 @@ public class Resource<T> implements ResourceModel<T> {
     public String getID() {
         return resourceID;
     }
+
+    @Override
+    public String toString() {
+        return "Resource{" +
+                "resourceID='" + resourceID + '\'' +
+                ", provider=" + provider +
+                ", consumer=" + consumer +
+                ", resource=" + resource +
+                '}';
+    }
 }

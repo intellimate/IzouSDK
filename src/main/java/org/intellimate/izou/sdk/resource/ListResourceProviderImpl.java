@@ -111,4 +111,11 @@ public class ListResourceProviderImpl implements ListResourceProvider {
                 .filter(resource -> resource.getProvider().getID().equals(sourceID))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public String toString() {
+        return "ListResourceProviderImpl{" +
+                "resources=" + resources +
+                '}';
+    }
 }
