@@ -10,6 +10,7 @@ import java.util.Optional;
  * @author LeanderK
  * @version 1.0
  */
+@SuppressWarnings("unused")
 public class Progress {
     /**
      * if the audio has no specified beginning or end (for example a LiveStream of the audio output of the computer).

@@ -2,17 +2,17 @@ package org.intellimate.izou.sdk.frameworks.music.resources;
 
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identification;
-import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.frameworks.music.player.Playlist;
 import org.intellimate.izou.sdk.resource.Resource;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 /**
  * @author LeanderK
  * @version 1.0
  */
-public class PlaylistResource extends Resource<Playlist> {
+public class PlaylistResource extends Resource<HashMap<String, Object>> {
     public static final String ID = "izou.music.resource.playlist";
     /**
      * creates a new Resource.
@@ -32,7 +32,7 @@ public class PlaylistResource extends Resource<Playlist> {
      * @param playlist   the resource
      */
     public PlaylistResource(Identification provider, Playlist playlist) {
-        super(ID, provider, playlist);
+        super(ID, provider, playlist.export());
     }
 
     /**
@@ -55,7 +55,7 @@ public class PlaylistResource extends Resource<Playlist> {
      * @param consumer   the ID of the Consumer
      */
     public PlaylistResource(Identification provider, Playlist playlist, Identification consumer) {
-        super(ID, provider, playlist, consumer);
+        super(ID, provider, playlist.export(), consumer);
     }
 
     /**
@@ -69,9 +69,9 @@ public class PlaylistResource extends Resource<Playlist> {
                     .getListResourceContainer()
                     .provideResource(ID)
                     .stream()
-                    .map(ResourceModel::getResource)
-                    .filter(ob -> ob instanceof Playlist)
-                    .map(ob -> (Playlist) ob)
+                    .map(Playlist::importResource)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .findAny();
         } else {
             return Optional.empty();

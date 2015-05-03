@@ -1,19 +1,23 @@
 package org.intellimate.izou.sdk.frameworks.music.player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import org.intellimate.izou.resource.ResourceModel;
+
+import java.util.*;
 
 /**
  * a playlist is a list of TrackInfo-objects, it is immutable!
  * @author LeanderK
  * @version 1.0
  */
+@SuppressWarnings("unused")
 public class Playlist {
+    public static final String QUEUE_DESCRIPTOR = "izou.music.playlist.queue";
     private final List<TrackInfo> queue;
+    public static final String POSITION_DESCRIPTOR = "izou.music.playlist.position";
     private final int position;
+    public static final String NAME_DESCRIPTOR = "izou.music.playlist.name";
     private final String name;
+    public static final String PLAYBACK_MODE_DESCRIPTOR = "izou.music.playlist.playbackmode";
     private final List<PlaybackMode> playbackModes;
 
     public Playlist(List<TrackInfo> queue) {
@@ -105,5 +109,62 @@ public class Playlist {
         List<TrackInfo> list = new ArrayList<>(queue);
         list.set(list.indexOf(old), newTrackInfo);
         return new Playlist(queue, name, playbackModes, position);
+    }
+
+    /**
+     * exports the Playlist to a HashMap
+     * @return a HashMap
+     */
+    public HashMap<String, Object> export() {
+        HashMap<String, Object> data = new HashMap<>();
+        for (int i = 0; i < queue.size(); i++) {
+            data.put(QUEUE_DESCRIPTOR+i, queue.get(i).export());
+        }
+        for (int i = 0; i < playbackModes.size(); i++) {
+            data.put(PLAYBACK_MODE_DESCRIPTOR+i, playbackModes.get(i).name());
+        }
+        data.put(NAME_DESCRIPTOR, name);
+        data.put(POSITION_DESCRIPTOR, position);
+        return data;
+    }
+
+    /**
+     * constructs (if no errors were found) the Playlist from the Resource
+     * @param resourceModel the resourceModel to import from
+     * @return the optional Playlist
+     */
+    public static Optional<Playlist> importResource(ResourceModel resourceModel) {
+        Object resource = resourceModel.getResource();
+        try {
+            //noinspection unchecked
+            HashMap<String, Object> data = (HashMap<String, Object>) resource;
+            ArrayList<TrackInfo> queue = new ArrayList<>();
+            ArrayList<PlaybackMode> playbackModes = new ArrayList<>();
+            final String[] name = {null};
+            final int[] position = {-1};
+            data.entrySet().forEach(entry -> {
+                if (entry.getKey().startsWith(QUEUE_DESCRIPTOR)) {
+                    int index = Integer.parseInt(entry.getKey().replace(QUEUE_DESCRIPTOR, ""));
+                    //noinspection unchecked
+                    TrackInfo.importFromHashMap((HashMap<String, Object>) entry.getValue())
+                            .ifPresent(trackInfo -> queue.add(index, trackInfo));
+                } else if (entry.getKey().startsWith(PLAYBACK_MODE_DESCRIPTOR)) {
+                    try {
+                        int index = Integer.parseInt(entry.getKey().replace(PLAYBACK_MODE_DESCRIPTOR, ""));
+                        //noinspection unchecked
+                        playbackModes.add(index, PlaybackMode.valueOf((String) entry.getValue()));
+                    } catch (IllegalArgumentException ignored) {
+                        //happens when the name is not present...maybe future sdks define other playbackModes
+                    }
+                } else if (entry.getKey().equals(NAME_DESCRIPTOR)) {
+                    name[0] = (String) entry.getValue();
+                } else if (entry.getKey().equals(POSITION_DESCRIPTOR)) {
+                    position[0] = (int) entry.getValue();
+                }
+            });
+            return Optional.of(new Playlist(queue, name[0] , playbackModes, position[0]));
+        } catch (ClassCastException | IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 }

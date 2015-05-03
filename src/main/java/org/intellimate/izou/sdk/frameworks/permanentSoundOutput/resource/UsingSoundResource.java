@@ -15,10 +15,10 @@ public class UsingSoundResource extends Resource<Identification> {
      * creates a new Resource.
      * This method is thread-safe.
      *
-     * @param provider   the Provider of the Resource
+     * @param consumer   the Provider of the Resource
      */
-    public UsingSoundResource(Identification provider) {
-        super(ID, provider, provider, null);
+    public UsingSoundResource(Identification consumer) {
+        super(ID, null, null, consumer);
     }
 
     /**

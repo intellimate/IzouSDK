@@ -89,6 +89,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * @param playbackRepeat whether the player is able to provide the info that the playback is repeating
      * @param playbackRepeatSong whether the player is able to provide the info that the playback is repeating the song
      */
+    @SuppressWarnings("unused")
     public Player(Context context, String id, boolean runsInPlay, Identifiable activator, boolean providesTrackInfo,
                   boolean playbackShuffle, boolean playbackRepeat, boolean playbackRepeatSong) {
         this(context, id, runsInPlay, Collections.singletonList(activator), providesTrackInfo,
@@ -108,6 +109,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * @param playbackRepeat whether the player is able to provide the info that the playback is repeating
      * @param playbackRepeatSong whether the player is able to provide the info that the playback is repeating the song
      */
+    @SuppressWarnings("unused")
     public Player(Context context, String id, boolean runsInPlay, boolean playRequestTrackInfo, boolean providesTrackInfo,
                   boolean playbackShuffle, boolean playbackRepeat, boolean playbackRepeatSong) {
         super(context, id);
@@ -156,17 +158,21 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      */
     @Override
     public boolean isPlaying() {
+        if (runsInPlay)
+            return isRunning;
         return isPlaying;
     }
 
     /**
      * this method has no effect if runsInPlay is enabled in the constructor
      */
+    @SuppressWarnings("unused")
     public void setPlayingStopped() {
         if (runsInPlay)
             return;
-        isRunning = false;
+        isPlaying = false;
         endSound();
+        super.stop();
     }
 
     /**
@@ -245,6 +251,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     /**
      * signals that the playing paused
      */
+    @SuppressWarnings("unused")
     public void pausePlaying() {
         switch (playbackState) {
             case PAUSE: return;
@@ -256,6 +263,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     /**
      * signals that the playing resumed
      */
+    @SuppressWarnings("unused")
     public void resumePlaying() {
         switch (playbackState) {
             case PLAY: return;
@@ -270,6 +278,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * @param progress the progress, or null
      * @param volume the volume, or null
      */
+    @SuppressWarnings("unused")
     public void updatePlayInfo(Playlist playlist, Progress progress, Volume volume) {
         if (playlist != null)
             this.playlist = playlist;
@@ -305,6 +314,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * @param playlist the playlist
      * @param info the new trackInfo object
      */
+    @SuppressWarnings("unused")
     public void trackInfoUpdate(Playlist playlist, TrackInfo info) {
         this.playlist = playlist;
         updatePlayInfo(info);

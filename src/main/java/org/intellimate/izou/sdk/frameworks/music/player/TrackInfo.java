@@ -12,6 +12,7 @@ import java.util.function.BiPredicate;
  * @author LeanderK
  * @version 1.0
  */
+@SuppressWarnings("unused")
 public class TrackInfo {
     public static final String nameDescriptor = "izou.music.trackinfo.name";
     private final String name;
@@ -183,6 +184,25 @@ public class TrackInfo {
     }
 
     /**
+     * returns the optional TrackInfo if the HashMap contains no malformed data
+     * @param hashMap the data to import from
+     * @return an optional
+     */
+    public static Optional<TrackInfo> importFromHashMap(HashMap<String, Object> hashMap) {
+        try {
+            String name = (String) hashMap.get(nameDescriptor);
+            String album = (String) hashMap.get(albumDescriptor);
+            String artist = (String) hashMap.get(artistDescriptor);
+            byte[] albumCover = (byte[]) hashMap.get(albumCoverDescriptor);
+            String albumCoverFormat = (String) hashMap.get(albumCoverFormatDescriptor);
+            String id = (String) hashMap.get(idDescriptor);
+            return Optional.of(new TrackInfo(name, artist, album, albumCover, albumCoverFormat, id));
+        } catch (ClassCastException e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
      * creates a TrackInfo from the resourceModel
      * @param resourceModel the resourceModel
      * @return the optional TrackInfo
@@ -192,13 +212,7 @@ public class TrackInfo {
         try {
             @SuppressWarnings("unchecked")
             HashMap<String, Object> hashMap = (HashMap<String, Object>) resource;
-            String name = (String) hashMap.get(nameDescriptor);
-            String album = (String) hashMap.get(albumDescriptor);
-            String artist = (String) hashMap.get(artistDescriptor);
-            byte[] albumCover = (byte[]) hashMap.get(albumCoverDescriptor);
-            String albumCoverFormat = (String) hashMap.get(albumCoverFormatDescriptor);
-            String id = (String) hashMap.get(idDescriptor);
-            return Optional.of(new TrackInfo(name, artist, album, albumCover, albumCoverFormat, id));
+            return importFromHashMap(hashMap);
         } catch (ClassCastException e) {
             return Optional.empty();
         }
