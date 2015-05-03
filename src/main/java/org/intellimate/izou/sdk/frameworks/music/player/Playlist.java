@@ -93,6 +93,7 @@ public class Playlist {
 
     /**
      * creates a new Playlist, with the specified position
+     * @param position the position to set to
      * @return a new Playlist
      */
     public Playlist setNewPosition(int position) {

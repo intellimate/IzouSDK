@@ -38,6 +38,7 @@ public class PlayerCommand extends Event {
      * @param capabilities the capabilities of the player
      * @param command the command
      * @param context the context to use
+     * @return the optional PlayerCommand
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
     public static Optional<PlayerCommand> createPlayerCommand(Identification source, Identification target, String command, Capabilities capabilities, Context context) {

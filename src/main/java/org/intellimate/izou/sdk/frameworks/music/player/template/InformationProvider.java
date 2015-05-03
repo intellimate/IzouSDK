@@ -19,6 +19,7 @@ public class InformationProvider extends AddOnModule implements MusicResourceGen
      * initializes the Module
      *
      * @param context the current Context
+     * @param musicProvider the musicProvider to get the data from
      * @param ID      the ID
      */
     public InformationProvider(Context context, String ID, MusicProvider musicProvider) {

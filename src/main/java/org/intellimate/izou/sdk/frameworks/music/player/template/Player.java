@@ -34,7 +34,7 @@ import java.util.concurrent.CompletableFuture;
  * to start playing, use the PlayerController.startPlaying() methods, never call the play() method directly!.
  * Also, don't call the stopSound() method directly!.
  * All basic methods are implemented in this class,but to code special behaviour fell free to explore the other
- * classes & interfaces.
+ * classes and interfaces.
  * </p>
  * @author LeanderK
  * @version 1.0
