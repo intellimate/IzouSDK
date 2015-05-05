@@ -2,6 +2,8 @@ package org.intellimate.izou.sdk.events;
 
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.sdk.contentgenerator.EventListener;
+import org.intellimate.izou.sdk.frameworks.presence.events.LeavingEvent;
+import org.intellimate.izou.sdk.frameworks.presence.events.PresenceEvent;
 
 import java.util.Optional;
 
@@ -47,7 +49,7 @@ public class CommonEvents {
          */
         public static Optional<EventListener> generalListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    GENERAL_DESCRIPTOR,
+                    PresenceEvent.GENERAL_DESCRIPTOR,
                     "this event does not mean the user is able to notice anything (can be used for warm-up), it " +
                             "indicates he might be",
                     "izou_presence_general",
@@ -56,29 +58,18 @@ public class CommonEvents {
         }
 
         /**
-         * this event does not mean the user is able to notice anything (can be used for warm-up), it indicates
-         * he might be
-         */
-        public static final String GENERAL_DESCRIPTOR = "izou.presence.general";
-
-        /**
          * it means the user has probably left (he could have left a while ago)
          * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */
         public static Optional<EventListener> generalLeavingListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    GENERAL_LEAVING_DESCRIPTOR,
+                    LeavingEvent.GENERAL_DESCRIPTOR,
                     "it means the user has probably left (he could have left a while ago)",
                     "izou_presence_general_leaving",
                     identifiable
             );
         }
-
-        /**
-         * it means the user has probably left (he could have left a while ago)
-         */
-        public static final String GENERAL_LEAVING_DESCRIPTOR = "izou.presence.general.leaving";
 
         /**
          * it means that the addon can guarantee that the user entered an area near izou
@@ -87,7 +78,7 @@ public class CommonEvents {
          */
         public static Optional<EventListener> strictListener(Identifiable identifiable) {
             return EventListener.createEventListener(
-                    STRICT_DESCRIPTOR,
+                    PresenceEvent.STRICT_DESCRIPTOR,
                     "it means that the addon can guarantee that the user entered an area near izou",
                     "izou_presence_strict",
                     identifiable
@@ -95,9 +86,18 @@ public class CommonEvents {
         }
 
         /**
-         * it means that the addon can guarantee that the user entered an area near izou
+         * it means the user has most likely left (he may come back immediately)
+         * @param identifiable the identifiable ot associate the EventListener with
+         * @return an optional which may contain an EventListener
          */
-        public static final String STRICT_DESCRIPTOR = "izou.presence.strict";
+        public static Optional<EventListener> strictLeavingListener(Identifiable identifiable) {
+            return EventListener.createEventListener(
+                    LeavingEvent.STRICT_DESCRIPTOR,
+                    "it means the user has most likely left (he may come back immediately)",
+                    "izou_presence_strict_leaving",
+                    identifiable
+            );
+        }
     }
 
     /**
