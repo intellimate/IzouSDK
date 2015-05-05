@@ -18,14 +18,12 @@ import java.util.concurrent.CompletableFuture;
  */
 public interface ResourceUser extends ContextProvider, Identifiable {
     /**
-     * generates the specified resource from the first matching ResourceBuilder (use the ID if you want to be sure)
-     * <p>
+     * generates the specified resource from the first matching ResourceBuilder (use the ID if you want to be sure).
      * tip: for a better coding experience: use the method
      * <pre>{@code
      * .orElse(CompletableFuture.completedFuture(new LinkedList<>()))
      * }</pre>
-     * to handle the empty case
-     * </p>
+     * to handle the empty case.
      * @param resourceID the id of the resource
      * @return an Optional containing a future of a list of results
      */
@@ -35,13 +33,11 @@ public interface ResourceUser extends ContextProvider, Identifiable {
 
     /**
      * generates the specified resource from the specified ResourceBuilder.
-     * <p>
      * tip: for a better coding experience: use the method
      * <pre>{@code
      * .orElse(CompletableFuture.completedFuture(new LinkedList<>()))
      * }</pre>
-     * to handle the empty case
-     * </p>
+     * to handle the empty case.
      * @param resourceID the id of the resource
      * @param provider the specified provider
      * @return an Optional containing a future of a list of results
