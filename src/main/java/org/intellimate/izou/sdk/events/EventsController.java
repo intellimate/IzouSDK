@@ -20,7 +20,9 @@ public abstract class EventsController extends AddOnModule implements EventsCont
     public boolean controlEventDispatcher(EventModel eventModel) {
         //noinspection SimplifiableIfStatement
         if (eventModel.getType().equals(CommonEvents.Type.NOTIFICATION_TYPE)
-                || eventModel.containsDescriptor("izou.alarm"))
+                || eventModel.containsDescriptor(CommonEvents.ALARM_DESCRIPTOR) ||
+                eventModel.containsDescriptor(CommonEvents.Descriptors.STOP_DESCRIPTOR) ||
+                eventModel.containsDescriptor(CommonEvents.Descriptors.NOT_INTERRUPT))
             return true;
         return controlEvents(eventModel);
     }
