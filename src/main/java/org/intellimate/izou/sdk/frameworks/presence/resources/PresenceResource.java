@@ -1,7 +1,10 @@
 package org.intellimate.izou.sdk.frameworks.presence.resources;
 
 import org.intellimate.izou.identification.Identification;
+import org.intellimate.izou.sdk.frameworks.presence.provider.Presence;
 import org.intellimate.izou.sdk.resource.Resource;
+
+import java.util.HashMap;
 
 /**
  * returns true if the user might be around.
@@ -11,7 +14,7 @@ import org.intellimate.izou.sdk.resource.Resource;
  * @author LeanderK
  * @version 1.0
  */
-public class PresenceResource extends Resource<Boolean> {
+public class PresenceResource extends Resource<HashMap<String, Object>> {
     public static final String ID = "izou.presence.resources.presence";
 
     /**
@@ -29,10 +32,10 @@ public class PresenceResource extends Resource<Boolean> {
      * This method is thread-safe.
      *
      * @param provider   the Provider of the Resource
-     * @param aBoolean   the resource
+     * @param presence   the resource
      */
-    public PresenceResource(Identification provider, Boolean aBoolean) {
-        super(ID, provider, aBoolean);
+    public PresenceResource(Identification provider, Presence presence) {
+        super(ID, provider, presence.export());
     }
 
     /**
@@ -51,10 +54,10 @@ public class PresenceResource extends Resource<Boolean> {
      * This method is thread-safe.
      *
      * @param provider   the Provider of the Resource
-     * @param aBoolean   the resource
+     * @param presence   the resource
      * @param consumer   the ID of the Consumer
      */
-    public PresenceResource(Identification provider, Boolean aBoolean, Identification consumer) {
-        super(ID, provider, aBoolean, consumer);
+    public PresenceResource(Identification provider, Presence presence, Identification consumer) {
+        super(ID, provider, presence.export(), consumer);
     }
 }
