@@ -25,7 +25,7 @@ public class StopEvent extends Event {
     protected StopEvent(Identification source)
             throws IllegalArgumentException {
         super(CommonEvents.Type.RESPONSE_TYPE, source, new ArrayList<>(Arrays.asList(ID,
-                CommonEvents.Descriptors.STOP_DESCRIPTOR)));
+                CommonEvents.Descriptors.STOP_DESCRIPTOR, CommonEvents.Descriptors.NOT_INTERRUPT)));
     }
 
     /**

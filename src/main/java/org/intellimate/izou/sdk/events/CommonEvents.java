@@ -233,8 +233,13 @@ public class CommonEvents {
             );
         }
         /**
-         * Event-Type which indicates that only your AddOn should react to an Event
+         * Event-Type which indicates that this events stops an already running addon
          */
         public static final String STOP_DESCRIPTOR = "stop";
+
+        /**
+         * Event-type which indicates that this event is important and should not get cancelled
+         */
+        public static final String NOT_INTERRUPT = "notinterrupt";
     }
 }

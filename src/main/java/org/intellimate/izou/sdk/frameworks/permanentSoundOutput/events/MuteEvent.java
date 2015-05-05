@@ -25,7 +25,7 @@ public class MuteEvent extends Event {
     protected MuteEvent(Identification source)
             throws IllegalArgumentException {
         super(CommonEvents.Type.RESPONSE_TYPE, source, new ArrayList<>(Arrays.asList(ID,
-                CommonEvents.Descriptors.STOP_DESCRIPTOR)));
+                CommonEvents.Descriptors.NOT_INTERRUPT)));
     }
 
     /**

@@ -23,7 +23,7 @@ public class EndedEvent extends Event {
     protected EndedEvent(Identification source)
             throws IllegalArgumentException {
         super(CommonEvents.Type.RESPONSE_TYPE, source, new ArrayList<>(Arrays.asList(ID,
-                CommonEvents.Descriptors.STOP_DESCRIPTOR)));
+                CommonEvents.Descriptors.NOT_INTERRUPT)));
     }
 
     /**

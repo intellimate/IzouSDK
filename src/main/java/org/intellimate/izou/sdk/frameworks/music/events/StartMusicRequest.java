@@ -29,8 +29,7 @@ public class StartMusicRequest extends Event {
      * @param source      the source of the Event, most likely a this reference.
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    protected StartMusicRequest(Identification source)
-                                                                        throws IllegalArgumentException {
+    protected StartMusicRequest(Identification source) throws IllegalArgumentException {
         super(CommonEvents.Type.RESPONSE_TYPE, source, Collections.singletonList(ID));
     }
 
