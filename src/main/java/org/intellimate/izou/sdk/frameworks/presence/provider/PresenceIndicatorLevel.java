@@ -1,4 +1,4 @@
-package org.intellimate.izou.sdk.frameworks.presence.logic;
+package org.intellimate.izou.sdk.frameworks.presence.provider;
 
 /**
  * contains some constants describing different levels of indication that the user is around

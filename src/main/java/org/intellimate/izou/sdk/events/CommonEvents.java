@@ -97,7 +97,7 @@ public class CommonEvents {
         /**
          * it means that the addon can guarantee that the user entered an area near izou
          */
-        public static final String STRICT_DESCRIPTOR = "izou.alarm";
+        public static final String STRICT_DESCRIPTOR = "izou.presence.strict";
     }
 
     /**
