@@ -21,7 +21,9 @@ public interface ResourceUser extends ContextProvider, Identifiable {
      * generates the specified resource from the first matching ResourceBuilder (use the ID if you want to be sure)
      * <p>
      * tip: for a better coding experience: use the method
-     * <code>.orElse(CompletableFuture.completedFuture(new LinkedList<>()))</code>
+     * <pre>{@code
+     * .orElse(CompletableFuture.completedFuture(new LinkedList<>()))
+     * }</pre>
      * to handle the empty case
      * </p>
      * @param resourceID the id of the resource
@@ -35,7 +37,9 @@ public interface ResourceUser extends ContextProvider, Identifiable {
      * generates the specified resource from the specified ResourceBuilder.
      * <p>
      * tip: for a better coding experience: use the method
-     * <code>.orElse(CompletableFuture.completedFuture(new LinkedList<>()))</code>
+     * <pre>{@code
+     * .orElse(CompletableFuture.completedFuture(new LinkedList<>()))
+     * }</pre>
      * to handle the empty case
      * </p>
      * @param resourceID the id of the resource
