@@ -15,7 +15,7 @@ import java.util.Optional;
  * @author LeanderK
  * @version 1.0
  */
-public interface PresenceResourceHelper extends ResourcesProviderBase, PresenceProvider {
+public interface PresenceResourceProvider extends ResourcesProviderBase, PresenceProvider {
     @Override
     default List<? extends ResourceModel> announceResources() {
         List<ResourceModel> resources = new ArrayList<>();
