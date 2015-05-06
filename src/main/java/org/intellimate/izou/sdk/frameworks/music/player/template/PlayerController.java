@@ -27,10 +27,19 @@ import java.util.Optional;
  * @version 1.0
  */
 public abstract class PlayerController extends Activator {
-    private final Player player;
+    private Player player;
 
     public PlayerController(Context context, String ID, Player player) {
         super(context, ID);
+        this.player = player;
+    }
+
+    public PlayerController(Context context, String ID) {
+        super(context, ID);
+        this.player = null;
+    }
+
+    public void setPlayer(Player player) {
         this.player = player;
     }
 
