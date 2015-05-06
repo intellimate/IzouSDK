@@ -57,7 +57,8 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * creates a new output-plugin with a new id
      *
      * @param context context
-     * @param id      the id of the new output-plugin
+     * @param id      the id of the new output-plugin. The ID of the InformationProvider is also based on this id
+     *                (id + ".InformationProvider")
      * @param runsInPlay whether the termination of the play method should be treated as the termination the
      *                   music (STOP not PAUSE)
      * @param activators the activators which are able to start the Player if the Player is not able to start from

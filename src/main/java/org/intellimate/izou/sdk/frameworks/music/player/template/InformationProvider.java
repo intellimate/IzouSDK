@@ -23,7 +23,7 @@ public class InformationProvider extends AddOnModule implements MusicResourceGen
      * @param ID      the ID
      */
     public InformationProvider(Context context, String ID, MusicProvider musicProvider) {
-        super(context, ID);
+        super(context, ID+".InformationProvider");
         this.musicProvider = musicProvider;
     }
 

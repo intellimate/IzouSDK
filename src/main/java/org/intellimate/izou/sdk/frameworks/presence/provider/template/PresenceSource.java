@@ -104,6 +104,8 @@ public abstract class PresenceSource extends EventsController implements Presenc
      * @param present true for presence, false if not
      */
     public void setPresence(boolean present) {
+        if (this.present == present)
+            return;
         this.present = present;
         updateVague();
         if (present) {
