@@ -6,6 +6,7 @@ import org.intellimate.izou.sdk.frameworks.presence.events.PresenceEvent;
 import org.intellimate.izou.sdk.util.FireEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,14 +19,23 @@ public interface PresenceHelper extends PresenceProvider, FireEvent {
      * fires the presence-Event
      */
     default void firePresence() {
+        firePresence(new ArrayList<>());
+    }
+
+    /**
+     * fires the presence-Event
+     * @param descriptors the descriptors
+     */
+    default void firePresence(List<String> descriptors) {
         Optional<PresenceEvent> startEvent = IdentificationManager.getInstance().getIdentification(this)
-                .flatMap(id -> PresenceEvent.createPresenceEvent(id, isStrict(), new ArrayList<>()));
+                .flatMap(id -> PresenceEvent.createPresenceEvent(id, isStrict(), descriptors));
         if (!startEvent.isPresent()) {
             getContext().getLogger().error("unable to fire startEvent");
         } else {
             fire(startEvent.get(), 5);
         }
     }
+
     /**
      * fires the leaving-Event
      */

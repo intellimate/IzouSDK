@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version 1.0
  */
 @SuppressWarnings("unused")
-public abstract class PresenceSource extends EventsController implements PresenceHelper, PresenceResourceProvider, ResourceUser {
+public abstract class PresenceConstant extends EventsController implements PresenceHelper, PresenceResourceProvider, ResourceUser {
     private boolean present = false;
     private final boolean strict;
     private final PresenceIndicatorLevel level;
@@ -45,7 +45,7 @@ public abstract class PresenceSource extends EventsController implements Presenc
      *                 only constant presence source can control events.
      *
      */
-    public PresenceSource(Context context, String ID, boolean strict, PresenceIndicatorLevel level, boolean constant) {
+    public PresenceConstant(Context context, String ID, boolean strict, PresenceIndicatorLevel level, boolean constant) {
         super(context, ID);
         this.strict = strict;
         this.level = level;
