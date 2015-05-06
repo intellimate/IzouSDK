@@ -183,8 +183,8 @@ public abstract class OutputPluginArgument<T, X> extends AddOnModule implements 
     /**
      * main method for outputPlugin, runs the data-conversion and output-renderer
      *
-     * when the outputExtensions are done processing the Event object, they add their finished objects into tDoneList,
-     * from where they will have to be gotten to render them in renderFinalOutput
+     * it will instruct the outputManager to let the outputExtensions generate the data. Wait for the time specified
+     * in getTimeoutLimit() (standard is 1000 milliseconds) abd the call renderFinalOutput() with the resulting data.
      */
     @Override
     public void run() {
