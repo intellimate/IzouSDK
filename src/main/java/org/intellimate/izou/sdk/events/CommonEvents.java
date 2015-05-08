@@ -42,8 +42,48 @@ public class CommonEvents {
      */
     public static class Presence {
         /**
+         * this event does indicate some kind of presence, strict or general.
+         * <p>
+         * Important: there is no authentication provided, if the descriptor: UNKNOWN_DESCRIPTOR is added to the
+         * event. Only if the descriptor: KNOWN_DESCRIPTOR is added, one should conclude that this is the actual user.
+         * </p>
+         * @param identifiable the identifiable ot associate the EventListener with
+         * @return an optional which may contain an EventListener
+         */
+        public static Optional<EventListener> presenceListener(Identifiable identifiable) {
+            return EventListener.createEventListener(
+                    PresenceEvent.ID,
+                    "this event does indicate some kind of presence, strict or general",
+                    "izou_presence",
+                    identifiable
+            );
+        }
+
+        /**
+         * this event does indicate some kind of leaving, strict or general
+         * <p>
+         * Important: there is no authentication provided, if the descriptor: UNKNOWN_DESCRIPTOR is added to the
+         * event. Only if the descriptor: KNOWN_DESCRIPTOR is added, one should conclude that this is the actual user.
+         * </p>
+         * @param identifiable the identifiable ot associate the EventListener with
+         * @return an optional which may contain an EventListener
+         */
+        public static Optional<EventListener> leavingListener(Identifiable identifiable) {
+            return EventListener.createEventListener(
+                    LeavingEvent.ID,
+                    "this event does indicate some kind of leaving, strict or general",
+                    "izou_presence_leaving",
+                    identifiable
+            );
+        }
+
+        /**
          * this event does not mean the user is able to notice anything (can be used for warm-up), it indicates
-         * he might be
+         * he might be.
+         * <p>
+         * Important: there is no authentication provided, if the descriptor: UNKNOWN_DESCRIPTOR is added to the
+         * event. Only if the descriptor: KNOWN_DESCRIPTOR is added, one should conclude that this is the actual user.
+         * </p>
          * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */
@@ -72,7 +112,11 @@ public class CommonEvents {
         }
 
         /**
-         * it means that the addon can guarantee that the user entered an area near izou
+         * it means that the addon can guarantee that the user entered an area near izou.
+         * <p>
+         * Important: there is no authentication provided, if the descriptor: UNKNOWN_DESCRIPTOR is added to the
+         * event. Only if the descriptor: KNOWN_DESCRIPTOR is added, one should conclude that this is the actual user.
+         * </p>
          * @param identifiable the identifiable ot associate the EventListener with
          * @return an optional which may contain an EventListener
          */

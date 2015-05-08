@@ -17,18 +17,20 @@ import java.util.Optional;
 public interface PresenceHelper extends PresenceProvider, FireEvent {
     /**
      * fires the presence-Event
-     */
-    default void firePresence() {
-        firePresence(new ArrayList<>());
+     * @param known whether it is highly likely that the user cause the event and not a random person
+    */
+    default void firePresence(boolean known) {
+        firePresence(new ArrayList<>(), known);
     }
 
     /**
      * fires the presence-Event
      * @param descriptors the descriptors
+     * @param known whether it is highly likely that the user cause the event and not a random person
      */
-    default void firePresence(List<String> descriptors) {
+    default void firePresence(List<String> descriptors, boolean known) {
         Optional<PresenceEvent> startEvent = IdentificationManager.getInstance().getIdentification(this)
-                .flatMap(id -> PresenceEvent.createPresenceEvent(id, isStrict(), descriptors));
+                .flatMap(id -> PresenceEvent.createPresenceEvent(id, isStrict(), known, descriptors));
         if (!startEvent.isPresent()) {
             getContext().getLogger().error("unable to fire startEvent");
         } else {

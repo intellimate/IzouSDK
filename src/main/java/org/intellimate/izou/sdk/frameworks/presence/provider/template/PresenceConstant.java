@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * If the addon is based on encounters with the user and not able to conclude constant presence from the information,
  * it should pass not extend this class, if not (for example if it monitors wifi) it can. They can just fire the
  * Presence-Event on encountering.
+ * It is expected that addons extending this class are pretty sure that the user is around and not a random person.
  * </p>
  * @author LeanderK
  * @version 1.0
@@ -42,7 +43,6 @@ public abstract class PresenceConstant extends EventsController implements Prese
      * @param level   the level
      * @param constant if the addon is based on encounters with the user and not able to conclude constant presence from
      *                 the information, it should pass false, if not (for example if it monitors wifi) it should return true.
-     *                 only constant presence source can control events.
      *
      */
     public PresenceConstant(Context context, String ID, boolean strict, PresenceIndicatorLevel level, boolean constant) {
@@ -109,7 +109,7 @@ public abstract class PresenceConstant extends EventsController implements Prese
         this.present = present;
         updateVague();
         if (present) {
-            firePresence();
+            firePresence(true);
         } else {
             fireLeaving();
         }

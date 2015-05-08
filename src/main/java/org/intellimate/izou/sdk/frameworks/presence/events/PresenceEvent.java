@@ -23,6 +23,14 @@ public class PresenceEvent extends Event {
      */
     public static final String STRICT_DESCRIPTOR = "izou.presence.strict";
     /**
+     * it means that someone entered an area near izou, but it is not clear if it is the user,
+     */
+    public static final String UNKNOWN_DESCRIPTOR = "izou.presence.unkownuser";
+    /**
+     * it means that the user entered an area near izou
+     */
+    public static final String KNOWN_DESCRIPTOR = "izou.presence.knownuser";
+    /**
      * it means that the addon can guarantee that the user entered an area near izou
      */
     public static final String ID = "izou.presence";
@@ -43,15 +51,21 @@ public class PresenceEvent extends Event {
      * creates a new PresenceEvent
      * @param source the caller
      * @param strict whether the addon can guarantee that the user is around
+     * @param known true if the addon knows if the person encountered is the (main) user
      * @param descriptors the descriptors
      * @return the optional PresenceEvent
      */
-    public static Optional<PresenceEvent> createPresenceEvent(Identification source, boolean strict, List<String> descriptors) {
+    public static Optional<PresenceEvent> createPresenceEvent(Identification source, boolean strict, boolean known, List<String> descriptors) {
         try {
             if (strict) {
                 descriptors.add(STRICT_DESCRIPTOR);
             } else {
                 descriptors.add(GENERAL_DESCRIPTOR);
+            }
+            if (known) {
+                descriptors.add(KNOWN_DESCRIPTOR);
+            } else {
+                descriptors.add(UNKNOWN_DESCRIPTOR);
             }
             descriptors.add(ID);
             PresenceEvent stopRequest = new PresenceEvent(source, descriptors);

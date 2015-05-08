@@ -27,15 +27,18 @@ import java.util.concurrent.CompletableFuture;
  * @author LeanderK
  * @version 1.0
  */
+@SuppressWarnings("unused")
 public abstract class PresenceNonConstant extends Activator implements EventListenerModel, ResourceUser {
     private boolean present = false;
     private boolean strictPresent = false;
     private LocalDateTime lastSeen = LocalDateTime.now();
     private final boolean strict;
+    private final boolean fireUnknownIfNotPresent;
 
-    public PresenceNonConstant(Context context, String ID, boolean strict) {
+    public PresenceNonConstant(Context context, String ID, boolean strict, boolean fireUnknownIfNotPresent) {
         super(context, ID);
         this.strict = strict;
+        this.fireUnknownIfNotPresent = fireUnknownIfNotPresent;
         getContext().getEvents().registerEventListener(Arrays.asList(LeavingEvent.ID, PresenceEvent.ID), this);
     }
 
@@ -43,14 +46,18 @@ public abstract class PresenceNonConstant extends Activator implements EventList
      * call this method when you have encountered the user
      */
     public void userEncountered() {
+        Optional<PresenceEvent> presenceEvent;
         List<String> descriptors = new ArrayList<>();
-        if (strict && (!present || !strictPresent) &&
-                lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMinuteThreshold()) {
-            descriptors.add(CommonEvents.Response.FULL_RESPONSE_DESCRIPTOR);
+        if (strict && (!present || !strictPresent)) {
+            if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMajorMinuteThreshold()) {
+                descriptors.add(CommonEvents.Response.MAJOR_RESPONSE_DESCRIPTOR);
+            } else if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMinorMinuteThreshold()) {
+                descriptors.add(CommonEvents.Response.MINOR_RESPONSE_DESCRIPTOR);
+            }
         }
-        Optional<PresenceEvent> presenceEvent = IdentificationManager.getInstance()
+        presenceEvent = IdentificationManager.getInstance()
                 .getIdentification(this)
-                .flatMap(id -> PresenceEvent.createPresenceEvent(id, strict, descriptors));
+                .flatMap(id -> PresenceEvent.createPresenceEvent(id, strict, present, descriptors));
         if (!presenceEvent.isPresent()) {
             error("unable to create PresenceEvent");
         } else {
@@ -59,11 +66,21 @@ public abstract class PresenceNonConstant extends Activator implements EventList
     }
 
     /**
-     * the time-threshold that had to pass to fire the event with an FULL_RESPONSE_DESCRIPTOR
+     * the time-threshold that had to pass to fire the event with an MINOR_RESPONSE_DESCRIPTOR,
+     * default is 20
      * @return int in minutes
      */
-    private int getMinuteThreshold() {
-        return 60;
+    private int getMinorMinuteThreshold() {
+        return 20;
+    }
+
+    /**
+     * the time-threshold that had to pass to fire the event with an MAJOR_RESPONSE_DESCRIPTOR,
+     * default is 90
+     * @return int in minutes
+     */
+    private int getMajorMinuteThreshold() {
+        return 90;
     }
 
     /**
