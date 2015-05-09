@@ -49,7 +49,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     private CompletableFuture<?> playingThread = null;
     private final boolean runsInPlay;
     private boolean isRunning = false;
-    private boolean isPlaying = true;
+    private boolean isPlaying = false;
     private final List<Identifiable> activators;
     private final CommandHandler commandHandler = createCommandHandler();
 
