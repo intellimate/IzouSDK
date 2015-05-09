@@ -86,4 +86,13 @@ public class Progress {
             return Optional.empty();
         }
     }
+
+    @Override
+    public String toString() {
+        return "Progress{" +
+                "length=" + (length / 60000) + ":" + (length % 60000) +
+                ", knownPosition=" + (knownPosition / 60000) + ":" + (knownPosition % 60000) +
+                ", knownMillisTimeStamp=" + knownMillisTimeStamp +
+                '}';
+    }
 }
