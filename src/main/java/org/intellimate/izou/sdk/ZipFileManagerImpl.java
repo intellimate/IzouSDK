@@ -1,6 +1,7 @@
 package org.intellimate.izou.sdk;
 
 import org.intellimate.izou.sdk.addon.ZipFileManager;
+import ro.fortsoft.pf4j.Extension;
 import ro.fortsoft.pf4j.PluginWrapper;
 
 /**
@@ -8,6 +9,7 @@ import ro.fortsoft.pf4j.PluginWrapper;
  * @author LeanderK
  * @version 1.0
  */
+@Extension
 public class ZipFileManagerImpl extends ZipFileManager {
     /**
      * Constructor to be used by plugin manager for plugin instantiation.
