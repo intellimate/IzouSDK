@@ -29,4 +29,20 @@ public class Volume {
             return Optional.empty();
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Volume)) return false;
+
+        Volume volume1 = (Volume) o;
+
+        return volume == volume1.volume;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return volume;
+    }
 }

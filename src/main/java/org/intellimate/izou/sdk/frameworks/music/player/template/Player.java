@@ -183,6 +183,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         isPlaying = false;
         stopSound();
         endedSound();
+        rollBackToDefault();
         super.stop();
     }
 
@@ -208,6 +209,34 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     }
 
     /**
+     * checks if the trackInfo is an update and fires the appropriate Event. This method should not be called
+     * without an active playlist, or an NullPointerException will be thrown.
+     * this method:<br>
+     *     - fires nothing if the trackInfo equals the current trackInfo.<br>
+     *     - fires an trackInfoUpdate if the trackInfo contains information not found in the current.<br>
+     */
+    @SuppressWarnings("unused")
+    public void updateCurrentTrackInfo(TrackInfo trackInfo) {
+        if (playlist.getCurrent().equals(trackInfo) ||
+                playlist.getCurrent().isNew(trackInfo))
+            return;
+        this.playlist = playlist.update(playlist.getCurrent(), trackInfo);
+        trackInfoUpdate(playlist, trackInfo);
+    }
+
+    /**
+     * call this method if the trackInfo object in the playlist was updated. Only the trackinfo object will be sent via
+     * Event
+     * @param playlist the playlist
+     * @param info the new trackInfo object
+     */
+    @SuppressWarnings("unused")
+    public void trackInfoUpdate(Playlist playlist, TrackInfo info) {
+        this.playlist = playlist;
+        updatePlayInfo(info);
+    }
+
+    /**
      * gets the Volume
      *
      * @return the volume
@@ -224,6 +253,8 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      */
     @Override
     public void updatePlayInfo(Volume volume) {
+        if (this.volume.equals(volume))
+            return;
         this.volume = volume;
         MusicHelper.super.updatePlayInfo(volume);
     }
@@ -317,18 +348,6 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         if (volume != null)
             this.volume = volume;
         MusicHelper.super.updatePlayInfo(playlist, progress, null, volume);
-    }
-
-    /**
-     * call this method if the trackInfo object in the playlist was updated. Only the trackinfo object will be sent via
-     * Event
-     * @param playlist the playlist
-     * @param info the new trackInfo object
-     */
-    @SuppressWarnings("unused")
-    public void trackInfoUpdate(Playlist playlist, TrackInfo info) {
-        this.playlist = playlist;
-        updatePlayInfo(info);
     }
 
     /**
@@ -450,6 +469,17 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     @Override
     public void stop() {
         setPlayingStopped();
+    }
+
+    /**
+     * sets every information into its default state (playlist, volume, etc...)
+     */
+    public void rollBackToDefault() {
+        playlist = new Playlist(new ArrayList<>());
+        playlist = new Playlist(new ArrayList<>());
+        volume = Volume.createVolume(50).orElse(null);
+        progress = new Progress(0,0);
+        playbackState = PlaybackState.PLAY;
     }
 
     /**

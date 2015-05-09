@@ -175,17 +175,39 @@ public class TrackInfo {
     }
 
     /**
-     * returns a trackinfo if some information was added and not overwritten
+     * returns a trackinfo if some information was added and not overwritten (see isNew) AND a change occurred.
      * @param name the name
      * @param artist the artist
      * @param album the album
      * @param albumCover the album cover
      * @param albumCoverFormat the album cover format
      * @param id the id of the track
-     * @return a trackinfo if some information was updated
+     * @return a trackInfo if some information was updated, and an empty optional if: 1. information would be ovewritten
+     * or 2. no change occured
      */
     public Optional<TrackInfo> update(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String id) {
         if (isNew(name, artist, album, albumCover, albumCoverFormat, id))
+            return Optional.empty();
+        boolean change = false;
+        if (name != null && !name.equals(this.name)) {
+            change = true;
+        }
+        if (artist != null && !artist.equals(this.artist)) {
+            change = true;
+        }
+        if (album != null && !album.equals(this.album)) {
+            change = true;
+        }
+        if (name != null && !name.equals(this.name)) {
+            change = true;
+        }
+        if (albumCoverFormat != null && !albumCoverFormat.equals(this.albumCoverFormat)) {
+            change = true;
+        }
+        if (id != null && !id.equals(this.id)) {
+            change = true;
+        }
+        if (!change)
             return Optional.empty();
         return Optional.of(new TrackInfo(
                 this.name == null? name : this.name,
@@ -245,5 +267,33 @@ public class TrackInfo {
         } catch (ClassCastException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TrackInfo)) return false;
+
+        TrackInfo trackInfo = (TrackInfo) o;
+
+        if (name != null ? !name.equals(trackInfo.name) : trackInfo.name != null) return false;
+        if (artist != null ? !artist.equals(trackInfo.artist) : trackInfo.artist != null) return false;
+        if (album != null ? !album.equals(trackInfo.album) : trackInfo.album != null) return false;
+        if (!Arrays.equals(albumCover, trackInfo.albumCover)) return false;
+        if (albumCoverFormat != null ? !albumCoverFormat.equals(trackInfo.albumCoverFormat) : trackInfo.albumCoverFormat != null)
+            return false;
+        return !(id != null ? !id.equals(trackInfo.id) : trackInfo.id != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (artist != null ? artist.hashCode() : 0);
+        result = 31 * result + (album != null ? album.hashCode() : 0);
+        result = 31 * result + (albumCover != null ? Arrays.hashCode(albumCover) : 0);
+        result = 31 * result + (albumCoverFormat != null ? albumCoverFormat.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
     }
 }

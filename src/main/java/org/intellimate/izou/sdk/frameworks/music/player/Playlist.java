@@ -83,10 +83,34 @@ public class Playlist {
         return playbackModes;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Playlist)) return false;
+
+        Playlist playlist = (Playlist) o;
+
+        if (position != playlist.position) return false;
+        if (queue != null ? !queue.equals(playlist.queue) : playlist.queue != null) return false;
+        if (name != null ? !name.equals(playlist.name) : playlist.name != null) return false;
+        return !(playbackModes != null ? !playbackModes.equals(playlist.playbackModes) : playlist.playbackModes != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = queue != null ? queue.hashCode() : 0;
+        result = 31 * result + position;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (playbackModes != null ? playbackModes.hashCode() : 0);
+        return result;
+    }
+
     /**
      * creates a new Playlist, with the next Track as head (or an illegal position if it is the last!!)
      * @return a new Playlist
      */
+
     public Playlist nextTrack() {
         return new Playlist(queue, name, playbackModes, position + 1);
     }
