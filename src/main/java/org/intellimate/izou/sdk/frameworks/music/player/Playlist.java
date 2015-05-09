@@ -53,7 +53,7 @@ public class Playlist {
         } catch (IndexOutOfBoundsException e) {
             trackInfo = null;
         }
-        return null;
+        return trackInfo;
     }
 
     /**

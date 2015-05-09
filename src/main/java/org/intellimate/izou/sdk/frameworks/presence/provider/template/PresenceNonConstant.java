@@ -48,16 +48,19 @@ public abstract class PresenceNonConstant extends Activator implements EventList
     public void userEncountered() {
         Optional<PresenceEvent> presenceEvent;
         List<String> descriptors = new ArrayList<>();
-        if (strict && (!present || !strictPresent)) {
+        if (strict && ((!present && !fireUnknownIfNotPresent)|| !strictPresent)) {
             if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMajorMinuteThreshold()) {
                 descriptors.add(CommonEvents.Response.MAJOR_RESPONSE_DESCRIPTOR);
             } else if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMinorMinuteThreshold()) {
                 descriptors.add(CommonEvents.Response.MINOR_RESPONSE_DESCRIPTOR);
             }
+        } else if (!present && fireUnknownIfNotPresent) {
+            descriptors.add(CommonEvents.Descriptors.NOT_INTERRUPT);
         }
+        boolean known = !fireUnknownIfNotPresent || present;
         presenceEvent = IdentificationManager.getInstance()
                 .getIdentification(this)
-                .flatMap(id -> PresenceEvent.createPresenceEvent(id, strict, present, descriptors));
+                .flatMap(id -> PresenceEvent.createPresenceEvent(id, strict, known, descriptors));
         if (!presenceEvent.isPresent()) {
             error("unable to create PresenceEvent");
         } else {
