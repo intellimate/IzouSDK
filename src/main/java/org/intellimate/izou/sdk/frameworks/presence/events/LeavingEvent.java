@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * this event guarantees that the user is not around anymore (as much as possible)
+ * this event guarantees that the user is not around anymore (as much as possible).
  * @author LeanderK
  * @version 1.0
  */
@@ -53,6 +53,7 @@ public class LeavingEvent extends Event {
                 descriptors.add(GENERAL_DESCRIPTOR);
             }
             descriptors.add(ID);
+            descriptors.add(CommonEvents.Descriptors.NOT_INTERRUPT);
             LeavingEvent stopRequest = new LeavingEvent(source, descriptors);
             return Optional.of(stopRequest);
         } catch (IllegalArgumentException e) {
