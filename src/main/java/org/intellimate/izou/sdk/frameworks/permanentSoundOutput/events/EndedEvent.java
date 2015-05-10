@@ -13,7 +13,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class EndedEvent extends Event {
-    public static final String ID = "izou.sound.events.stop";
+    public static final String ID = "izou.sound.events.ended";
     /**
      * Creates a new Event Object
      *
