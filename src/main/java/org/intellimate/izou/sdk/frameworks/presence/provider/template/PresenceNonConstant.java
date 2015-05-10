@@ -93,6 +93,8 @@ public abstract class PresenceNonConstant extends Activator implements EventList
      */
     @Override
     public void eventFired(EventModel event) {
+        if (this.isOwner(event.getSource()))
+            return;
         if (event.containsDescriptor(LeavingEvent.ID) || event.containsDescriptor(PresenceEvent.ID)) {
             if (event.containsDescriptor(LeavingEvent.ID)) {
                 if (event.containsDescriptor(LeavingEvent.GENERAL_DESCRIPTOR)) {
