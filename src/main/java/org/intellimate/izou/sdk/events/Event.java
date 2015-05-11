@@ -60,8 +60,8 @@ public class Event implements EventModel<Event> {
     private final String type;
     private final Identification source;
     private final List<String> descriptors;
-    private final ListResourceProvider listResourceContainer = new ListResourceProviderImpl();
-    private final EventBehaviourController eventBehaviourController = new EventBehaviourController();
+    private final ListResourceProvider listResourceContainer;
+    private final EventBehaviourController eventBehaviourController;
 
     /**
      * Creates a new Event Object
@@ -76,6 +76,28 @@ public class Event implements EventModel<Event> {
         this.type = type;
         this.source = source;
         this.descriptors = Collections.synchronizedList(new ArrayList<>(descriptors));
+        listResourceContainer = new ListResourceProviderImpl();
+        eventBehaviourController = new EventBehaviourController();
+    }
+
+    /**
+     * Creates a new Event Object
+     * @param type the Type of the Event, try to use the predefined Event types
+     * @param source the source of the Event, most likely a this reference.
+     * @param listResourceContainer the ResourceContainer
+     * @param descriptors the descriptors to initialize the Event with
+     * @param eventBehaviourController the Controller of the Event
+     * @throws IllegalArgumentException if one of the Arguments is null or empty
+     */
+    protected Event(String type, Identification source, ListResourceProvider listResourceContainer, List<String> descriptors,
+                    EventBehaviourController eventBehaviourController)throws IllegalArgumentException {
+        if(type == null || type.isEmpty()) throw new IllegalArgumentException("illegal type");
+        if(source == null) throw new IllegalArgumentException("source is null");
+        this.type = type;
+        this.source = source;
+        this.descriptors = Collections.synchronizedList(new ArrayList<>(descriptors));
+        this.listResourceContainer = listResourceContainer;
+        this.eventBehaviourController = eventBehaviourController;
     }
 
     /**
@@ -240,7 +262,8 @@ public class Event implements EventModel<Event> {
 
     @Override
     public EventModel<Event> finalizeEvent() {
-        return new Event(type, source, Collections.unmodifiableList(new ArrayList<>(descriptors)));
+        return new Event(type, source, listResourceContainer,
+                Collections.unmodifiableList(new ArrayList<>(descriptors)), eventBehaviourController);
     }
 
     @Override
