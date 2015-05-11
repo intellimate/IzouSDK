@@ -56,6 +56,7 @@ public class Event implements EventModel<Event> {
     @Deprecated
     @SuppressWarnings("UnusedDeclaration")
     public static final String MINOR_WELCOME_EVENT = "izou.MinorResponse";
+
     private final String type;
     private final Identification source;
     private final List<String> descriptors;
@@ -198,16 +199,14 @@ public class Event implements EventModel<Event> {
         return new Event(getType(), getSource(), descriptors);
     }
 
-    /**
-     * sets the Descriptors (but not the Event-Type).
-     * @param descriptor a String describing the Event.
-     * @return the resulting Event (which is the same instance)
-     */
-    public Event addDescriptor(String descriptor) {
-        List<String> newDescriptors = new ArrayList<>();
-        newDescriptors.addAll(descriptors);
-        newDescriptors.add(descriptor);
-        return new Event(getType(), getSource(), newDescriptors);
+    @Override
+    public boolean addDescriptor(String descriptor) {
+        return descriptors.add(descriptor);
+    }
+
+    @Override
+    public boolean removeDescriptor(String s) {
+        return descriptors.remove(s);
     }
 
     /**
@@ -237,6 +236,11 @@ public class Event implements EventModel<Event> {
     @Override
     public EventBehaviourControllerModel getEventBehaviourController() {
         return eventBehaviourController;
+    }
+
+    @Override
+    public EventModel<Event> finalizeEvent() {
+        return new Event(type, source, Collections.unmodifiableList(new ArrayList<>(descriptors)));
     }
 
     @Override
