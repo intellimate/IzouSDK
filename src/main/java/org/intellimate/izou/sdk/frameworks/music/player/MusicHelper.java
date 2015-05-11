@@ -39,7 +39,10 @@ public interface MusicHelper extends PermanentSoundHelper {
     default void startedSound(Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
         Optional<Event> startEvent = IdentificationManager.getInstance().getIdentification(this)
                 .flatMap(PlayerUpdate::createPlayerUpdate)
-                .map(event -> event.addDescriptor(StartEvent.ID));
+                .map(event -> {
+                    event.addDescriptor(StartEvent.ID);
+                    return event;
+                });
         Optional<Identification> id = IdentificationManager.getInstance().getIdentification(this);
         if (!startEvent.isPresent() || !id.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerUpdate");
