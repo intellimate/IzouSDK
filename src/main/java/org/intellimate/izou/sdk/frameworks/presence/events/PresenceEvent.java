@@ -31,6 +31,10 @@ public class PresenceEvent extends Event {
      */
     public static final String KNOWN_DESCRIPTOR = "izou.presence.knownuser";
     /**
+     * Means that the Addon encountered the user the first time IN THE SPECIFIED MODE (Strict/General) since he left.
+     */
+    public static final String FIRST_ENCOUNTER_DESCRIPTOR = "izou.presence.knownuser";
+    /**
      * it means that the addon can guarantee that the user entered an area near izou
      */
     public static final String ID = "izou.presence";
@@ -52,10 +56,12 @@ public class PresenceEvent extends Event {
      * @param source the caller
      * @param strict whether the addon can guarantee that the user is around
      * @param known true if the addon knows if the person encountered is the (main) user
+     * @param firstEncounter if the user was first encountered in the specified mode
      * @param descriptors the descriptors
      * @return the optional PresenceEvent
      */
-    public static Optional<PresenceEvent> createPresenceEvent(Identification source, boolean strict, boolean known, List<String> descriptors) {
+    public static Optional<PresenceEvent> createPresenceEvent(Identification source, boolean strict, boolean known,
+                                                                    boolean firstEncounter, List<String> descriptors) {
         try {
             if (strict) {
                 descriptors.add(STRICT_DESCRIPTOR);
@@ -67,6 +73,8 @@ public class PresenceEvent extends Event {
             } else {
                 descriptors.add(UNKNOWN_DESCRIPTOR);
             }
+            if (firstEncounter)
+                descriptors.add(FIRST_ENCOUNTER_DESCRIPTOR);
             descriptors.add(ID);
             PresenceEvent stopRequest = new PresenceEvent(source, descriptors);
             return Optional.of(stopRequest);

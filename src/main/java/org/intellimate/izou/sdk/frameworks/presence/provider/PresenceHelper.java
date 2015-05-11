@@ -30,7 +30,7 @@ public interface PresenceHelper extends PresenceProvider, FireEvent {
      */
     default void firePresence(List<String> descriptors, boolean known) {
         Optional<PresenceEvent> startEvent = IdentificationManager.getInstance().getIdentification(this)
-                .flatMap(id -> PresenceEvent.createPresenceEvent(id, isStrict(), known, descriptors));
+                .flatMap(id -> PresenceEvent.createPresenceEvent(id, isStrict(), known, isFirstEncountering(), descriptors));
         if (!startEvent.isPresent()) {
             getContext().getLogger().error("unable to fire startEvent");
         } else {

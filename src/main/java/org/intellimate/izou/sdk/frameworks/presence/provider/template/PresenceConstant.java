@@ -8,7 +8,6 @@ import org.intellimate.izou.sdk.frameworks.presence.provider.PresenceHelper;
 import org.intellimate.izou.sdk.frameworks.presence.provider.PresenceIndicatorLevel;
 import org.intellimate.izou.sdk.frameworks.presence.provider.PresenceResourceProvider;
 import org.intellimate.izou.sdk.frameworks.presence.resources.PresenceResource;
-import org.intellimate.izou.sdk.util.ResourceUser;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -27,8 +26,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version 1.0
  */
 @SuppressWarnings("unused")
-public abstract class PresenceConstant extends EventsController implements PresenceHelper, PresenceResourceProvider, ResourceUser {
+public abstract class PresenceConstant extends EventsController implements PresenceHelper, PresenceResourceProvider {
     private boolean present = false;
+    private  boolean globalPresent = false;
+    private boolean globalStrictPresent = false;
     private final boolean strict;
     private final PresenceIndicatorLevel level;
     /**
@@ -97,6 +98,39 @@ public abstract class PresenceConstant extends EventsController implements Prese
     @Override
     public boolean isPresent() {
         return present;
+    }
+
+    /**
+     * when this method is called the present-status was changed
+     *
+     * @param present true if present, false if not
+     */
+    @Override
+    public void setGlobalPresent(boolean present) {
+        globalPresent = present;
+    }
+
+    /**
+     * returns true if the user is first encountered in the current mode
+     */
+    @Override
+    public boolean isFirstEncountering() {
+        if (strict && !globalStrictPresent) {
+            return true;
+        } else if (!globalPresent) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * when this method is called, the strict-present status was changed
+     *
+     * @param present true if present, false if not
+     */
+    @Override
+    public void setGlobalStrictPresent(boolean present) {
+        globalStrictPresent = present;
     }
 
     /**
