@@ -1,7 +1,6 @@
 package org.intellimate.izou.sdk.properties;
 
 import org.intellimate.izou.sdk.Context;
-import org.intellimate.izou.sdk.addon.AddOn;
 import org.intellimate.izou.sdk.util.AddOnModule;
 import org.intellimate.izou.system.file.FileSystemManager;
 import org.intellimate.izou.system.file.ReloadableFile;
@@ -113,7 +112,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
     }
 
     /**
-     * Gets the path to default properties file (the file which is copied into the real properties on start)
+     * Gets the path to default properties file path (the file which is copied into the real properties on start)
      *
      * @return path to default properties file
      */
@@ -154,7 +153,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
             context.getLogger().error("Error while trying to read Properties-File", e);
         }
 
-        if (defaultPropertiesPath != null) {
+        if (defaultPropertiesPath != null && new File(defaultPropertiesPath).exists()) {
             @SuppressWarnings("unchecked")
             Enumeration<String> keys = (Enumeration<String>)properties.propertyNames();
 
@@ -202,87 +201,24 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
      */
     private void reloadProperties() {
         Properties temp = new Properties();
-        InputStream inputStream = null;
+        BufferedReader bufferedReader = null;
         try {
             File properties = new File(propertiesPath);
-
-            //Reader reader = new FileReader(properties);
-            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(properties),
-                    //        "Windows-1252"));
-                    "UTF8"));
-            temp.load(in);
-            //inputStream = new FileInputStream(properties);
-            //temp.load(inputStream);
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(properties), "UTF8"));
+            temp.load(bufferedReader);
             this.properties = temp;
         } catch(IOException e) {
             context.getLogger().error("Error while trying to load the Properties-File: "
                     + propertiesPath, e);
         } finally {
-            if (inputStream != null) {
+            if (bufferedReader != null) {
                 try {
-                    inputStream.close();
+                    bufferedReader.close();
                 } catch (IOException e) {
                     context.getLogger().error("Unable to close input stream", e);
                 }
             }
         }
-    }
-
-    /**
-     * If you are looking for a way to change to default location of your <i>defaultProperties.txt</i> file, you could
-     * use this but,
-     * <p>
-     * *** YOU SHOULD NOT HAVE TO USE THIS METHOD ***
-     * <br><br>
-     * Otherwise this method sets the path to default properties file (the file which is copied into the real properties
-     * on start), all you need to do is provide the artifact name and version concatenated together. We strongly
-     * recommend you look at the addOnName parameter for more info. It is also VERY IMPORTANT that your
-     * "defaultProperties.txt" file is created in the resource folder of your addOn, if you are using the default,
-     * otherwise it will not work, and a <i>defaultProperties.txt</i> file will be created for you.
-     * </p>
-     * @param addOnName The artifact name and version concatenated together.
-     *                  (Ex: "artifactName-versionNumber", "testaddon-0.1", etc.)
-     *
-     * @throws NullPointerException the given addOnName is not the correct artifact name and version number
-     */
-    public void setDefaultPropertiesPath(String addOnName) throws NullPointerException {
-        String[] parts = addOnName.split(File.separator);
-
-        if (parts.length == 1) {
-            String tempPath = "." + File.separator + "lib" + File.separator + addOnName + File.separator +
-                    "classes" + File.separator;
-            if (new File(tempPath).exists()) {
-                defaultPropertiesPath = tempPath + "defaultProperties.txt";
-            } else {
-                throw new NullPointerException("File path does not exist");
-            }
-        } else {
-            if (new File(addOnName).exists()) {
-                this.defaultPropertiesPath = addOnName;
-            } else {
-                throw new NullPointerException("File path does not exist");
-            }
-        }
-    }
-
-    /**
-     * Gets folder of addOn
-     *
-     * @param addOn the addOn for which to get the folder
-     * @return the folder as a String or null if it was not found
-     */
-    public static String getFolder(AddOn addOn) {
-        String addOnName = addOn.getClass().getPackage().getName();
-        String[] nameParts = addOnName.split("\\.");
-
-        File file = new File("." + File.separator + "lib");
-        String[] directories = file.list((current, name) -> new File(current, name).isDirectory());
-
-        for(String fileName : directories) {
-            if(nameParts.length > 0 && fileName.contains(nameParts[nameParts.length - 1]))
-                return fileName;
-        }
-        return null;
     }
 
     @Override
