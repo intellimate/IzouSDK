@@ -3,6 +3,7 @@ package org.intellimate.izou.sdk.properties;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.addon.AddOn;
 import org.intellimate.izou.sdk.util.AddOnModule;
+import org.intellimate.izou.system.file.FileSystemManager;
 import org.intellimate.izou.system.file.ReloadableFile;
 
 import java.io.*;
@@ -28,6 +29,9 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
         this.propertiesPath = null;
         this.defaultPropertiesPath = null;
         this.assistant = new EventPropertiesAssistant(context, addOnID + ".EventPropertiesAssistant");
+        this.defaultPropertiesPath = FileSystemManager.FULL_WORKING_DIRECTORY + File.separator + "lib"
+                 + getContext().getAddOn().getPlugin().getPluginPath() + File.separator + "classes" + File.separator
+                + "default_properties.txt";
         initProperties();
     }
 
@@ -124,7 +128,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
         String propertiesPathTemp;
         try {
             propertiesPathTemp = new File(".").getCanonicalPath() + File.separator + "properties" + File.separator
-                    + getID() + ".properties";
+                    + getContext().getAddOn().getID() + ".properties";
         } catch (IOException e) {
             propertiesPathTemp = null;
             context.getLogger().error("Error while trying to build the propertiesPathTemp", e);

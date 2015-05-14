@@ -131,31 +131,6 @@ public class Context implements org.intellimate.izou.system.Context {
         return context.getAddOn();
     }
 
-    /*
-     * Adds the event ID of {@code value} to the PopularEvents.properties file with a key of {@code key}
-     *
-     * @param description a short description of what the event ID is for, should not be null
-     * @param key the key with which to store the event ID, should not be null
-     * @param value the complete event ID, should not be null
-     */
-    //TODO: move
-//    @Override
-//    public void addEventIDToPropertiesFile(String description, String key, String value) {
-//        main.getEventPropertiesManager().registerEventID(description, key, value);
-//    }
-
-    /*
-     * Gets the full event ID associated with the key {@code key}
-     *
-     * @param key the key of the full event ID
-     * @return the complete the event ID, or null if none is found
-     */
-    //TODO: move
-//    @Override
-//    public String getEventsID(String key) {
-//        return main.getEventPropertiesManager().getEventID(key);
-//    }
-
     private class ContentGeneratorsImpl implements ContentGenerators {
 
         /**
@@ -165,8 +140,7 @@ public class Context implements org.intellimate.izou.system.Context {
          * @throws IllegalIDException not implemented yet
          */
         @Override
-        public void registerContentGenerator(ContentGeneratorModel contentGenerator)
-                                                                                            throws IllegalIDException {
+        public void registerContentGenerator(ContentGeneratorModel contentGenerator) throws IllegalIDException {
             List<? extends EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
             for (EventListener eventListener : triggeredEvents) {
                 propertiesAssistant.getEventPropertiesAssistant().registerEventID(eventListener.getDescription(),

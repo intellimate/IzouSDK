@@ -17,46 +17,6 @@ import java.util.Optional;
  * This class is immutable! for every change it will return an new instance!
  */
 public class Event implements EventModel<Event> {
-    /**
-     * Use this type when other AddOns should react to this Event.
-     * @deprecated use {@link CommonEvents}
-     */
-    @Deprecated
-    public static final String RESPONSE = "response";
-    /**
-     * Use this type when only our Addon reacts to this Event
-     * @deprecated use {@link CommonEvents}
-     */
-    @Deprecated
-    public static final String NOTIFICATION = "notification";
-    //common Events-Descriptors:
-    /**
-     * Event for a Welcome with maximum response.
-     *
-     * Every component that can contribute should contribute to this Event.
-     * @deprecated use {@link CommonEvents}
-     */
-    @Deprecated
-    public static final String FULL_WELCOME_EVENT = "izou.FullResponse";
-    /**
-     * Event for a Welcome with major response.
-     *
-     * Every component that is import should contribute to this Event.
-     * @deprecated use {@link CommonEvents}
-     */
-    @Deprecated
-    @SuppressWarnings("UnusedDeclaration")
-    public static final String MAJOR_WELCOME_EVENT = "izou.MajorResponse";
-    /**
-     * Event for a Welcome with minor response.
-     *
-     * Only components that have information of great importance should contribute to this event.
-     * @deprecated use {@link CommonEvents}
-     */
-    @Deprecated
-    @SuppressWarnings("UnusedDeclaration")
-    public static final String MINOR_WELCOME_EVENT = "izou.MinorResponse";
-
     private final String type;
     private final Identification source;
     private final List<String> descriptors;
