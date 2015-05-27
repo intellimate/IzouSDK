@@ -48,7 +48,7 @@ public class BroadcasterPlaylist extends Resource<HashMap<String, Object>> {
     /**
      * creates a new Resource.
      * This method is thread-safe.
-     *´
+     *
      * @param provider   the Provider of the Resource
      * @param consumer   the ID of the Consumer
      */
