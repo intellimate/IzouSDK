@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -32,6 +34,8 @@ public class CommandHandler {
     private Consumer<Progress> jumpProgress = null;
     private Consumer<String> changePlayback = null;
     private Consumer<Volume> changeVolume;
+    private Function<String, Playlist> playlistForNameFunction = null;
+    private Supplier<List<String>> availablePlaylist = null;
 
     /**
      * creates a new CommandHandler
@@ -112,6 +116,19 @@ public class CommandHandler {
             return;
         changeVolume = controller;
         capabilities.setChangeVolume(true);
+    }
+
+    /**
+     * adds the ability to return the available playlists on request.
+     * @param availablePlaylist retruns a List of Strings which represent the Playlists
+     * @param playlistForNameFunction takes a String from the List and returns the Playlist
+     */
+    public void broadcastAvailablePlaylists(Supplier<List<String>> availablePlaylist, Function<String, Playlist> playlistForNameFunction) {
+        if (availablePlaylist == null || playlistForNameFunction == null)
+            return;
+        this.availablePlaylist = availablePlaylist;
+        this.playlistForNameFunction = playlistForNameFunction;
+        capabilities.setBroadcasting(true);
     }
 
     /**
@@ -206,5 +223,22 @@ public class CommandHandler {
                     resourceModel.getProvider());
         }
         selectTrack.accept(trackInfo.get());
+    }
+
+    /**
+     * retruns the playlist for the specified name
+     * @param name the name of the playlist
+     * @return the playlist
+     */
+    public Playlist getPlaylistFromName(String name) {
+        return playlistForNameFunction.apply(name);
+    }
+
+    /**
+     * generates all available playlists.
+     * @return a list containing the names of all available Playlists.
+     */
+    public List<String> getAvailablePlaylists() {
+        return availablePlaylist.get();
     }
 }

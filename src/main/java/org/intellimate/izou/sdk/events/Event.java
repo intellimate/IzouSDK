@@ -35,7 +35,7 @@ public class Event implements EventModel<Event> {
         if(source == null) throw new IllegalArgumentException("source is null");
         this.type = type;
         this.source = source;
-        this.descriptors = Collections.synchronizedList(new ArrayList<>(descriptors));
+        this.descriptors = Collections.unmodifiableList(descriptors);
         listResourceContainer = new ListResourceProviderImpl();
         eventBehaviourController = new EventBehaviourController();
     }
@@ -55,7 +55,7 @@ public class Event implements EventModel<Event> {
         if(source == null) throw new IllegalArgumentException("source is null");
         this.type = type;
         this.source = source;
-        this.descriptors = Collections.synchronizedList(new ArrayList<>(descriptors));
+        this.descriptors = Collections.unmodifiableList(new ArrayList<>(descriptors));
         this.listResourceContainer = listResourceContainer;
         this.eventBehaviourController = eventBehaviourController;
     }
@@ -96,7 +96,7 @@ public class Event implements EventModel<Event> {
      */
     @Override
     public String getID() {
-    return type;
+        return type;
     }
 
     /**
@@ -181,16 +181,6 @@ public class Event implements EventModel<Event> {
         return new Event(getType(), getSource(), descriptors);
     }
 
-    @Override
-    public boolean addDescriptor(String descriptor) {
-        return descriptors.add(descriptor);
-    }
-
-    @Override
-    public boolean removeDescriptor(String s) {
-        return descriptors.remove(s);
-    }
-
     /**
      * replaces the Descriptors
      * @param descriptors a list containing the Descriptors.
@@ -218,12 +208,6 @@ public class Event implements EventModel<Event> {
     @Override
     public EventBehaviourControllerModel getEventBehaviourController() {
         return eventBehaviourController;
-    }
-
-    @Override
-    public EventModel<Event> finalizeEvent() {
-        return new Event(type, source, listResourceContainer,
-                Collections.unmodifiableList(new ArrayList<>(descriptors)), eventBehaviourController);
     }
 
     @Override

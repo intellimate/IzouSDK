@@ -18,7 +18,6 @@ public class Resource<T> implements ResourceModel<T> {
 
     /**
      * creates a new Resource.
-     * This method is thread-safe.
      * @param resourceID the ID of the Resource
      */
     public Resource(String resourceID) {
@@ -27,7 +26,6 @@ public class Resource<T> implements ResourceModel<T> {
 
     /**
      * creates a new Resource.
-     * This method is thread-safe.
      * @param resourceID the ID of the Resource
      * @param provider the Provider of the Resource
      */
@@ -37,7 +35,6 @@ public class Resource<T> implements ResourceModel<T> {
 
     /**
      * creates a new Resource.
-     * This method is thread-safe.
      * @param resourceID the ID of the Resource
      * @param provider the Provider of the Resource
      * @param t the resource
@@ -48,7 +45,17 @@ public class Resource<T> implements ResourceModel<T> {
 
     /**
      * creates a new Resource.
-     * This method is thread-safe.
+     * @param resourceID the ID of the Resource
+     * @param consumer the ID of the Consumer
+     * @param t the resource
+     */
+    public Resource(String resourceID, T t, Identification consumer) {
+        this(resourceID, null, t, consumer);
+    }
+
+
+    /**
+     * creates a new Resource.
      * @param resourceID the ID of the Resource
      * @param provider the Provider of the Resource
      * @param consumer the ID of the Consumer
@@ -59,7 +66,6 @@ public class Resource<T> implements ResourceModel<T> {
 
     /**
      * creates a new Resource.
-     * This method is thread-safe.
      * @param resourceID the ID of the Resource
      * @param provider the Provider of the Resource
      * @param t the resource

@@ -43,6 +43,9 @@ public class Capabilities {
     private boolean playbackChangeable = false;
     public static final String changeVolumeDescriptor = "izou.music.capabilities.volume";
     private boolean changeVolume = false;
+    @SuppressWarnings("SpellCheckingInspection")
+    public static final String broadcastingDescriptor = "izou.music.capabilities.broadcasting";
+    private boolean broadcasting = false;
     private final Context context;
 
     public static Capabilities constructCapabilites(HashMap<String, Boolean> data, Context context) {
@@ -72,6 +75,8 @@ public class Capabilities {
                 case changeVolumeDescriptor: capabilities.setChangeVolume(data.get(descriptor));
                     break;
                 case ableToJumpDescriptor: capabilities.setAbleToJump(data.get(descriptor));
+                    break;
+                case broadcastingDescriptor: capabilities.setBroadcasting(data.get(descriptor));
                     break;
                 default: context.getLogger().error("unkown command: " + descriptor);
                     break;
@@ -278,6 +283,22 @@ public class Capabilities {
     }
 
     /**
+     * returns whether you can obtain available Playlists via the BroadcasterAvailablePlaylists-resource.
+     * @return true if able, false if not
+     */
+    public boolean isBroadcasting() {
+        return broadcasting;
+    }
+
+    /**
+     * sets whether you can obtain available Playlists via the BroadcasterAvailablePlaylists-resource.
+     * @param broadcasting true if able, false if not
+     */
+    public void setBroadcasting(boolean broadcasting) {
+        this.broadcasting = broadcasting;
+    }
+
+    /**
      * the associated Context (mainly used for logging)
      * @return the context
      */
@@ -299,6 +320,7 @@ public class Capabilities {
         data.put(playbackShuffleDescriptor, playbackShuffle);
         data.put(playRequestOutsideDescriptor, playRequestOutside);
         data.put(changeVolumeDescriptor, changeVolume);
+        data.put(broadcastingDescriptor, broadcasting);
         return data;
     }
 }

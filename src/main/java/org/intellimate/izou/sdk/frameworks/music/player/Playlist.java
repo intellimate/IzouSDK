@@ -19,12 +19,15 @@ public class Playlist {
     private final String name;
     public static final String PLAYBACK_MODE_DESCRIPTOR = "izou.music.playlist.playbackmode";
     private final List<PlaybackMode> playbackModes;
+    public static final String DATA_DESCRIPTOR = "izou.music.playlist.data";
+    private final String data;
 
     public Playlist(List<TrackInfo> queue) {
         this.queue = Collections.unmodifiableList(queue);
         this.name = "";
         playbackModes = new ArrayList<>();
         this.position = 0;
+        data = null;
     }
 
     public Playlist(List<TrackInfo> queue, String name, List<PlaybackMode> playbackModes, int position) {
@@ -32,6 +35,15 @@ public class Playlist {
         this.name = name;
         this.playbackModes = playbackModes;
         this.position = position;
+        data = null;
+    }
+
+    public Playlist(List<TrackInfo> queue, String name, List<PlaybackMode> playbackModes, int position, String data) {
+        this.queue = queue;
+        this.position = position;
+        this.name = name;
+        this.playbackModes = playbackModes;
+        this.data = data;
     }
 
     /**
@@ -83,6 +95,14 @@ public class Playlist {
         return playbackModes;
     }
 
+    /**
+     *returns the associated data (not really specified, specified by implementation)
+     * @return the optional data-element
+     */
+    public Optional<String> getData() {
+        return Optional.of(data);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,6 +113,7 @@ public class Playlist {
         if (position != playlist.position) return false;
         if (queue != null ? !queue.equals(playlist.queue) : playlist.queue != null) return false;
         if (name != null ? !name.equals(playlist.name) : playlist.name != null) return false;
+        if (data != null ? !data.equals(playlist.data) : playlist.data != null) return false;
         return !(playbackModes != null ? !playbackModes.equals(playlist.playbackModes) : playlist.playbackModes != null);
 
     }
@@ -150,6 +171,7 @@ public class Playlist {
         }
         data.put(NAME_DESCRIPTOR, name);
         data.put(POSITION_DESCRIPTOR, position);
+        data.put(DATA_DESCRIPTOR, this.data);
         return data;
     }
 
@@ -167,6 +189,7 @@ public class Playlist {
             ArrayList<PlaybackMode> playbackModes = new ArrayList<>();
             final String[] name = {null};
             final int[] position = {-1};
+            final String[] dataString = {null};
             data.entrySet().forEach(entry -> {
                 if (entry.getKey().startsWith(QUEUE_DESCRIPTOR)) {
                     int index = Integer.parseInt(entry.getKey().replace(QUEUE_DESCRIPTOR, ""));
@@ -185,9 +208,11 @@ public class Playlist {
                     name[0] = (String) entry.getValue();
                 } else if (entry.getKey().equals(POSITION_DESCRIPTOR)) {
                     position[0] = (int) entry.getValue();
+                } else if (entry.getKey().equals(DATA_DESCRIPTOR)) {
+                    dataString[0] = (String) entry.getValue();
                 }
             });
-            return Optional.of(new Playlist(queue, name[0] , playbackModes, position[0]));
+            return Optional.of(new Playlist(queue, name[0] , playbackModes, position[0], dataString[0]));
         } catch (ClassCastException | IllegalArgumentException e) {
             return Optional.empty();
         }

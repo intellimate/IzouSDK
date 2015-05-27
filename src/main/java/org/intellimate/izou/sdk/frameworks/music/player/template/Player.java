@@ -45,13 +45,13 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     private Progress progress = new Progress(0,0);
     private PlaybackState playbackState = PlaybackState.PLAY;
     private final Capabilities capabilities;
-    private final InformationProvider informationProvider = new InformationProvider(getContext(), getID(), this);
     private CompletableFuture<?> playingThread = null;
     private final boolean runsInPlay;
     private boolean isRunning = false;
     private boolean isPlaying = false;
     private final List<Identifiable> activators;
     private final CommandHandler commandHandler = createCommandHandler();
+    private final InformationProvider informationProvider = new InformationProvider(getContext(), getID(), this, commandHandler);
 
     /**
      * creates a new output-plugin with a new id
