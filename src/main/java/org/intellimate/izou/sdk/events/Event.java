@@ -182,6 +182,19 @@ public class Event implements EventModel<Event> {
     }
 
     /**
+     * sets the Descriptors (but not the Event-Type).
+     * @param descriptor a String describing the Event.
+     * @return the resulting Event (which is the same instance)
+     */
+    public Event addDescriptor(String descriptor) {
+        List<String> newDescriptors = new ArrayList<>();
+        newDescriptors.addAll(descriptors);
+        newDescriptors.add(descriptor);
+        return new Event(getType(), getSource(), newDescriptors);
+    }
+
+
+    /**
      * replaces the Descriptors
      * @param descriptors a list containing the Descriptors.
      * @return the resulting Event (which is the same instance)
