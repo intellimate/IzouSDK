@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
+ * this event indicates that the sound ended
  * @author LeanderK
  * @version 1.0
  */

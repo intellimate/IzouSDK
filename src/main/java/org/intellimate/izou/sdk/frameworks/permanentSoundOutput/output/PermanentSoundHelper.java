@@ -25,7 +25,7 @@ public interface PermanentSoundHelper extends Identifiable, FireEvent, ContextPr
         if (!startEvent.isPresent()) {
             getContext().getLogger().error("unable to fire startEvent");
         } else {
-            fire(startEvent.get(), 5);
+            getContext().getEvents().distributor().fireEventConcurrently(startEvent.get());
         }
     }
 
@@ -33,12 +33,12 @@ public interface PermanentSoundHelper extends Identifiable, FireEvent, ContextPr
      * fires an EndedEvent
      */
     default void endedSound() {
-        Optional<EndedEvent> startEvent = IdentificationManager.getInstance().getIdentification(this)
+        Optional<EndedEvent> ended = IdentificationManager.getInstance().getIdentification(this)
                 .flatMap(EndedEvent::createEndedEvent);
-        if (!startEvent.isPresent()) {
-            getContext().getLogger().error("unable to fire startEvent");
+        if (!ended.isPresent()) {
+            getContext().getLogger().error("unable to fire ended");
         } else {
-            fire(startEvent.get(), 5);
+            getContext().getEvents().distributor().fireEventConcurrently(ended.get());
         }
     }
 }

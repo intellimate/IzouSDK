@@ -57,7 +57,7 @@ public interface MusicHelper extends PermanentSoundHelper {
             if (volume != null) {
                 startEvent.get().addResource(new VolumeResource(id.get(), volume));
             }
-            fire(startEvent.get(), 5);
+            getContext().getEvents().distributor().fireEventConcurrently(startEvent.get());
         }
     }
 
@@ -71,7 +71,7 @@ public interface MusicHelper extends PermanentSoundHelper {
         if (!playerError.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerError");
         } else {
-            fire(playerError.get(), 5);
+            getContext().getEvents().distributor().fireEventConcurrently(playerError.get());
         }
     }
 
@@ -88,7 +88,7 @@ public interface MusicHelper extends PermanentSoundHelper {
             getContext().getLogger().error("unable to fire PlayerError");
         } else {
             playerError.get().addResource(new SelectorResource(id.get(), target));
-            fire(playerError.get(), 5);
+            getContext().getEvents().distributor().fireEventConcurrently(playerError.get());
         }
     }
 
