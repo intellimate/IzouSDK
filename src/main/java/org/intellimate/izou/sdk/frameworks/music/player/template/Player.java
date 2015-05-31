@@ -39,6 +39,7 @@ import java.util.function.Consumer;
  * @author LeanderK
  * @version 1.0
  */
+//TODO: stop if the user is not present anymore!
 public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider, ResourceBuilderModel, MusicHelper {
     private Playlist playlist = new Playlist(new ArrayList<>());
     private Volume volume = Volume.createVolume(50).orElse(null);
