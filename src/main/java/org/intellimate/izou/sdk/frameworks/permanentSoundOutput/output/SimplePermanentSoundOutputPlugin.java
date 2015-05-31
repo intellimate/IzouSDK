@@ -1,12 +1,17 @@
 package org.intellimate.izou.sdk.frameworks.permanentSoundOutput.output;
 
 import org.intellimate.izou.events.EventModel;
+import org.intellimate.izou.identification.Identification;
+import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.Context;
+import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.MuteEvent;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.StopEvent;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.UnMuteEvent;
 import org.intellimate.izou.sdk.output.OutputPlugin;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -42,13 +47,49 @@ public abstract class SimplePermanentSoundOutputPlugin<T> extends OutputPlugin<T
     public EventModel blockingQueueHandling() throws InterruptedException {
         EventModel eventModel = super.blockingQueueHandling();
         if (eventModel.containsDescriptor(MuteEvent.ID)) {
-            mute();
+            List<ResourceModel> resourceModels =
+                    eventModel.getListResourceContainer().provideResource(SelectorResource.RESOURCE_ID);
+            if (resourceModels.isEmpty()) {
+                mute();
+            } else {
+                resourceModels.stream()
+                        .map(resourceModel -> resourceModel.getResource() instanceof Identification ?
+                                ((Identification) resourceModel.getResource()) : null)
+                        .filter(Objects::nonNull)
+                        .filter(this::isOwner)
+                        .findAny()
+                        .ifPresent(id -> mute());
+            }
         }
         if (eventModel.containsDescriptor(UnMuteEvent.ID)) {
-            unMute();
+            List<ResourceModel> resourceModels =
+                    eventModel.getListResourceContainer().provideResource(SelectorResource.RESOURCE_ID);
+            if (resourceModels.isEmpty()) {
+                unMute();
+            } else {
+                resourceModels.stream()
+                        .map(resourceModel -> resourceModel.getResource() instanceof Identification ?
+                                ((Identification) resourceModel.getResource()) : null)
+                        .filter(Objects::nonNull)
+                        .filter(this::isOwner)
+                        .findAny()
+                        .ifPresent(id -> unMute());
+            }
         }
         if (eventModel.containsDescriptor(StopEvent.ID)) {
-            stopSound();
+            List<ResourceModel> resourceModels =
+                    eventModel.getListResourceContainer().provideResource(SelectorResource.RESOURCE_ID);
+            if (resourceModels.isEmpty()) {
+                stopSound();
+            } else {
+                resourceModels.stream()
+                        .map(resourceModel -> resourceModel.getResource() instanceof Identification ?
+                                ((Identification) resourceModel.getResource()) : null)
+                        .filter(Objects::nonNull)
+                        .filter(this::isOwner)
+                        .findAny()
+                        .ifPresent(id -> stopSound());
+            }
         }
         return eventModel;
     }

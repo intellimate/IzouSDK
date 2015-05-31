@@ -2,9 +2,11 @@ package org.intellimate.izou.sdk.frameworks.music.player.template;
 
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identifiable;
+import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.resource.ResourceBuilderModel;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.Context;
+import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
 import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.frameworks.music.events.PlayerCommand;
 import org.intellimate.izou.sdk.frameworks.music.events.PlayerError;
@@ -20,11 +22,9 @@ import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.StopEvent
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.UnMuteEvent;
 import org.intellimate.izou.sdk.output.OutputPlugin;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /**
  * use this class to actually play music.
@@ -409,6 +409,21 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      */
     @Override
     public void renderFinalOutput(List<T> data, EventModel eventModel) {
+        Consumer<Runnable> checkOrCall = runnable -> {
+            List<ResourceModel> resourceModels =
+                    eventModel.getListResourceContainer().provideResource(SelectorResource.RESOURCE_ID);
+            if (resourceModels.isEmpty()) {
+                runnable.run();
+            } else {
+                resourceModels.stream()
+                        .map(resourceModel -> resourceModel.getResource() instanceof Identification ?
+                                ((Identification) resourceModel.getResource()) : null)
+                        .filter(Objects::nonNull)
+                        .filter(this::isOwner)
+                        .findAny()
+                        .ifPresent(id -> runnable.run());
+            }
+        };
         if (StartMusicRequest.verify(eventModel, capabilities, this, activators)) {
             if (!isOutputRunning()) {
                 playerError(PlayerError.ERROR_ALREADY_PLAYING);
@@ -430,13 +445,13 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
                     });
         }
         if (eventModel.containsDescriptor(MuteEvent.ID)) {
-            mute();
+            checkOrCall.accept(this::mute);
         }
         if (eventModel.containsDescriptor(UnMuteEvent.ID)) {
-            unMute();
+            checkOrCall.accept(this::unMute);
         }
         if (eventModel.containsDescriptor(StopEvent.ID)) {
-            setPlayingStopped();
+            checkOrCall.accept(this::setPlayingStopped);
         }
         if (StopMusic.verify(eventModel, this)) {
             setPlayingStopped();

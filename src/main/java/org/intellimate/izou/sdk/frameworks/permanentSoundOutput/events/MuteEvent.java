@@ -4,6 +4,7 @@ import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
 import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
+import org.intellimate.izou.system.sound.SoundIDs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class MuteEvent extends Event {
-    public static final String ID = "izou.sound.events.mute";
+    public static final String ID = SoundIDs.MuteEvent.descriptor;
     /**
      * Creates a new Event Object
      *
@@ -34,12 +35,28 @@ public class MuteEvent extends Event {
      * @param target the target who should start playing
      * @return the optional StartMusicRequest
      */
-    public static Optional<MuteEvent> createStopMusic(Identification source, Identification target) {
+    public static Optional<MuteEvent> createMuteEvent(Identification source, Identification target) {
         if (target == null || target.equals(source))
             return Optional.empty();
         try {
             MuteEvent muteRequest = new MuteEvent(source);
             muteRequest.addResource(new SelectorResource(source, target));
+            return Optional.of(muteRequest);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * creates a new MuteEvent, will mute everything
+     * @param source the caller
+     * @return the optional StartMusicRequest
+     */
+    public static Optional<MuteEvent> createMuteEvent(Identification source) {
+        if (source == null)
+            return Optional.empty();
+        try {
+            MuteEvent muteRequest = new MuteEvent(source);
             return Optional.of(muteRequest);
         } catch (IllegalArgumentException e) {
             return Optional.empty();

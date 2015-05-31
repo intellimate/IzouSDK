@@ -3,6 +3,7 @@ package org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
+import org.intellimate.izou.system.sound.SoundIDs;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -13,7 +14,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class StartEvent extends Event {
-    public static final String ID = "izou.sound.events.start";
+    public static final String ID = SoundIDs.StartEvent.descriptor;
     /**
      * Creates a new Event Object
      *

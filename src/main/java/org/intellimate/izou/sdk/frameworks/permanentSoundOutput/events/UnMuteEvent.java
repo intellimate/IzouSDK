@@ -4,6 +4,7 @@ import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
 import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
+import org.intellimate.izou.system.sound.SoundIDs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,8 +16,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class UnMuteEvent extends Event {
-    @SuppressWarnings("SpellCheckingInspection")
-    public static final String ID = "izou.sound.events.unmute";
+    public static final String ID = SoundIDs.UnMuteEvent.descriptor;
     /**
      * Creates a new Event Object
      *
