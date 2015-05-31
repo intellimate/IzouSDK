@@ -7,7 +7,9 @@ import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
 import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
 import org.intellimate.izou.sdk.frameworks.music.Capabilities;
+import org.intellimate.izou.sdk.frameworks.music.player.Playlist;
 import org.intellimate.izou.sdk.frameworks.music.player.TrackInfo;
+import org.intellimate.izou.sdk.frameworks.music.resources.PlaylistResource;
 import org.intellimate.izou.sdk.frameworks.music.resources.TrackInfoResource;
 
 import java.util.Collections;
@@ -40,7 +42,7 @@ public class StartMusicRequest extends Event {
      * @return the optional StartMusicRequest
      */
     public static Optional<StartMusicRequest> createStartMusicRequest(Identification source, Identification target) {
-        return createStartMusicRequest(source, target, null);
+        return createStartMusicRequest(source, target, (TrackInfo) null);
     }
 
     /**
@@ -58,6 +60,27 @@ public class StartMusicRequest extends Event {
             request.addResource(new SelectorResource(source, target));
             if (trackInfo != null)
                 request.addResource(new TrackInfoResource(target, trackInfo, source));
+            return Optional.of(request);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * creates a new StartRequest
+     * @param source the caller
+     * @param target the target who should start playing
+     * @param playlist the playlist to play
+     * @return the optional StartMusicRequest
+     */
+    public static Optional<StartMusicRequest> createStartMusicRequest(Identification source, Identification target, Playlist playlist) {
+        if (target.equals(source))
+            return Optional.empty();
+        try {
+            StartMusicRequest request = new StartMusicRequest(source);
+            request.addResource(new SelectorResource(source, target));
+            if (playlist != null)
+                request.addResource(new PlaylistResource(target, playlist, source));
             return Optional.of(request);
         } catch (IllegalArgumentException e) {
             return Optional.empty();

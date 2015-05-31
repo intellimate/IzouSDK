@@ -514,7 +514,8 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     public abstract void stopSound();
 
     /**
-     * this method will be called if a request was catched which
+     * this method will be called if a request was cached which was eligible to start the music.
+     * please check the events resources for parameters (if expected).
      * @param eventModel the cause
      */
     public abstract void play(EventModel eventModel);
