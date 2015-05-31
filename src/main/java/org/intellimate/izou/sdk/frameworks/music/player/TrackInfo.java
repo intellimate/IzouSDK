@@ -27,6 +27,15 @@ public class TrackInfo {
     public static final String idDescriptor = "izou.music.trackinfo.id";
     private final String id;
 
+    public TrackInfo(String name) {
+        this.name = name;
+        this.artist = null;
+        this.album = null;
+        albumCover = null;
+        albumCoverFormat = null;
+        id = null;
+    }
+
     public TrackInfo(String name, String artist, String album) {
         this.name = name;
         this.artist = artist;

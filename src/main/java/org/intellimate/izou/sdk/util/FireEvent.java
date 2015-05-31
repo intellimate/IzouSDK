@@ -91,4 +91,16 @@ public interface FireEvent extends ContextProvider, Identifiable {
         }
         return false;
     }
+
+    /**
+     * tries to fire an an Event 5 times, returns true if succeed.
+     * <p>
+     * If there is currently another Event getting processed, it will wait for 100 milliseconds and try for retry-times.
+     * </p>
+     * @param event the event to fire
+     * @return true if fired, false if unable
+     */
+    default boolean fire(Event event) {
+        return fire(event, 5);
+    }
 }
