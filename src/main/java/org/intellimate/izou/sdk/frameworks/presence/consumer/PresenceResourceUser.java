@@ -1,12 +1,17 @@
 package org.intellimate.izou.sdk.frameworks.presence.consumer;
 
+import org.intellimate.izou.resource.ResourceMinimalImpl;
 import org.intellimate.izou.sdk.frameworks.presence.provider.Presence;
 import org.intellimate.izou.sdk.frameworks.presence.resources.PresenceResource;
 import org.intellimate.izou.sdk.util.ResourceUser;
+import org.intellimate.izou.sdk.util.ThreadPoolUser;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * utility class used interacting with information about presence obtained through resource.
@@ -14,28 +19,74 @@ import java.util.concurrent.CompletableFuture;
  * @author LeanderK
  * @version 1.0
  */
-public interface PresenceResourceUser extends ResourceUser {
+public interface PresenceResourceUser extends ResourceUser, ThreadPoolUser {
     /**
-     * returns a CompletableFuture containing true if present, else false
+     * returns a CompletableFuture containing true if present, else false.
+     * if not presence-providers were found, it returns false.
+     * Time-Outs every Provider after 500 milliseconds.
      * @return a future true if present, false if not
      */
-    default CompletableFuture<Boolean> isPresent() {
-        return isPresent(false);
+    default boolean isPresent() {
+        return isPresent(false, false, 500);
     }
 
     /**
      * returns a CompletableFuture containing true if present, else false
+     * if not presence-providers were found, it returns false.
+     * Time-Outs every Provider after 500 milliseconds.
      * @param strict true if only addons where it is highly likely that the user is around should be creating the result
      * @return a future true if present, false if not
      */
-    default CompletableFuture<Boolean> isPresent(boolean strict) {
+    default boolean isPresent(boolean strict) {
+        return isPresent(strict, false, 500);
+    }
+
+    /**
+     * returns a CompletableFuture containing true if present, else false.
+     * if not presence-providers were found, it returns false.
+     * Time-Outs every Provider after 500 milliseconds.
+     * @param strict true if only addons where it is highly likely that the user is around should be creating the result
+     * @param ifNotPresent the default value
+     * @return a future true if present, false if not
+     */
+    default boolean isPresent(boolean strict, boolean ifNotPresent) {
+        return isPresent(strict, ifNotPresent, 500);
+    }
+
+    /**
+     * returns a CompletableFuture containing true if present, else false.
+     * if not presence-providers were found, it returns false.
+     * Time-Outs every Provider after 500 milliseconds.
+     * @param strict true if only addons where it is highly likely that the user is around should be creating the result
+     * @param ifNotPresent the default value
+     * @param timeout the timeout in milliseconds
+     * @return a future true if present, false if not
+     */
+    default boolean isPresent(boolean strict, boolean ifNotPresent, int timeout) {
+        try {
+            return getIsPresent(strict, ifNotPresent)
+                    .get(timeout, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            error("unable to get Value", e);
+            return false;
+        }
+    }
+
+    /**
+     * returns a CompletableFuture containing true if present, else false.
+     * if not presence-providers were found, it returns false.
+     * @param strict true if only addons where it is highly likely that the user is around should be creating the result
+     * @param ifNotPresent the default value
+     * @return a future true if present, false if not
+     */
+    default CompletableFuture<Boolean> getIsPresent(boolean strict, boolean ifNotPresent) {
         return generateResource(PresenceResource.ID)
-                .orElse(CompletableFuture.completedFuture(new ArrayList<>()))
-                .thenApply(list -> list.stream()
-                        .map(Presence::importPresence)
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .filter(presence -> !strict || presence.isStrict())
-                        .anyMatch(Presence::isPresent));
+                    .orElse(CompletableFuture.completedFuture(Collections.singletonList(new ResourceMinimalImpl<>("", null, ifNotPresent, null))))
+                    .thenApply(list -> list.stream()
+                            .map(Presence::importPresence)
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .filter(presence -> !strict || presence.isStrict())
+                            .anyMatch(Presence::isPresent));
     }
 }
