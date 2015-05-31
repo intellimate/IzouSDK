@@ -48,6 +48,6 @@ public interface PresenceResourceProvider extends ResourcesProviderBase, Presenc
     default Optional<PresenceResource> createPresenceResource() {
         return IdentificationManager.getInstance()
                 .getIdentification(this)
-                .map(id -> new PresenceResource(id, new Presence(getLevel(), isPresent(), isStrict())));
+                .map(id -> new PresenceResource(id, new Presence(getLevel(), isPresent(), isStrict(), isKnown())));
     }
 }

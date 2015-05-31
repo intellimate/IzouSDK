@@ -38,6 +38,12 @@ public interface PresenceProvider extends Identifiable, EventListenerModel, Reso
     boolean isPresent();
 
     /**
+     * whether it is known that the user caused the presence
+     * @return true if known, false if not
+     */
+    boolean isKnown();
+
+    /**
      * when this method is called the present-status was changed
      * @param present true if present, false if not
      */

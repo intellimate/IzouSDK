@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author LeanderK
  * @version 1.0
  */
-@SuppressWarnings("unused")
 public abstract class PresenceConstant extends EventsController implements PresenceHelper, PresenceResourceProvider {
     private boolean present = false;
     private  boolean globalPresent = false;
@@ -42,11 +41,9 @@ public abstract class PresenceConstant extends EventsController implements Prese
      * @param ID      the ID
      * @param strict  whether it is strict (very high probability that the user is around)
      * @param level   the level
-     * @param constant if the addon is based on encounters with the user and not able to conclude constant presence from
-     *                 the information, it should pass false, if not (for example if it monitors wifi) it should return true.
      *
      */
-    public PresenceConstant(Context context, String ID, boolean strict, PresenceIndicatorLevel level, boolean constant) {
+    public PresenceConstant(Context context, String ID, boolean strict, PresenceIndicatorLevel level) {
         super(context, ID);
         this.strict = strict;
         this.level = level;
@@ -78,6 +75,16 @@ public abstract class PresenceConstant extends EventsController implements Prese
     @Override
     public boolean isStrict() {
         return strict;
+    }
+
+    /**
+     * whether it is known that the user caused the presence
+     *
+     * @return true if known, false if not
+     */
+    @Override
+    public boolean isKnown() {
+        return true;
     }
 
     /**

@@ -17,17 +17,21 @@ public class Presence {
     private final boolean present;
     public static final String STRICT_DESCRIPTOR = "izou.presence.provider.presence.strict";
     private final boolean strict;
+    public static final String KNOWN_DESCRIPTOR = "izou.presence.provider.presence.known";
+    private final boolean known;
 
     /**
      * returns a new Presence-Object
      * @param level the level of the Presence (mostly used internally)
      * @param present whether it is present
      * @param strict whether it is strict
+     * @param known whether it is known that the user caused this
      */
-    public Presence(PresenceIndicatorLevel level, boolean present, boolean strict) {
+    public Presence(PresenceIndicatorLevel level, boolean present, boolean strict, boolean known) {
         this.level = level;
         this.present = present;
         this.strict = strict;
+        this.known = known;
     }
 
     /**
@@ -39,11 +43,12 @@ public class Presence {
     }
 
     /**
-     * whether it is present
+     * whether it is present AND known
      * @return true if present
      */
     public boolean isPresent() {
-        return present;
+        if (known) return present;
+        else return false;
     }
 
     /**
@@ -55,6 +60,14 @@ public class Presence {
     }
 
     /**
+     * whether it is known that the user cause the Event
+     * @return true if known
+     */
+    public boolean isKnown() {
+        return known;
+    }
+
+    /**
      * exports the Presence to a HashMap
      * @return the resulting HashMap
      */
@@ -63,6 +76,7 @@ public class Presence {
         data.put(LEVEL_DESCRIPTOR, level.name());
         data.put(PRESENT_DESCRIPTOR, present);
         data.put(STRICT_DESCRIPTOR, strict);
+        data.put(KNOWN_DESCRIPTOR, known);
         return data;
     }
 
@@ -84,7 +98,8 @@ public class Presence {
             }
             boolean present = (boolean) data.get(PRESENT_DESCRIPTOR);
             boolean strict = (boolean) data.get(STRICT_DESCRIPTOR);
-            return Optional.of(new Presence(level, present, strict));
+            boolean known = (boolean) data.get(KNOWN_DESCRIPTOR);
+            return Optional.of(new Presence(level, present, strict, known));
         } catch (Exception e) {
             return Optional.empty();
         }
