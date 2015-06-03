@@ -181,4 +181,14 @@ public class InformationProvider extends AddOnModule implements MusicResourceGen
     public boolean isPlaying() {
         return musicProvider.isPlaying();
     }
+
+    /**
+     * true if using java, false if not (and for example a C-library)
+     *
+     * @return true if using java
+     */
+    @Override
+    public boolean isUsingJava() {
+        return musicProvider.isUsingJava();
+    }
 }
