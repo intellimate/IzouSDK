@@ -6,8 +6,9 @@ import org.intellimate.izou.system.file.FileSystemManager;
 import org.intellimate.izou.system.file.ReloadableFile;
 
 import java.io.*;
-import java.util.Enumeration;
-import java.util.Properties;
+import java.lang.ref.WeakReference;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Manages property files, and is also a {@link ReloadableFile}
@@ -20,6 +21,9 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
     private String defaultPropertiesPath;
     private Properties properties;
     private final EventPropertiesAssistant assistant;
+    private File propertiesFile;
+    private List<WeakReference<Consumer<PropertiesAssistant>>> listeners =
+            Collections.synchronizedList(new ArrayList<>());
 
     public PropertiesAssistant(Context context, String addOnID) {
         super(context, addOnID + ".PropertiesAssistant");
@@ -81,19 +85,6 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
     }
 
     /**
-     * Sets properties
-     *
-     * @param properties instance of properties, not null
-     */
-    public void setProperties(Properties properties) {
-        if(properties == null) {
-            return;
-        }
-        this.properties = properties;
-    }
-
-
-    /**
      * Gets the path to properties file (the real properties file - as opposed to the {@code defaultProperties.txt} file)
      *
      * @return path to properties file
@@ -103,10 +94,30 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
     }
 
     /**
+     * Gets the path to properties file (the real properties file - as opposed to the {@code defaultProperties.txt} file)
+     *
+     * @return path to properties file
+     */
+    public File getPropertiesFile() {
+        return propertiesFile;
+    }
+
+    /**
+     * the listener will always be called, when the Properties-file changes.
+     *
+     * @param listener the listener
+     */
+    public void registerUpdateListener(Consumer<PropertiesAssistant> listener) {
+        if (listener != null)
+            listeners.add(new WeakReference<>(listener));
+    }
+
+    /**
      * Sets the path to properties file (the real properties file - as opposed to the {@code defaultProperties.txt} file)
      *
      * @param propertiesPath to properties file
      */
+    @Deprecated//not used anywhere...what is the usage?
     public void setPropertiesPath(String propertiesPath) {
         this.propertiesPath = propertiesPath;
     }
@@ -134,15 +145,15 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
         }
 
         propertiesPath = propertiesPathTemp;
-        File propertiesFile = new File(propertiesPath);
-        if (!propertiesFile.exists()) try {
-            propertiesFile.createNewFile();
+        this.propertiesFile = new File(propertiesPath);
+        if (!this.propertiesFile.exists()) try {
+            this.propertiesFile.createNewFile();
         } catch (IOException e) {
             context.getLogger().error("Error while trying to create the new Properties file", e);
         }
 
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(propertiesFile),
+            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.propertiesFile),
                     "UTF8"));
             try {
                 properties.load(in);
@@ -207,6 +218,12 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
             bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(properties), "UTF8"));
             temp.load(bufferedReader);
             this.properties = temp;
+            listeners.removeIf(weakReference -> weakReference.get() == null);
+            listeners.forEach(weakReference -> {
+                Consumer<PropertiesAssistant> consumer = weakReference.get();
+                if (consumer != null)
+                    consumer.accept(this);
+            });
         } catch(IOException e) {
             context.getLogger().error("Error while trying to load the Properties-File: "
                     + propertiesPath, e);
