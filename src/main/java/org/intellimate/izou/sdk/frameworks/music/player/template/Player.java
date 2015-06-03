@@ -1,5 +1,6 @@
 package org.intellimate.izou.sdk.frameworks.music.player.template;
 
+import org.intellimate.izou.events.EventListenerModel;
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
@@ -20,6 +21,7 @@ import org.intellimate.izou.sdk.frameworks.music.resources.VolumeResource;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.MuteEvent;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.StopEvent;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.UnMuteEvent;
+import org.intellimate.izou.sdk.frameworks.presence.events.LeavingEvent;
 import org.intellimate.izou.sdk.output.OutputPlugin;
 
 import java.util.*;
@@ -34,13 +36,13 @@ import java.util.function.Consumer;
  * to start playing, use the PlayerController.startPlaying() methods, never call the play() method directly!.
  * Also, don't call the stopSound() method directly!.
  * All basic methods are implemented in this class,but to code special behaviour fell free to explore the other
- * classes and interfaces.
+ * classes and interfaces.<br>
+ * Note: the playback automatically stops when the user left.
  * </p>
  * @author LeanderK
  * @version 1.0
  */
-//TODO: stop if the user is not present anymore!
-public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider, ResourceBuilderModel, MusicHelper {
+public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider, ResourceBuilderModel, MusicHelper, EventListenerModel {
     private Playlist playlist = new Playlist(new ArrayList<>());
     private Volume volume = Volume.createVolume(50).orElse(null);
     private Progress progress = new Progress(0,0);
@@ -53,27 +55,29 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     private final List<Identifiable> activators;
     private final CommandHandler commandHandler = createCommandHandler();
     private final InformationProvider informationProvider = new InformationProvider(getContext(), getID(), this, commandHandler);
+    private final boolean isUsingJava;
 
     /**
      * creates a new output-plugin with a new id
-     *
-     * @param context context
+     *  @param context context
      * @param id      the id of the new output-plugin. The ID of the InformationProvider is also based on this id
      *                (id + ".InformationProvider")
      * @param runsInPlay whether the termination of the play method should be treated as the termination the
-     *                   music (STOP not PAUSE)
+ *                   music (STOP not PAUSE)
      * @param activators the activators which are able to start the Player if the Player is not able to start from
-     *                   request from other addons
+*                   request from other addons
      * @param providesTrackInfo whether the Player provides TrackInfo
      * @param playbackShuffle whether the player is able to provide the info that the playback is shuffling
      * @param playbackRepeat whether the player is able to provide the info that the playback is repeating
      * @param playbackRepeatSong whether the player is able to provide the info that the playback is repeating the song
+     * @param isUsingJava true if using java, false if not (and for example a C-library)
      */
     public Player(Context context, String id, boolean runsInPlay, List<Identifiable> activators,
-                  boolean providesTrackInfo, boolean playbackShuffle, boolean playbackRepeat, boolean playbackRepeatSong) {
+                  boolean providesTrackInfo, boolean playbackShuffle, boolean playbackRepeat, boolean playbackRepeatSong, boolean isUsingJava) {
         super(context, id);
         this.runsInPlay = runsInPlay;
         this.activators = activators;
+        this.isUsingJava = isUsingJava;
         capabilities = new Capabilities(context);
         if (providesTrackInfo)
             capabilities.setProvidesTrackInfo(true);
@@ -83,13 +87,14 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
             capabilities.setPlaybackRepeat(true);
         if (playbackRepeatSong)
             capabilities.setPlaybackRepeatSong(true);
+        getContext().getEvents().registerEventListener(Collections.singletonList(LeavingEvent.ID), this);
     }
 
     /**
      * creates a new output-plugin with a new id
-     *
-     * @param context context
-     * @param id      the id of the new output-plugin
+     *  @param context context
+     * @param id      the id of the new output-plugin. The ID of the InformationProvider is also based on this id
+     *                (id + ".InformationProvider")
      * @param runsInPlay whether the termination of the play method should be treated as the termination the
      *                   music (STOP not PAUSE)
      * @param activator the activator which is able to start the Player if the Player is not able to start from
@@ -98,18 +103,18 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * @param playbackShuffle whether the player is able to provide the info that the playback is shuffling
      * @param playbackRepeat whether the player is able to provide the info that the playback is repeating
      * @param playbackRepeatSong whether the player is able to provide the info that the playback is repeating the song
+     * @param isUsingJava true if using java, false if not (and for example a C-library)
      */
     @SuppressWarnings("unused")
     public Player(Context context, String id, boolean runsInPlay, Identifiable activator, boolean providesTrackInfo,
-                  boolean playbackShuffle, boolean playbackRepeat, boolean playbackRepeatSong) {
+                  boolean playbackShuffle, boolean playbackRepeat, boolean playbackRepeatSong, boolean isUsingJava) {
         this(context, id, runsInPlay, Collections.singletonList(activator), providesTrackInfo,
-                playbackShuffle, playbackRepeat, playbackRepeatSong);
+                playbackShuffle, playbackRepeat, playbackRepeatSong, isUsingJava);
     }
 
     /**
      * creates a new output-plugin with a new id
-     *
-     * @param context context
+     *  @param context context
      * @param id      the id of the new output-plugin
      * @param runsInPlay whether the termination of the play method should be treated as the termination of playing the
      *                   music
@@ -118,12 +123,14 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * @param playbackShuffle whether the player is able to provide the info that the playback is shuffling
      * @param playbackRepeat whether the player is able to provide the info that the playback is repeating
      * @param playbackRepeatSong whether the player is able to provide the info that the playback is repeating the song
+     * @param isUsingJava true if using java, false if not (and for example a C-library)
      */
     @SuppressWarnings("unused")
     public Player(Context context, String id, boolean runsInPlay, boolean playRequestTrackInfo, boolean providesTrackInfo,
-                  boolean playbackShuffle, boolean playbackRepeat, boolean playbackRepeatSong) {
+                  boolean playbackShuffle, boolean playbackRepeat, boolean playbackRepeatSong, boolean isUsingJava) {
         super(context, id);
         this.runsInPlay = runsInPlay;
+        this.isUsingJava = isUsingJava;
         activators = null;
         capabilities = new Capabilities(context);
         capabilities.setPlayRequestOutside(true);
@@ -174,12 +181,21 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     }
 
     /**
+     * true if using java, false if not (and for example a C-library)
+     *
+     * @return true if using java
+     */
+    @Override
+    public boolean isUsingJava() {
+        return isUsingJava;
+    }
+
+    /**
      * this method has no effect if runsInPlay is enabled in the constructor.
      * stops the playing
      */
-    @SuppressWarnings("unused")
-    public void setPlayingStopped() {
-        if (runsInPlay)
+    public void stopMusicPlayback() {
+        if (runsInPlay || !isPlaying)
             return;
         isPlaying = false;
         stopSound();
@@ -452,10 +468,10 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
             checkOrCall.accept(this::unMute);
         }
         if (eventModel.containsDescriptor(StopEvent.ID)) {
-            checkOrCall.accept(this::setPlayingStopped);
+            checkOrCall.accept(this::stopMusicPlayback);
         }
         if (StopMusic.verify(eventModel, this)) {
-            setPlayingStopped();
+            stopMusicPlayback();
         }
         if (PlayerCommand.verify(eventModel, this)) {
             getCommandHandler().handleCommandResources(eventModel);
@@ -479,12 +495,18 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         Optional<Progress> progress = ProgressResource.getProgress(eventModel);
         Optional<TrackInfo> trackInfo = TrackInfoResource.getTrackInfo(eventModel);
         Optional<Volume> volume = VolumeResource.getVolume(eventModel);
-        startedSound(playlist.orElse(null), progress.orElse(null), trackInfo.orElse(null), volume.orElse(null));
+        startedSound(playlist.orElse(null), progress.orElse(null), trackInfo.orElse(null), volume.orElse(null), isUsingJava);
     }
 
     @Override
     public void stop() {
-        setPlayingStopped();
+        stopMusicPlayback();
+    }
+
+    @Override
+    public void eventFired(EventModel eventModel) {
+        if (eventModel.containsDescriptor(LeavingEvent.GENERAL_DESCRIPTOR))
+            stopMusicPlayback();
     }
 
     /**
@@ -510,7 +532,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
 
     /**
      * this method call must stop the sound.
-     * NEVER CALL THIS METHOD DIRECTLY, USED {@link #setPlayingStopped()}.
+     * NEVER CALL THIS METHOD DIRECTLY, USED {@link #stopMusicPlayback()}.
      */
     public abstract void stopSound();
 

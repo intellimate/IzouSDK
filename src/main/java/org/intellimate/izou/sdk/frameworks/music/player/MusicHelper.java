@@ -20,12 +20,12 @@ import java.util.Optional;
 public interface MusicHelper extends PermanentSoundHelper {
     /**
      * fires an StartEvent
-     *
+     * @param isUsingJava true if using java, false if not (and for example a C-library)
      */
     @Override
-    default void startedSound() {
+    default void startedSound(boolean isUsingJava) {
         getContext().getLogger().warn("creating start music event without Information");
-        startedSound(null, null, null, null);
+        startedSound(null, null, null, null, isUsingJava);
     }
 
     /**
@@ -35,11 +35,13 @@ public interface MusicHelper extends PermanentSoundHelper {
      * @param progress the progress or null
      * @param trackInfo the trackInfo or null
      * @param volume the volume or null
+     * @param isUsingJava true if using java, false if not (and for example a C-library)
      */
-    default void startedSound(Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
+    default void startedSound(Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume, boolean isUsingJava) {
         Optional<Event> startEvent = IdentificationManager.getInstance().getIdentification(this)
                 .flatMap(PlayerUpdate::createPlayerUpdate)
-                .map(event -> event.addDescriptor(StartEvent.ID));
+                .map(event -> event.addDescriptor(StartEvent.ID))
+                .map(event -> isUsingJava ? event : event.addDescriptor(StartEvent.IS_USING_NON_JAVA_OUTPUT));
         Optional<Identification> id = IdentificationManager.getInstance().getIdentification(this);
         if (!startEvent.isPresent() || !id.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerUpdate");

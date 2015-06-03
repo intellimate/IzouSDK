@@ -17,11 +17,18 @@ public interface MusicProvider extends PermanentSoundUsed {
     boolean isOutputRunning();
 
     /**
+     * true if using java, false if not (and for example a C-library)
+     *
+     * @return true if using java
+     */
+    @Override
+    boolean isUsingJava();
+
+    /**
      * true if playing and false if not
      * @return tre if playing
      */
     boolean isPlaying();
-
 
     /**
      * gets the current Playlist

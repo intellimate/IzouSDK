@@ -10,7 +10,7 @@ import org.intellimate.izou.sdk.util.FireEvent;
 import java.util.Optional;
 
 /**
- * interface which provides
+ * interface which provides various methods to
  * @author LeanderK
  * @version 1.0
  */
@@ -18,10 +18,11 @@ public interface PermanentSoundHelper extends Identifiable, FireEvent, ContextPr
 
     /**
      * fires an StartEvent
+     * @param isUsingJava true if using java, false if not (and for example a C-library)
      */
-    default void startedSound() {
+    default void startedSound(boolean isUsingJava) {
         Optional<StartEvent> startEvent = IdentificationManager.getInstance().getIdentification(this)
-                .flatMap(StartEvent::createStartEvent);
+                .flatMap(id -> StartEvent.createStartEvent(id, isUsingJava));
         if (!startEvent.isPresent()) {
             getContext().getLogger().error("unable to fire startEvent");
         } else {

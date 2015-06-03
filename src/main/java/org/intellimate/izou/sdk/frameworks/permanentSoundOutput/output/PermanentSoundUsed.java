@@ -11,4 +11,10 @@ public interface PermanentSoundUsed {
      * @return true if  using the sound output
      */
     boolean isOutputRunning();
+
+    /**
+     * true if using java, false if not (and for example a C-library)
+     * @return true if using java
+     */
+    boolean isUsingJava();
 }

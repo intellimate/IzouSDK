@@ -23,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 public abstract class SimplePermanentSoundOutputPlugin<T> extends OutputPlugin<T> implements PermanentSoundUsed,
         PermanentSoundHelper, PermanentSoundResources {
     private boolean isCurrentlyPlayingSound = false;
+    public final boolean isUsingJava;
 
     /**
      * creates a new output-plugin with a new id
@@ -30,9 +31,10 @@ public abstract class SimplePermanentSoundOutputPlugin<T> extends OutputPlugin<T
      * @param context context
      * @param id the id of the new output-plugin
      */
-    public SimplePermanentSoundOutputPlugin(Context context, String id) {
+    public SimplePermanentSoundOutputPlugin(Context context, String id, boolean isUsingJava) {
         super(context, id);
         resourcesInit(context);
+        this.isUsingJava = isUsingJava;
     }
 
     /**
@@ -107,6 +109,16 @@ public abstract class SimplePermanentSoundOutputPlugin<T> extends OutputPlugin<T
     }
 
     /**
+     * true if using java, false if not (and for example a C-library)
+     *
+     * @return true if using java
+     */
+    @Override
+    public boolean isUsingJava() {
+        return isUsingJava;
+    }
+
+    /**
      * use this method to start playing sound (only plays sound if it is not already playing)
      * @param function the function which plays the sound
      * @return the Future
@@ -114,7 +126,7 @@ public abstract class SimplePermanentSoundOutputPlugin<T> extends OutputPlugin<T
     public Optional<CompletableFuture<Void>> startPlaying(Runnable function) {
         if (isCurrentlyPlayingSound)
             return Optional.empty();
-        CompletableFuture<Void> voidCompletableFuture = submit((Runnable) this::startedSound)
+        CompletableFuture<Void> voidCompletableFuture = submit((Runnable) () -> startedSound(isUsingJava))
                 .thenRun(() -> {
                     try {
                         isCurrentlyPlayingSound = true;
