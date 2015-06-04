@@ -19,7 +19,7 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
     /**
      * The path to the local_events.properties file
      */
-    //TODO: not available anymore
+    //TODO: not available anymore, with new izou-version getContext.getFiles.getPropertiesBla is the way
     public static final String EVENTS_PROPERTIES_PATH = FileSystemManager.PROPERTIES_PATH + File.separator +
             "local_events.properties";
     private Properties properties;

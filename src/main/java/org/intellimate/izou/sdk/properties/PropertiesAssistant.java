@@ -32,6 +32,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
         this.propertiesPath = null;
         this.defaultPropertiesPath = null;
         this.assistant = new EventPropertiesAssistant(context, addOnID + ".EventPropertiesAssistant");
+        //TODO: not available anymore, with new izou-version getContext.getFiles.getPropertiesBla is the way
         this.defaultPropertiesPath = FileSystemManager.FULL_WORKING_DIRECTORY + File.separator + "lib"
                  + getContext().getAddOn().getPlugin().getPluginPath() + File.separator + "classes" + File.separator
                 + "default_properties.txt";
