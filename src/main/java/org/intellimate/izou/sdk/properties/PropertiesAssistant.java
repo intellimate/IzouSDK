@@ -59,7 +59,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
      *
      * @param key the property key.
      * @return the value in this property list with the specified key value.
-     * @deprecated wrong method name
+     * @deprecated wrong method name, use {@link #getProperty(String)}
      */
     @Deprecated
     public String getProperties(String key) {
