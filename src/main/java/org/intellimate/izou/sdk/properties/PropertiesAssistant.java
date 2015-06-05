@@ -47,8 +47,21 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
     }
 
     /**
-     * You should probably use getProperties() unless you have a very good reason not to.
+     * Searches for the property with the specified key in this property list.
      *
+     * If the key is not found in this property list, the default property list, and its defaults, recursively, are
+     * then checked. The method returns null if the property is not found.
+     *
+     * @param key the property key.
+     * @return the value in this property list with the specified key value.
+     * @deprecated wrong method name
+     */
+    @Deprecated
+    public String getProperties(String key) {
+        return properties.getProperty(key);
+    }
+
+    /**
      * Searches for the property with the specified key in this property list.
      *
      * If the key is not found in this property list, the default property list, and its defaults, recursively, are
@@ -57,7 +70,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
      * @param key the property key.
      * @return the value in this property list with the specified key value.
      */
-    public String getProperties(String key) {
+    public String getProperty(String key) {
         return properties.getProperty(key);
     }
 
