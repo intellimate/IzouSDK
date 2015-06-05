@@ -2,7 +2,6 @@ package org.intellimate.izou.sdk.properties;
 
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.util.AddOnModule;
-import org.intellimate.izou.system.file.FileSystemManager;
 import org.intellimate.izou.system.file.ReloadableFile;
 
 import java.io.*;
@@ -32,9 +31,8 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
         this.propertiesPath = null;
         this.defaultPropertiesPath = null;
         this.assistant = new EventPropertiesAssistant(context, addOnID + ".EventPropertiesAssistant");
-        //TODO: not available anymore, with new izou-version getContext.getFiles.getPropertiesBla is the way
-        this.defaultPropertiesPath = FileSystemManager.FULL_WORKING_DIRECTORY + File.separator + "lib"
-                 + getContext().getAddOn().getPlugin().getPluginPath() + File.separator + "classes" + File.separator
+        this.defaultPropertiesPath = getContext().getFiles().getPropertiesLocation() +
+                getContext().getAddOn().getPlugin().getPluginPath() + File.separator + "classes" + File.separator
                 + "default_properties.txt";
         initProperties();
     }

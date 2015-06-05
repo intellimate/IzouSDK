@@ -1,11 +1,10 @@
 package org.intellimate.izou.sdk.properties;
 
-import org.intellimate.izou.sdk.Context;
-import org.intellimate.izou.sdk.util.AddOnModule;
-import org.intellimate.izou.system.file.FileSystemManager;
-import org.intellimate.izou.system.file.ReloadableFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.intellimate.izou.sdk.Context;
+import org.intellimate.izou.sdk.util.AddOnModule;
+import org.intellimate.izou.system.file.ReloadableFile;
 
 import java.io.*;
 import java.util.Properties;
@@ -19,8 +18,7 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
     /**
      * The path to the local_events.properties file
      */
-    //TODO: not available anymore, with new izou-version getContext.getFiles.getPropertiesBla is the way
-    public static final String EVENTS_PROPERTIES_PATH = FileSystemManager.PROPERTIES_PATH + File.separator +
+    private final String eventPropertiesPath = getContext().getFiles().getPropertiesLocation() + File.separator +
             "local_events.properties";
     private Properties properties;
     private final Logger fileLogger = LogManager.getLogger(this.getClass());
@@ -63,6 +61,14 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
     }
 
     /**
+     * gets the String containing the Properties-Path
+     * @return a String
+     */
+    public String getEventPropertiesPath() {
+        return eventPropertiesPath;
+    }
+
+    /**
      * Gets the full event ID associated with the key {@code key}
      *
      * @param key the key of the full event ID
@@ -87,7 +93,7 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
 
         BufferedWriter bufferedWriterInit = null;
         try {
-            bufferedWriterInit = new BufferedWriter(new FileWriter(EVENTS_PROPERTIES_PATH, true));
+            bufferedWriterInit = new BufferedWriter(new FileWriter(eventPropertiesPath, true));
         } catch (IOException e) {
             fileLogger.error("Unable to create buffered writer", e);
         }
@@ -119,7 +125,7 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
 
         BufferedWriter bufferedWriter = null;
         try {
-            bufferedWriter = new BufferedWriter(new FileWriter(EVENTS_PROPERTIES_PATH, true));
+            bufferedWriter = new BufferedWriter(new FileWriter(eventPropertiesPath, true));
         } catch (IOException e) {
             fileLogger.error("Unable to create buffered writer", e);
         }
@@ -149,7 +155,7 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
         Properties temp = new Properties();
         BufferedReader in = null;
         try {
-            File properties = new File(EVENTS_PROPERTIES_PATH);
+            File properties = new File(eventPropertiesPath);
             in = new BufferedReader(new InputStreamReader(new FileInputStream(properties), "UTF8"));
             temp.load(in);
             this.properties = temp;
