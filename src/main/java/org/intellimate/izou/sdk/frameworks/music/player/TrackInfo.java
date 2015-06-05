@@ -33,7 +33,7 @@ public class TrackInfo {
         this.album = null;
         albumCover = null;
         albumCoverFormat = null;
-        id = null;
+        data = null;
     }
 
     public TrackInfo(String name, String artist, String album) {
