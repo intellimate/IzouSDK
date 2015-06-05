@@ -12,6 +12,7 @@ import org.intellimate.izou.system.context.*;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -142,9 +143,10 @@ public class Context implements org.intellimate.izou.system.Context {
         @Override
         public void registerContentGenerator(ContentGeneratorModel contentGenerator) throws IllegalIDException {
             List<? extends EventListener> triggeredEvents = contentGenerator.getTriggeredEvents();
-            for (EventListener eventListener : triggeredEvents) {
-                propertiesAssistant.getEventPropertiesAssistant().registerEventID(eventListener.getDescription(),
-                        eventListener.getDescriptorID(), eventListener.getDescriptor());
+            if (triggeredEvents != null) {
+                triggeredEvents.stream()
+                        .filter(Objects::nonNull)
+                        .forEach(propertiesAssistant.getEventPropertiesAssistant()::registerEventListener);
             }
             getResources().registerResourceBuilder(contentGenerator);
         }

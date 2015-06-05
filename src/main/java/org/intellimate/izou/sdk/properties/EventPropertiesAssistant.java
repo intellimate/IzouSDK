@@ -3,6 +3,8 @@ package org.intellimate.izou.sdk.properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.intellimate.izou.sdk.Context;
+import org.intellimate.izou.sdk.contentgenerator.EventListener;
+import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.util.AddOnModule;
 import org.intellimate.izou.system.file.ReloadableFile;
 
@@ -37,6 +39,25 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
         } catch (IOException e) {
             context.getLogger().error("Unable to initialize local_events.properties file", e);
         }
+        registerStandardEvents();
+    }
+
+    /**
+     * registers the standard-events
+     */
+    private void registerStandardEvents() {
+        CommonEvents.Descriptors.stopListener(this).ifPresent(this::registerEventListener);
+        CommonEvents.Presence.generalLeavingListener(this).ifPresent(this::registerEventListener);
+        CommonEvents.Presence.generalListener(this).ifPresent(this::registerEventListener);
+        CommonEvents.Presence.leavingListener(this).ifPresent(this::registerEventListener);
+        CommonEvents.Presence.presenceListener(this).ifPresent(this::registerEventListener);
+        CommonEvents.Presence.strictLeavingListener(this).ifPresent(this::registerEventListener);
+        CommonEvents.Presence.strictListener(this).ifPresent(this::registerEventListener);
+        CommonEvents.Response.fullResponseListener(this).ifPresent(this::registerEventListener);
+        CommonEvents.Response.majorResponseListener(this).ifPresent(this::registerEventListener);
+        CommonEvents.Response.minorResponseListener(this).ifPresent(this::registerEventListener);
+        CommonEvents.Type.notificationListener(this).ifPresent(this::registerEventListener);
+        CommonEvents.Type.responseListener(this).ifPresent(this::registerEventListener);
     }
 
     private void createIzouPropertiesFiles() throws IOException {
@@ -76,6 +97,16 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
      */
     public String getEventID(String key) {
         return (String) properties.get(key);
+    }
+
+    /**
+     * Registers or adds an event to the local_events.properties file with the informations found in the EventListener
+     *
+     * @param eventListener the eventListener to add
+     */
+    public void registerEventListener(EventListener eventListener) {
+        registerEventID(eventListener.getDescription(),
+                eventListener.getDescriptorID(), eventListener.getDescriptor());
     }
 
     /**

@@ -13,6 +13,7 @@ import java.util.Optional;
  * @author LeanderK
  * @version 1.0
  */
+//implementation: every added EventListener should be added in the registerStandardMethod in EventPropertiesAssistant
 public class CommonEvents {
 
     /**
