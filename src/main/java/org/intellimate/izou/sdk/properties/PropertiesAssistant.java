@@ -3,6 +3,7 @@ package org.intellimate.izou.sdk.properties;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.util.AddOnModule;
 import org.intellimate.izou.system.file.ReloadableFile;
+import ro.fortsoft.pf4j.PluginWrapper;
 
 import java.io.*;
 import java.lang.ref.WeakReference;
@@ -15,7 +16,6 @@ import java.util.function.Consumer;
  * <p>Unlike most manager classes in Izou, the PropertiesManager is included in every {@code AddOn} instance</p>
  */
 public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
-    private final Context context;
     private String propertiesPath;
     private String defaultPropertiesPath;
     private Properties properties;
@@ -26,14 +26,19 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
 
     public PropertiesAssistant(Context context, String addOnID) {
         super(context, addOnID + ".PropertiesAssistant");
-        this.context = context;
         this.properties = new Properties();
         this.propertiesPath = null;
         this.defaultPropertiesPath = null;
         this.assistant = new EventPropertiesAssistant(context, addOnID + ".EventPropertiesAssistant");
-        this.defaultPropertiesPath = getContext().getFiles().getPropertiesLocation() +
-                getContext().getAddOn().getPlugin().getPluginPath() + File.separator + "classes" + File.separator
-                + "default_properties.txt";
+        PluginWrapper plugin = getContext().getAddOn().getPlugin();
+        if (plugin != null) {
+            this.defaultPropertiesPath = getContext().getFiles().getPropertiesLocation() +
+                    getContext().getAddOn().getPlugin().getPluginPath() + File.separator + "classes" + File.separator
+                    + "default_properties.txt";
+        } else {
+            //if we are debugging
+            this.defaultPropertiesPath = getContext().getAddOn().getClass().getClassLoader().getResource("default_properties.txt").toString();
+        }
         initProperties();
     }
 
@@ -153,7 +158,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
                     + getContext().getAddOn().getID() + ".properties";
         } catch (IOException e) {
             propertiesPathTemp = null;
-            context.getLogger().error("Error while trying to build the propertiesPathTemp", e);
+            error("Error while trying to build the propertiesPathTemp", e);
         }
 
         propertiesPath = propertiesPathTemp;
@@ -161,7 +166,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
         if (!this.propertiesFile.exists()) try {
             this.propertiesFile.createNewFile();
         } catch (IOException e) {
-            context.getLogger().error("Error while trying to create the new Properties file", e);
+            error("Error while trying to create the new Properties file", e);
         }
 
         try {
@@ -170,10 +175,10 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
             try {
                 properties.load(in);
             } catch (IOException e) {
-                context.getLogger().error("unable to load the InputStream for the PropertiesFile",e);
+                error("unable to load the InputStream for the PropertiesFile",e);
             }
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
-            context.getLogger().error("Error while trying to read Properties-File", e);
+            error("Error while trying to read Properties-File", e);
         }
 
         if (defaultPropertiesPath != null && new File(defaultPropertiesPath).exists()) {
@@ -184,7 +189,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
                 try {
                     createDefaultPropertyFile(defaultPropertiesPath);
                 } catch (IOException e) {
-                    context.getLogger().error("Error while trying to copy the Default-Properties File", e);
+                    error("Error while trying to copy the Default-Properties File", e);
                 }
 
                 if (new File(defaultPropertiesPath).exists() && !writeToPropertiesFile(defaultPropertiesPath)) return;
@@ -201,7 +206,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
      * @return true if operation has succeeded, else false
      */
     private boolean writeToPropertiesFile(String defaultPropsPath) {
-        return context.getFiles().writeToFile(defaultPropsPath, propertiesPath);
+        return getContext().getFiles().writeToFile(defaultPropsPath, propertiesPath);
     }
 
     /**
@@ -215,7 +220,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
      * @throws java.io.IOException is thrown by bufferedWriter
      */
     private void createDefaultPropertyFile(String defaultPropsPath) throws IOException {
-        context.getFiles().createDefaultFile(defaultPropsPath, "# Properties should always be in the "
+        getContext().getFiles().createDefaultFile(defaultPropsPath, "# Properties should always be in the "
                 + "form of: \"key = value\"");
     }
 
@@ -236,15 +241,15 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
                 if (consumer != null)
                     consumer.accept(this);
             });
-        } catch(IOException e) {
-            context.getLogger().error("Error while trying to load the Properties-File: "
+        } catch (IOException e) {
+            error("Error while trying to load the Properties-File: "
                     + propertiesPath, e);
         } finally {
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
                 } catch (IOException e) {
-                    context.getLogger().error("Unable to close input stream", e);
+                    error("Unable to close input stream", e);
                 }
             }
         }
