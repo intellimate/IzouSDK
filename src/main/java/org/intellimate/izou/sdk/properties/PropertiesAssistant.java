@@ -37,7 +37,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
                     + "default_properties.txt";
         } else {
             //if we are debugging
-            this.defaultPropertiesPath = getContext().getAddOn().getClass().getClassLoader().getResource("default_properties.txt").toString();
+            this.defaultPropertiesPath = getContext().getAddOn().getClass().getClassLoader().getResource("default_properties.txt").getFile();
         }
         initProperties();
     }
