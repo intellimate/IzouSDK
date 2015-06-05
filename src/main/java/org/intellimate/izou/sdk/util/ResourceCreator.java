@@ -10,9 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * provides various utility-methods to create Resources
+ * provides various utility-methods to create Resources.
  * @author Leander Kurscheidt
  * @version 1.0
+ * @see Resource
  */
 public interface ResourceCreator extends ContextProvider, Identifiable {
     /**

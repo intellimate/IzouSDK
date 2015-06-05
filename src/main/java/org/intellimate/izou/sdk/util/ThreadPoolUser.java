@@ -18,6 +18,7 @@ public interface ThreadPoolUser extends ContextProvider {
      * submits the Runnable to the AddOns Thread-Pool
      * @param runnable the runnable to submit
      * @return the new CompletableFuture
+     * @see java.util.concurrent.ExecutorService#submit(Callable)
      */
     default CompletableFuture<Void> submit(Runnable runnable) {
         return submitRun(runnable);
@@ -27,6 +28,7 @@ public interface ThreadPoolUser extends ContextProvider {
      * submits the Runnable to the AddOns Thread-Pool
      * @param runnable the runnable to submit
      * @return the new CompletableFuture
+     * @see java.util.concurrent.ExecutorService#submit(Callable)
      */
     default CompletableFuture<Void> submitRun(Runnable runnable) {
         return CompletableFuture.runAsync(runnable, getContext().getThreadPool().getThreadPool())
@@ -42,6 +44,7 @@ public interface ThreadPoolUser extends ContextProvider {
      * @param supplier the supplier executed
      * @param <U> the return type
      * @return the new CompletableFuture
+     * @see java.util.concurrent.ExecutorService#submit(Callable)
      */
     default <U> CompletableFuture<U> submit(Supplier<U> supplier) {
         return CompletableFuture.supplyAsync(supplier, getContext().getThreadPool().getThreadPool())
@@ -58,13 +61,14 @@ public interface ThreadPoolUser extends ContextProvider {
      * @param <U> the type to return
      * @param <X> the Callable
      * @return an Future-Object
+     * @see java.util.concurrent.ExecutorService#submit(Callable)
      */
     default <U, X extends AddOnModule & Callable<U>> Future<U>  submit(X x) {
         return getContext().getThreadPool().getThreadPool().submit(x);
     }
 
     /**
-     * times out the collection of futures
+     * Times out the collection of futures.
      * @param futures the collection of futures
      * @param milliseconds the limit in milliseconds (everything under 20 milliseconds makes no sense)
      * @param <U> the return type of the futures

@@ -24,8 +24,8 @@ public class TrackInfo {
     private final byte[] albumCover;
     public static final String albumCoverFormatDescriptor = "izou.music.trackinfo.albumCoverFormat";
     private final String albumCoverFormat;
-    public static final String idDescriptor = "izou.music.trackinfo.id";
-    private final String id;
+    public static final String idDescriptor = "izou.music.trackinfo.data";
+    private final String data;
 
     public TrackInfo(String name) {
         this.name = name;
@@ -33,7 +33,7 @@ public class TrackInfo {
         this.album = null;
         albumCover = null;
         albumCoverFormat = null;
-        id = null;
+        data = null;
     }
 
     public TrackInfo(String name, String artist, String album) {
@@ -42,7 +42,7 @@ public class TrackInfo {
         this.album = album;
         albumCover = null;
         albumCoverFormat = null;
-        id = null;
+        data = null;
     }
 
     public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat) {
@@ -51,7 +51,7 @@ public class TrackInfo {
         this.album = album;
         this.albumCover = albumCover;
         this.albumCoverFormat = albumCoverFormat;
-        id = null;
+        data = null;
     }
 
     public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String id) {
@@ -60,7 +60,7 @@ public class TrackInfo {
         this.album = album;
         this.albumCover = albumCover;
         this.albumCoverFormat = albumCoverFormat;
-        this.id = id;
+        this.data = id;
     }
 
 
@@ -113,7 +113,7 @@ public class TrackInfo {
      * @return the optional id
      */
     public Optional<String> getId() {
-        return Optional.of(id);
+        return Optional.of(data);
     }
 
     /**
@@ -128,7 +128,7 @@ public class TrackInfo {
                 trackInfo.album,
                 trackInfo.albumCover,
                 trackInfo.albumCoverFormat,
-                trackInfo.id);
+                trackInfo.data);
     }
 
     /**
@@ -156,7 +156,7 @@ public class TrackInfo {
         if (compareStrings.test(album, this.album)) {
             return true;
         }
-        if (compareStrings.test(id, this.id)) {
+        if (compareStrings.test(id, this.data)) {
             return true;
         }
         if (compareStrings.test(albumCoverFormat, this.albumCoverFormat)) {
@@ -180,7 +180,7 @@ public class TrackInfo {
                 trackInfo.album,
                 trackInfo.albumCover,
                 trackInfo.albumCoverFormat,
-                trackInfo.id);
+                trackInfo.data);
     }
 
     /**
@@ -213,7 +213,7 @@ public class TrackInfo {
         if (albumCoverFormat != null && !albumCoverFormat.equals(this.albumCoverFormat)) {
             change = true;
         }
-        if (id != null && !id.equals(this.id)) {
+        if (id != null && !id.equals(this.data)) {
             change = true;
         }
         if (!change)
@@ -224,7 +224,7 @@ public class TrackInfo {
                 this.album == null? album : this.album,
                 this.albumCover == null? albumCover : this.albumCover,
                 this.albumCoverFormat == null? albumCoverFormat : this.albumCoverFormat,
-                this.id == null? id : this.id
+                this.data == null? id : this.data
         ));
     }
 
@@ -239,7 +239,7 @@ public class TrackInfo {
         data.put(albumDescriptor, albumDescriptor);
         data.put(albumCoverDescriptor, albumCover);
         data.put(albumCoverFormatDescriptor, albumCoverFormatDescriptor);
-        data.put(idDescriptor, id);
+        data.put(idDescriptor, data);
         return data;
     }
 
@@ -291,7 +291,7 @@ public class TrackInfo {
         if (!Arrays.equals(albumCover, trackInfo.albumCover)) return false;
         if (albumCoverFormat != null ? !albumCoverFormat.equals(trackInfo.albumCoverFormat) : trackInfo.albumCoverFormat != null)
             return false;
-        return !(id != null ? !id.equals(trackInfo.id) : trackInfo.id != null);
+        return !(data != null ? !data.equals(trackInfo.data) : trackInfo.data != null);
 
     }
 
@@ -302,7 +302,7 @@ public class TrackInfo {
         result = 31 * result + (album != null ? album.hashCode() : 0);
         result = 31 * result + (albumCover != null ? Arrays.hashCode(albumCover) : 0);
         result = 31 * result + (albumCoverFormat != null ? albumCoverFormat.hashCode() : 0);
-        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (data != null ? data.hashCode() : 0);
         return result;
     }
 }
