@@ -452,11 +452,13 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
                 } else {
                     isRunning = true;
                 }
+                isPlaying = true;
                 fireStartMusicRequest(eventModel);
             }).thenRun(() -> play(eventModel))
                     .thenRun(() -> {
                         if (runsInPlay) {
                             isRunning = false;
+                            isPlaying = false;
                             endedSound();
                         }
                     });
