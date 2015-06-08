@@ -125,14 +125,14 @@
                 <configuration>
                     <failOnError>false</failOnError>
                     <linksource>true</linksource>
-                    <reportOutputDirectory>${project.build.directory}</reportOutputDirectory>
+                    <reportOutputDirectory>${project.build.directory}/site</reportOutputDirectory>
                     <destDir>javadoc/</destDir>
                     <source>1.8</source>
                     <sourcepath>${basedir}/src/main/java/</sourcepath>
                     <skip>false</skip>
                 </configuration>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
                 <version>1.6.3</version>
@@ -142,7 +142,7 @@
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
-            </plugin>
+            </plugin>-->
             <!-- pf4j -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -206,7 +206,7 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>de.jutzig</groupId>
                 <artifactId>github-release-plugin</artifactId>
                 <version>1.1.0</version>
@@ -223,7 +223,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
