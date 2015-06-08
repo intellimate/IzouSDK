@@ -275,7 +275,7 @@
                             <outputDirectory>${project.basedir}/javadoc</outputDirectory>
                             <!-- Use merge or override the content -->
                             <merge>true</merge>
-                            <branch>refs/heads/gh-pages</branch>
+                            <branch>refs/heads/gh-pages/javadoc</branch>
                             <repositoryName>IzouSDK</repositoryName>      <!-- github repo name -->
                             <repositoryOwner>intellimate</repositoryOwner>
                         </configuration>
