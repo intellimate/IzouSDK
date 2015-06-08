@@ -276,8 +276,8 @@
                             <!-- Use merge or override the content -->
                             <merge>true</merge>
                             <branch>refs/heads/gh-pages</branch>
-                            <repositoryName>intellimate</repositoryName>      <!-- github repo name -->
-                            <repositoryOwner>IzouSDK</repositoryOwner>
+                            <repositoryName>IzouSDK</repositoryName>      <!-- github repo name -->
+                            <repositoryOwner>intellimate</repositoryOwner>
                         </configuration>
                     </execution>
                 </executions>
