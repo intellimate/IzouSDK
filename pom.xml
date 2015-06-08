@@ -251,8 +251,7 @@
                         <goals>
                             <goal>site</goal>
                         </goals>
-                        <!-- select the Maven phase in which the plugin will be executed -->
-                        <phase>site-deploy</phase>
+                        <phase>deploy</phase>
                         <configuration>
                             <!-- Plugin configuration ges here -->
 
