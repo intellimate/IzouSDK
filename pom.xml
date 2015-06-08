@@ -276,7 +276,7 @@
                             <merge>true</merge>
                             <branch>refs/heads/gh-pages/javadoc</branch>
                             <repositoryName>intellimate</repositoryName>      <!-- github repo name -->
-                            <repositoryOwner>Izou</repositoryOwner>
+                            <repositoryOwner>IzouSDK</repositoryOwner>
                         </configuration>
                     </execution>
                 </executions>
