@@ -273,10 +273,9 @@
 
                             <!-- The commit message -->
                             <message>Building site for my Izou SDK version: ${project.version}</message>
-                            <outputDirectory>${basedir}/javadoc</outputDirectory>
+                            <outputDirectory>${project.basedir}/javadoc</outputDirectory>
                             <includes>
-                                <include>${project.build.directory}/javadoc/**/*</include>
-                                <include>${basedir}/javadoc/**/*</include>
+                                <include>**/*</include>
                             </includes>
                             <excludes>
                                 <exclude>*.jar</exclude>
