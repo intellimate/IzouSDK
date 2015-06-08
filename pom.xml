@@ -268,18 +268,11 @@
                         <phase>deploy</phase>
                         <configuration>
                             <!-- Plugin configuration ges here -->
-
                             <server>github</server>
 
                             <!-- The commit message -->
                             <message>Building site for my Izou SDK version: ${project.version}</message>
                             <outputDirectory>${project.basedir}/javadoc</outputDirectory>
-                            <includes>
-                                <include>**/*</include>
-                            </includes>
-                            <excludes>
-                                <exclude>*.jar</exclude>
-                            </excludes>
                             <!-- Use merge or override the content -->
                             <merge>true</merge>
                             <branch>refs/heads/gh-pages</branch>
