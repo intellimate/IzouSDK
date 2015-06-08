@@ -273,13 +273,11 @@
 
                             <!-- The commit message -->
                             <message>Building site for my Izou SDK version: ${project.version}</message>
-                            <!-- The location where the site is uploaded -->
-                            <path>${project.build.directory}/gh-pages</path>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                            <includes>
-                                <include>javadoc/**/*</include>
-                                <include>site/**/*</include>
-                            </includes>
+                            <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
+                            <!--<includes>
+                                <include>${project.build.directory}/javadoc/**/*</include>
+                                <include>${project.build.directory}/site/**/*</include>
+                            </includes>-->
                             <excludes>
                                 <exclude>*.jar</exclude>
                             </excludes>
