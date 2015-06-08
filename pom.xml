@@ -124,6 +124,12 @@
                 </executions>
                 <configuration>
                     <failOnError>false</failOnError>
+                    <linksource>true</linksource>
+                    <reportOutputDirectory>${project.build.directory}</reportOutputDirectory>
+                    <destDir>javadoc/</destDir>
+                    <source>1.8</source>
+                    <sourcepath>${basedir}/src/main/java/</sourcepath>
+                    <skip>false</skip>
                 </configuration>
             </plugin>
             <plugin>
@@ -240,6 +246,14 @@
                         </plugin>
                     </reportPlugins>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-descriptor</id>
+                        <goals>
+                            <goal>attach-descriptor</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <!-- Deploy the web site -->
@@ -261,6 +275,14 @@
                             <message>Building site for my Izou SDK version: ${project.version}</message>
                             <!-- The location where the site is uploaded -->
                             <path>${project.build.directory}/gh-pages</path>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <includes>
+                                <include>javadoc/**/*</include>
+                                <include>site/**/*</include>
+                            </includes>
+                            <excludes>
+                                <exclude>*.jar</exclude>
+                            </excludes>
                             <!-- Use merge or override the content -->
                             <merge>true</merge>
                             <branch>refs/heads/gh-pages/javadoc</branch>
