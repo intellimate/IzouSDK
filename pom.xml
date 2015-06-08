@@ -274,16 +274,16 @@
                             <!-- The commit message -->
                             <message>Building site for my Izou SDK version: ${project.version}</message>
                             <outputDirectory>${basedir}/javadoc</outputDirectory>
-                            <!--<includes>
+                            <includes>
                                 <include>${project.build.directory}/javadoc/**/*</include>
-                                <include>${project.build.directory}/site/**/*</include>
-                            </includes>-->
+                                <include>${basedir}/javadoc/**/*</include>
+                            </includes>
                             <excludes>
                                 <exclude>*.jar</exclude>
                             </excludes>
                             <!-- Use merge or override the content -->
                             <merge>true</merge>
-                            <branch>refs/heads/gh-pages/javadoc</branch>
+                            <branch>refs/heads/gh-pages</branch>
                             <repositoryName>intellimate</repositoryName>      <!-- github repo name -->
                             <repositoryOwner>IzouSDK</repositoryOwner>
                         </configuration>
