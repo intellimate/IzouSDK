@@ -125,7 +125,7 @@
                 <configuration>
                     <failOnError>false</failOnError>
                     <linksource>true</linksource>
-                    <reportOutputDirectory>${project.build.directory}/target/javadoc</reportOutputDirectory>
+                    <reportOutputDirectory>${project.build.directory}/javadoc</reportOutputDirectory>
                     <destDir>javadoc/</destDir>
                     <source>1.8</source>
                     <sourcepath>${basedir}/src/main/java/</sourcepath>
@@ -273,7 +273,7 @@
 
                             <!-- The commit message -->
                             <message>Building site for my Izou SDK version: ${project.version}</message>
-                            <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
+                            <outputDirectory>${project.build.directory}/../javadoc</outputDirectory>
                             <!--<includes>
                                 <include>${project.build.directory}/javadoc/**/*</include>
                                 <include>${project.build.directory}/site/**/*</include>
