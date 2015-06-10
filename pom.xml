@@ -40,10 +40,6 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
-        <site>
-            <id>gh-pages</id>
-            <url>scm:git:ssh://git@github.com/intellimate/IzouSDK.git</url>
-        </site>
     </distributionManagement>
 
     <developers>
@@ -253,12 +249,12 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-publish-plugin</artifactId>
                 <version>1.1</version>
                 <configuration>
-                    <!-- URL zum Repository anpassen! -->
+                    &lt;!&ndash; URL zum Repository anpassen! &ndash;&gt;
                     <pubScmUrl>scm:git:https://github.com/intellimate/IzouSDK.git</pubScmUrl>
                     <scmBranch>gh-pages/javadoc</scmBranch>
                     <checkinComment>Updated JavaDocs via Maven</checkinComment>
@@ -275,6 +271,21 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-publish-plugin</artifactId>
+                <version>1.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <!-- svn location for publication -->
+                    <pubScmUrl>scm:git:https://github.com/intellimate/IzouSDK.git</pubScmUrl>
+                    <scmBranch>gh-pages/javadoc</scmBranch>
+                    <checkinComment>Updated JavaDocs via Maven</checkinComment>
+                    <content>${project.build.directory}/javadoc</content>
+                    <siteOutputEncoding>UTF-8</siteOutputEncoding>
+                    <tryUpdate>true</tryUpdate>
+                </configuration>
             </plugin>
             <!--<plugin>
                 &lt;!&ndash; Deploy the web site &ndash;&gt;

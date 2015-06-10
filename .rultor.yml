@@ -18,6 +18,5 @@ release:
   script: |-
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mvn -Preporting site site:stage
     mvn scm-publish:publish-scm
     mvn clean deploy --settings /home/r/settings.xml
