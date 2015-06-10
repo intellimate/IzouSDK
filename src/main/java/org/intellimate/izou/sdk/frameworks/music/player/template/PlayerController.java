@@ -54,6 +54,7 @@ public abstract class PlayerController extends Activator {
      * starts the playing command
      * @param trackInfo the track to play
      */
+    //TODO method with playlist
     public void startPlaying(TrackInfo trackInfo) {
         Optional<Identification> ownIdentification = IdentificationManager.getInstance()
                 .getIdentification(this);

@@ -40,11 +40,10 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
-        <repository>
-            <id>internal.repo</id>
-            <name>Temporary Staging Repository</name>
-            <url>file://${project.build.directory}/mvn-repo</url>
-        </repository>
+        <site>
+            <id>https://github.com/intellimate/IzouSDK</id>
+            <url>scm:git:git@github.com:intellimate/IzouSDK.git</url>
+        </site>
     </distributionManagement>
 
     <developers>
@@ -241,7 +240,7 @@
                 <configuration>
                     <!-- URL zum Repository anpassen! -->
                     <pubScmUrl>scm:git:https://github.com/intellimate/IzouSDK.git</pubScmUrl>
-                    <scmBranch>gh-pages</scmBranch>
+                    <scmBranch>gh-pages/javadoc</scmBranch>
                     <checkinComment>Updated JavaDocs via Maven</checkinComment>
                     <content>${project.build.directory}/javadoc</content>
                     <siteOutputEncoding>UTF-8</siteOutputEncoding>
