@@ -43,7 +43,8 @@ import java.util.function.Consumer;
  * @author LeanderK
  * @version 1.0
  */
-public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider, ResourceBuilderModel, MusicHelper, EventListenerModel {
+public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider, ResourceBuilderModel, MusicHelper,
+        EventListenerModel {
     private Playlist playlist = new Playlist(new ArrayList<>());
     private Volume volume = Volume.createVolume(50).orElse(null);
     private Progress progress = new Progress(0,0);
@@ -55,7 +56,8 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     private boolean isPlaying = false;
     private final List<Identifiable> activators;
     private final CommandHandler commandHandler = createCommandHandler();
-    private final InformationProvider informationProvider = new InformationProvider(getContext(), getID(), this, commandHandler);
+    private final InformationProvider informationProvider = new InformationProvider(getContext(), getID(), this,
+            commandHandler);
     private final boolean isUsingJava;
 
     /**
@@ -74,7 +76,8 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * @param isUsingJava true if using java, false if not (and for example a C-library)
      */
     public Player(Context context, String id, boolean runsInPlay, List<Identifiable> activators,
-                  boolean providesTrackInfo, boolean playbackShuffle, boolean playbackRepeat, boolean playbackRepeatSong, boolean isUsingJava) {
+                  boolean providesTrackInfo, boolean playbackShuffle, boolean playbackRepeat,
+                  boolean playbackRepeatSong, boolean isUsingJava) {
         super(context, id);
         this.runsInPlay = runsInPlay;
         this.activators = activators;

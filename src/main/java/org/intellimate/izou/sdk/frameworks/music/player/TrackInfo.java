@@ -26,6 +26,14 @@ public class TrackInfo {
     private final String albumCoverFormat;
     public static final String idDescriptor = "izou.music.trackinfo.data";
     private final String data;
+    /*TODO: Add the following:
+        year
+        genre
+        comment
+        bmp
+     */
+
+
 
     public TrackInfo(String name) {
         this.name = name;

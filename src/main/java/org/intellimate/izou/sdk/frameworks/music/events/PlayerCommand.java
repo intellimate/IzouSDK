@@ -41,7 +41,9 @@ public class PlayerCommand extends Event {
      * @return the optional PlayerCommand
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    public static Optional<PlayerCommand> createPlayerCommand(Identification source, Identification target, String command, Capabilities capabilities, Context context) {
+    public static Optional<PlayerCommand> createPlayerCommand(Identification source, Identification target,
+                                                              String command, Capabilities capabilities,
+                                                              Context context) {
         try {
             Optional<CommandResource> commandResource = CommandResource.createCommandResource(source, command,
                     capabilities, context);
