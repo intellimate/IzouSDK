@@ -279,7 +279,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <!-- svn location for publication -->
-                    <pubScmUrl>scm:git:git@github.com:intellimate/IzouSDK.git</pubScmUrl>
+                    <pubScmUrl>scm:git:https://github.com/intellimate/IzouSDK.git</pubScmUrl>
                     <scmBranch>gh-pages</scmBranch>
                     <checkinComment>Updated JavaDocs via Maven</checkinComment>
                     <content>${project.build.directory}/javadoc</content>
