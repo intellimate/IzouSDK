@@ -230,7 +230,7 @@ public class CommandHandler {
      * @param name the name of the playlist
      * @return the playlist
      */
-    public Playlist getPlaylistFromName(String name) {
+    Playlist getPlaylistFromName(String name) {
         return playlistForNameFunction.apply(name);
     }
 
@@ -238,7 +238,7 @@ public class CommandHandler {
      * generates all available playlists.
      * @return a list containing the names of all available Playlists.
      */
-    public List<String> getAvailablePlaylists() {
+    List<String> getAvailablePlaylists() {
         return availablePlaylist.get();
     }
 }

@@ -138,10 +138,13 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <links>
+                        <link>http://intellimate.github.io/Izou/apidocs</link>
+                    </links>
                     <failOnError>false</failOnError>
                     <linksource>true</linksource>
                     <reportOutputDirectory>${project.build.directory}/javadoc</reportOutputDirectory>
-                    <destDir>javadoc/</destDir>
+                    <destDir>apidocs/</destDir>
                     <source>1.8</source>
                     <sourcepath>${basedir}/src/main/java/</sourcepath>
                     <skip>false</skip>
