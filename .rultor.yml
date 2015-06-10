@@ -16,6 +16,8 @@ release:
       - LeanderK
       - jundl77
   script: |-
+    git config --global user.email "Leander.Kurscheidt@gmx.de"
+    git config --global user.name "Leander Kurscheidt"
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
     mvn javadoc:javadoc scm-publish:publish-scm
