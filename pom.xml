@@ -272,23 +272,23 @@
                     </execution>
                 </executions>
             </plugin>-->
-            <!--<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-publish-plugin</artifactId>
                 <version>1.1</version>
                 <extensions>true</extensions>
                 <configuration>
-                    &lt;!&ndash; svn location for publication &ndash;&gt;
-                    <pubScmUrl>scm:git:git@github.com:intellimate/IzouSDK.git</pubScmUrl>
+                    <!-- svn location for publication -->
+                    <pubScmUrl>scm:git:https://github.com/intellimate/IzouSDK.git</pubScmUrl>
                     <scmBranch>gh-pages</scmBranch>
                     <checkinComment>Updated JavaDocs via Maven</checkinComment>
                     <content>${project.build.directory}/javadoc</content>
                     <siteOutputEncoding>UTF-8</siteOutputEncoding>
                     <tryUpdate>true</tryUpdate>
                 </configuration>
-            </plugin>-->
-            <plugin>
-                <!-- Deploy the web site -->
+            </plugin>
+            <!--<plugin>
+                &lt;!&ndash; Deploy the web site &ndash;&gt;
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
                 <version>0.9</version>
@@ -299,21 +299,21 @@
                         </goals>
                         <phase>deploy</phase>
                         <configuration>
-                            <!-- Plugin configuration ges here -->
+                            &lt;!&ndash; Plugin configuration ges here &ndash;&gt;
                             <server>github</server>
 
-                            <!-- The commit message -->
+                            &lt;!&ndash; The commit message &ndash;&gt;
                             <message>Building site for my Izou SDK version: ${project.version}</message>
                             <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
-                            <!-- Use merge or override the content -->
+                            &lt;!&ndash; Use merge or override the content &ndash;&gt;
                             <merge>true</merge>
                             <branch>refs/heads/gh-pages/javadoc</branch>
-                            <repositoryName>IzouSDK</repositoryName>      <!-- github repo name -->
+                            <repositoryName>IzouSDK</repositoryName>      &lt;!&ndash; github repo name &ndash;&gt;
                             <repositoryOwner>intellimate</repositoryOwner>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
     
