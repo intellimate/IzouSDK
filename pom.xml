@@ -140,7 +140,7 @@
                 <configuration>
                     <failOnError>false</failOnError>
                     <linksource>true</linksource>
-                    <reportOutputDirectory>${project.build.directory}/javadoc/javadoc</reportOutputDirectory>
+                    <reportOutputDirectory>${project.build.directory}/javadoc</reportOutputDirectory>
                     <destDir>javadoc/</destDir>
                     <source>1.8</source>
                     <sourcepath>${basedir}/src/main/java/</sourcepath>
