@@ -34,6 +34,8 @@ public class TrackInfo {
         frames per second
         type -- please make a set of final vars that give typ options (file, url, etc..) or is there
         already a way to know this?
+
+        please also add a getDuration method, and getters for all of these
      */
 
     public TrackInfo(String name) {
