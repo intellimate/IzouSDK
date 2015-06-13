@@ -41,6 +41,8 @@ public class TrackInfo {
         already a way to know this?
 
         please also add a getDuration() method
+
+        And please a way to set all these attributes, too (setters?)
      */
 
     public TrackInfo(String name) {
