@@ -43,8 +43,7 @@ import java.util.function.Consumer;
  * @author LeanderK
  * @version 1.0
  */
-public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider, ResourceBuilderModel, MusicHelper,
-        EventListenerModel {
+public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider, ResourceBuilderModel, MusicHelper, EventListenerModel {
     private Playlist playlist = new Playlist(new ArrayList<>());
     private Volume volume = Volume.createVolume(50).orElse(null);
     private Progress progress = new Progress(0,0);
@@ -66,9 +65,9 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      * @param id      the id of the new output-plugin. The ID of the InformationProvider is also based on this id
      *                (id + ".InformationProvider")
      * @param runsInPlay whether the termination of the play method should be treated as the termination the
- *                   music (STOP not PAUSE)
+     *                   music (STOP not PAUSE)
      * @param activators the activators which are able to start the Player if the Player is not able to start from
-*                   request from other addons
+     *                   request from other addons
      * @param providesTrackInfo whether the Player provides TrackInfo
      * @param playbackShuffle whether the player is able to provide the info that the playback is shuffling
      * @param playbackRepeat whether the player is able to provide the info that the playback is repeating

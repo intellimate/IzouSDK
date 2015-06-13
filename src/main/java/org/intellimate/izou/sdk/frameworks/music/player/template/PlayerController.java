@@ -47,14 +47,13 @@ public abstract class PlayerController extends Activator {
      * starts the playing command
      */
     public void startPlaying() {
-        startPlaying(null);
+        startPlaying((TrackInfo)null);
     }
 
     /**
      * starts the playing command
      * @param trackInfo the track to play
      */
-    //TODO method with playlist
     public void startPlaying(TrackInfo trackInfo) {
         Optional<Identification> ownIdentification = IdentificationManager.getInstance()
                 .getIdentification(this);
@@ -65,6 +64,24 @@ public abstract class PlayerController extends Activator {
             return;
         }
         StartMusicRequest.createStartMusicRequest(ownIdentification.get(), playerIdentification.get(), trackInfo)
+                .ifPresent(event -> fire(event, 5));
+
+    }
+
+    /**
+     * starts the playing command
+     * @param playlist the playlist to play
+     */
+    public void startPlaying(Playlist playlist) {
+        Optional<Identification> ownIdentification = IdentificationManager.getInstance()
+                .getIdentification(this);
+        Optional<Identification> playerIdentification = IdentificationManager.getInstance()
+                .getIdentification(player);
+        if (!ownIdentification.isPresent() || !playerIdentification.isPresent()) {
+            error("unable to obtain identification");
+            return;
+        }
+        StartMusicRequest.createStartMusicRequest(ownIdentification.get(), playerIdentification.get(), playlist)
                 .ifPresent(event -> fire(event, 5));
 
     }

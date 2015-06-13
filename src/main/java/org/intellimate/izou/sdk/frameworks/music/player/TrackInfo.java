@@ -24,26 +24,16 @@ public class TrackInfo {
     private final byte[] albumCover;
     public static final String albumCoverFormatDescriptor = "izou.music.trackinfo.albumCoverFormat";
     private final String albumCoverFormat;
-    public static final String idDescriptor = "izou.music.trackinfo.data";
+    public static final String dataDescriptor = "izou.music.trackinfo.data";
     private final String data;
-    /*TODO: Add the following:
-        Please name methods in the following way, because this is how I used them, so then I don't have
-        to do any renaming:
-
-        year - getYear()
-        genre - getGenre()
-        comment - getComment()
-        bmp - getBPM()
-        frames per second - getFramesPerSecond()
-        startTime - getStartTime() -- in case this song should not be fully played (cropped)
-        endTime - getEndTime()
-        type - getType() -- please make a set of final vars that give typ options (file, url, etc..) or is there
-        already a way to know this?
-
-        please also add a getDuration() method
-
-        And please a way to set all these attributes, too (setters?)
-     */
+    public static final String yearDescriptor = "izou.music.trackinfo.year";
+    private final String year;
+    public static final String genreDescriptor = "izou.music.trackinfo.genre";
+    private final String genre;
+    public static final String bmpDescriptor = "izou.music.trackinfo.bmp";
+    private final String bmp;
+    public static final String durationDescriptor = "izou.music.trackinfo.duration";
+    private final String duration;
 
     public TrackInfo(String name) {
         this.name = name;
@@ -52,6 +42,10 @@ public class TrackInfo {
         albumCover = null;
         albumCoverFormat = null;
         data = null;
+        year = null;
+        genre = null;
+        bmp = null;
+        duration = null;
     }
 
     public TrackInfo(String name, String artist, String album) {
@@ -61,6 +55,10 @@ public class TrackInfo {
         albumCover = null;
         albumCoverFormat = null;
         data = null;
+        year = null;
+        genre = null;
+        bmp = null;
+        duration = null;
     }
 
     public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat) {
@@ -70,18 +68,37 @@ public class TrackInfo {
         this.albumCover = albumCover;
         this.albumCoverFormat = albumCoverFormat;
         data = null;
+        year = null;
+        genre = null;
+        bmp = null;
+        duration = null;
     }
 
-    public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String id) {
+    public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String data) {
         this.name = name;
         this.artist = artist;
         this.album = album;
         this.albumCover = albumCover;
         this.albumCoverFormat = albumCoverFormat;
-        this.data = id;
+        this.data = data;
+        year = null;
+        genre = null;
+        bmp = null;
+        duration = null;
     }
 
-
+    public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String data, String year, String genre, String bmp, String duration) {
+        this.name = name;
+        this.artist = artist;
+        this.album = album;
+        this.albumCover = albumCover;
+        this.albumCoverFormat = albumCoverFormat;
+        this.data = data;
+        this.year = year;
+        this.genre = genre;
+        this.bmp = bmp;
+        this.duration = duration;
+    }
 
     /**
      * returns a String containing the Name of the Track
@@ -100,7 +117,7 @@ public class TrackInfo {
     }
 
     /**
-     * returns a String containing the Name of the Artist
+     * returns a String containing the Name of the Album
      * @return the optional Artist
      */
     public Optional<String> getAlbum() {
@@ -124,14 +141,46 @@ public class TrackInfo {
     }
 
     /**
-     * returns the ID of the TrackInfo.
+     * returns the data of the TrackInfo.
      * <p>
      * this field is mostly internal, can be an url etc. should be used only if obtained from a player
      * </p>
-     * @return the optional id
+     * @return the optional data
      */
-    public Optional<String> getId() {
+    public Optional<String> getData() {
         return Optional.of(data);
+    }
+
+    /**
+     * returns a String containing the Year of the release
+     * @return the optional Year of the release
+     */
+    public Optional<String> getYear() {
+        return Optional.of(year);
+    }
+
+    /**
+     * returns a String containing the Genre
+     * @return the optional Genre
+     */
+    public Optional<String> getGenre() {
+        return Optional.of(genre);
+    }
+
+    /**
+     * returns a String containing the BMP
+     * @return the optional BMP
+     */
+    public Optional<String> getBmp() {
+        return Optional.of(bmp);
+    }
+
+    /**
+     * returns a String containing the Duration
+     * @return the optional Duration
+     */
+    public Optional<String> getDuration() {
+        return Optional.of(duration);
     }
 
     /**
@@ -146,7 +195,11 @@ public class TrackInfo {
                 trackInfo.album,
                 trackInfo.albumCover,
                 trackInfo.albumCoverFormat,
-                trackInfo.data);
+                trackInfo.data,
+                trackInfo.year,
+                trackInfo.genre,
+                trackInfo.duration,
+                trackInfo.bmp);
     }
 
     /**
@@ -158,9 +211,13 @@ public class TrackInfo {
      * @param albumCover the album cover
      * @param albumCoverFormat the album cover format
      * @param id the id of the track
+     * @param year the year
+     * @param genre the genre
+     * @param duration the duration
+     * @param bmp the bmp
      * @return true if new
      */
-    public boolean isNew(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String id) {
+    public boolean isNew(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String id, String year, String genre, String duration, String bmp) {
         if (name == null && artist == null && album == null && albumCover == null && id == null)
             return true;
         BiPredicate<String, String> compareStrings = (newString, oldString) ->
@@ -178,6 +235,18 @@ public class TrackInfo {
             return true;
         }
         if (compareStrings.test(albumCoverFormat, this.albumCoverFormat)) {
+            return true;
+        }
+        if (compareStrings.test(year, this.year)) {
+            return true;
+        }
+        if (compareStrings.test(genre, this.genre)) {
+            return true;
+        }
+        if (compareStrings.test(duration, this.duration)) {
+            return true;
+        }
+        if (compareStrings.test(bmp, this.bmp)) {
             return true;
         }
         if (albumCover != null) {
@@ -198,7 +267,11 @@ public class TrackInfo {
                 trackInfo.album,
                 trackInfo.albumCover,
                 trackInfo.albumCoverFormat,
-                trackInfo.data);
+                trackInfo.data,
+                trackInfo.year,
+                trackInfo.genre,
+                trackInfo.duration,
+                trackInfo.bmp);
     }
 
     /**
@@ -207,13 +280,17 @@ public class TrackInfo {
      * @param artist the artist
      * @param album the album
      * @param albumCover the album cover
-     * @param albumCoverFormat the album cover format
-     * @param id the id of the track
+     * @param coverFormat the album cover format
+     * @param data the data
+     * @param year the year
+     * @param genre the genre
+     * @param duration the duration
+     * @param bmp the bmp
      * @return a trackInfo if some information was updated, and an empty optional if: 1. information would be ovewritten
      * or 2. no change occured
      */
-    public Optional<TrackInfo> update(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String id) {
-        if (isNew(name, artist, album, albumCover, albumCoverFormat, id))
+    public Optional<TrackInfo> update(String name, String artist, String album, byte[] albumCover, String coverFormat, String data, String year, String genre, String duration, String bmp) {
+        if (isNew(name, artist, album, albumCover, albumCoverFormat, data, year, genre, duration, bmp))
             return Optional.empty();
         boolean change = false;
         if (name != null && !name.equals(this.name)) {
@@ -231,7 +308,19 @@ public class TrackInfo {
         if (albumCoverFormat != null && !albumCoverFormat.equals(this.albumCoverFormat)) {
             change = true;
         }
-        if (id != null && !id.equals(this.data)) {
+        if (data != null && !data.equals(this.data)) {
+            change = true;
+        }
+        if (year != null && !year.equals(this.year)) {
+            change = true;
+        }
+        if (genre != null && !genre.equals(this.genre)) {
+            change = true;
+        }
+        if (duration != null && !duration.equals(this.duration)) {
+            change = true;
+        }
+        if (bmp != null && !bmp.equals(this.bmp)) {
             change = true;
         }
         if (!change)
@@ -242,7 +331,11 @@ public class TrackInfo {
                 this.album == null? album : this.album,
                 this.albumCover == null? albumCover : this.albumCover,
                 this.albumCoverFormat == null? albumCoverFormat : this.albumCoverFormat,
-                this.data == null? id : this.data
+                this.data == null? data : this.data,
+                this.year == null? year : this.year,
+                this.genre == null? genre : this.genre,
+                this.duration == null? duration : this.duration,
+                this.bmp == null? bmp : this.bmp
         ));
     }
 
@@ -257,7 +350,11 @@ public class TrackInfo {
         data.put(albumDescriptor, albumDescriptor);
         data.put(albumCoverDescriptor, albumCover);
         data.put(albumCoverFormatDescriptor, albumCoverFormatDescriptor);
-        data.put(idDescriptor, data);
+        data.put(dataDescriptor, this.data);
+        data.put(yearDescriptor, this.year);
+        data.put(genreDescriptor, this.genre);
+        data.put(durationDescriptor, this.duration);
+        data.put(bmpDescriptor, this.bmp);
         return data;
     }
 
@@ -273,8 +370,12 @@ public class TrackInfo {
             String artist = (String) hashMap.get(artistDescriptor);
             byte[] albumCover = (byte[]) hashMap.get(albumCoverDescriptor);
             String albumCoverFormat = (String) hashMap.get(albumCoverFormatDescriptor);
-            String id = (String) hashMap.get(idDescriptor);
-            return Optional.of(new TrackInfo(name, artist, album, albumCover, albumCoverFormat, id));
+            String id = (String) hashMap.get(dataDescriptor);
+            String year = (String) hashMap.get(yearDescriptor);
+            String genre = (String) hashMap.get(genreDescriptor);
+            String duration = (String) hashMap.get(durationDescriptor);
+            String bmp = (String) hashMap.get(bmpDescriptor);
+            return Optional.of(new TrackInfo(name, artist, album, albumCover, albumCoverFormat, id, year, genre, bmp, duration));
         } catch (ClassCastException e) {
             return Optional.empty();
         }
@@ -306,10 +407,10 @@ public class TrackInfo {
         if (name != null ? !name.equals(trackInfo.name) : trackInfo.name != null) return false;
         if (artist != null ? !artist.equals(trackInfo.artist) : trackInfo.artist != null) return false;
         if (album != null ? !album.equals(trackInfo.album) : trackInfo.album != null) return false;
-        if (!Arrays.equals(albumCover, trackInfo.albumCover)) return false;
-        if (albumCoverFormat != null ? !albumCoverFormat.equals(trackInfo.albumCoverFormat) : trackInfo.albumCoverFormat != null)
-            return false;
-        return !(data != null ? !data.equals(trackInfo.data) : trackInfo.data != null);
+        if (year != null ? !year.equals(trackInfo.year) : trackInfo.year != null) return false;
+        if (genre != null ? !genre.equals(trackInfo.genre) : trackInfo.genre != null) return false;
+        if (bmp != null ? !bmp.equals(trackInfo.bmp) : trackInfo.bmp != null) return false;
+        return !(duration != null ? !duration.equals(trackInfo.duration) : trackInfo.duration != null);
 
     }
 
@@ -318,9 +419,10 @@ public class TrackInfo {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (artist != null ? artist.hashCode() : 0);
         result = 31 * result + (album != null ? album.hashCode() : 0);
-        result = 31 * result + (albumCover != null ? Arrays.hashCode(albumCover) : 0);
-        result = 31 * result + (albumCoverFormat != null ? albumCoverFormat.hashCode() : 0);
-        result = 31 * result + (data != null ? data.hashCode() : 0);
+        result = 31 * result + (year != null ? year.hashCode() : 0);
+        result = 31 * result + (genre != null ? genre.hashCode() : 0);
+        result = 31 * result + (bmp != null ? bmp.hashCode() : 0);
+        result = 31 * result + (duration != null ? duration.hashCode() : 0);
         return result;
     }
 }
