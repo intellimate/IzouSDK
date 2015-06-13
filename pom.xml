@@ -40,11 +40,6 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
-        <repository>
-            <id>internal.repo</id>
-            <name>Temporary Staging Repository</name>
-            <url>file://${project.build.directory}/mvn-repo</url>
-        </repository>
     </distributionManagement>
 
     <developers>
@@ -70,6 +65,26 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-scm</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-manager-plexus</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-provider-gitexe</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-api</artifactId>
+            <version>1.8</version>
         </dependency>
     </dependencies>
 
@@ -234,14 +249,14 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-publish-plugin</artifactId>
                 <version>1.1</version>
                 <configuration>
-                    <!-- URL zum Repository anpassen! -->
+                    &lt;!&ndash; URL zum Repository anpassen! &ndash;&gt;
                     <pubScmUrl>scm:git:https://github.com/intellimate/IzouSDK.git</pubScmUrl>
-                    <scmBranch>gh-pages</scmBranch>
+                    <scmBranch>gh-pages/javadoc</scmBranch>
                     <checkinComment>Updated JavaDocs via Maven</checkinComment>
                     <content>${project.build.directory}/javadoc</content>
                     <siteOutputEncoding>UTF-8</siteOutputEncoding>
@@ -256,9 +271,24 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <!--<plugin>
-                &lt;!&ndash; Deploy the web site &ndash;&gt;
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-publish-plugin</artifactId>
+                <version>1.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    &lt;!&ndash; svn location for publication &ndash;&gt;
+                    <pubScmUrl>scm:git:git@github.com:intellimate/IzouSDK.git</pubScmUrl>
+                    <scmBranch>gh-pages</scmBranch>
+                    <checkinComment>Updated JavaDocs via Maven</checkinComment>
+                    <content>${project.build.directory}/javadoc</content>
+                    <siteOutputEncoding>UTF-8</siteOutputEncoding>
+                    <tryUpdate>true</tryUpdate>
+                </configuration>
+            </plugin>-->
+            <plugin>
+                <!-- Deploy the web site -->
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
                 <version>0.9</version>
@@ -269,21 +299,21 @@
                         </goals>
                         <phase>deploy</phase>
                         <configuration>
-                            &lt;!&ndash; Plugin configuration ges here &ndash;&gt;
+                            <!-- Plugin configuration ges here -->
                             <server>github</server>
 
-                            &lt;!&ndash; The commit message &ndash;&gt;
+                            <!-- The commit message -->
                             <message>Building site for my Izou SDK version: ${project.version}</message>
-                            <outputDirectory>${project.basedir}/javadoc</outputDirectory>
-                            &lt;!&ndash; Use merge or override the content &ndash;&gt;
+                            <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
+                            <!-- Use merge or override the content -->
                             <merge>true</merge>
                             <branch>refs/heads/gh-pages/javadoc</branch>
-                            <repositoryName>IzouSDK</repositoryName>      &lt;!&ndash; github repo name &ndash;&gt;
+                            <repositoryName>IzouSDK</repositoryName>      <!-- github repo name -->
                             <repositoryOwner>intellimate</repositoryOwner>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
     
