@@ -27,17 +27,20 @@ public class TrackInfo {
     public static final String idDescriptor = "izou.music.trackinfo.data";
     private final String data;
     /*TODO: Add the following:
-        year
-        genre
-        comment
-        bmp
-        frames per second
-        startTime -- in case this song should not be fully played (cropped)
-        endTime
-        type -- please make a set of final vars that give typ options (file, url, etc..) or is there
+        Please name methods in the following way, because this is how I used them, so then I don't have
+        to do any renaming:
+
+        year - getYear()
+        genre - getGenre()
+        comment - getComment()
+        bmp - getBPM()
+        frames per second - getFramesPerSecond()
+        startTime - getStartTime() -- in case this song should not be fully played (cropped)
+        endTime - getEndTime()
+        type - getType() -- please make a set of final vars that give typ options (file, url, etc..) or is there
         already a way to know this?
 
-        please also add a getDuration method, and getters for all of these
+        please also add a getDuration() method
      */
 
     public TrackInfo(String name) {
