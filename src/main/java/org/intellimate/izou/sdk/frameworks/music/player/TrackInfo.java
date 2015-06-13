@@ -31,9 +31,9 @@ public class TrackInfo {
         genre
         comment
         bmp
+        type -- please make a set of final vars that give typ options (file, url, etc..) or is there
+        already a way to know this?
      */
-
-
 
     public TrackInfo(String name) {
         this.name = name;
