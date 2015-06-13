@@ -31,6 +31,7 @@ public class TrackInfo {
         genre
         comment
         bmp
+        frames per second
         type -- please make a set of final vars that give typ options (file, url, etc..) or is there
         already a way to know this?
      */
