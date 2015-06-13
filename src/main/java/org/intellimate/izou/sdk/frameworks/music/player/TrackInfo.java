@@ -32,6 +32,8 @@ public class TrackInfo {
         comment
         bmp
         frames per second
+        startTime -- in case this song should not be fully played (cropped)
+        endTime
         type -- please make a set of final vars that give typ options (file, url, etc..) or is there
         already a way to know this?
 
