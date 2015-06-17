@@ -33,7 +33,7 @@ public class TrackInfo {
     public static final String bmpDescriptor = "izou.music.trackinfo.bmp";
     private final String bmp;
     public static final String durationDescriptor = "izou.music.trackinfo.duration";
-    private final String duration;
+    private final long duration;
 
     public TrackInfo(String name) {
         this.name = name;
@@ -45,7 +45,7 @@ public class TrackInfo {
         year = null;
         genre = null;
         bmp = null;
-        duration = null;
+        duration = -1;
     }
 
     public TrackInfo(String name, String artist, String album) {
@@ -58,7 +58,7 @@ public class TrackInfo {
         year = null;
         genre = null;
         bmp = null;
-        duration = null;
+        duration = -1;
     }
 
     public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat) {
@@ -71,7 +71,7 @@ public class TrackInfo {
         year = null;
         genre = null;
         bmp = null;
-        duration = null;
+        duration = -1;
     }
 
     public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String data) {
@@ -84,10 +84,10 @@ public class TrackInfo {
         year = null;
         genre = null;
         bmp = null;
-        duration = null;
+        duration = -1;
     }
 
-    public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String data, String year, String genre, String bmp, String duration) {
+    public TrackInfo(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String data, String year, String genre, String bmp, long duration) {
         this.name = name;
         this.artist = artist;
         this.album = album;
@@ -176,11 +176,15 @@ public class TrackInfo {
     }
 
     /**
-     * returns a String containing the Duration
+     * returns a long containing the Duration in milliseconds
      * @return the optional Duration
      */
-    public Optional<String> getDuration() {
-        return getOptionalOrEmtpyIfNull(duration);
+    public Optional<Long> getDuration() {
+        if (duration < 0) {
+            return Optional.empty();
+        } else {
+            return Optional.of(duration);
+        }
     }
 
     private <T> Optional<T> getOptionalOrEmtpyIfNull(T t) {
@@ -206,8 +210,8 @@ public class TrackInfo {
                 trackInfo.data,
                 trackInfo.year,
                 trackInfo.genre,
-                trackInfo.duration,
-                trackInfo.bmp);
+                trackInfo.bmp,
+                trackInfo.duration);
     }
 
     /**
@@ -225,11 +229,11 @@ public class TrackInfo {
      * @param bmp the bmp
      * @return true if new
      */
-    public boolean isNew(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String id, String year, String genre, String duration, String bmp) {
+    public boolean isNew(String name, String artist, String album, byte[] albumCover, String albumCoverFormat, String id, String year, String genre, String bmp, long duration) {
         if (name == null && artist == null && album == null && albumCover == null && id == null)
             return true;
         BiPredicate<String, String> compareStrings = (newString, oldString) ->
-                newString != null && (oldString == null || !newString.equals(oldString));
+                oldString != null && newString != null && !oldString.equals(newString);
         if (compareStrings.test(name, this.name)) {
             return true;
         }
@@ -251,7 +255,7 @@ public class TrackInfo {
         if (compareStrings.test(genre, this.genre)) {
             return true;
         }
-        if (compareStrings.test(duration, this.duration)) {
+        if (this.duration > 0 && duration > 0 && this.duration == duration) {
             return true;
         }
         if (compareStrings.test(bmp, this.bmp)) {
@@ -278,8 +282,8 @@ public class TrackInfo {
                 trackInfo.data,
                 trackInfo.year,
                 trackInfo.genre,
-                trackInfo.duration,
-                trackInfo.bmp);
+                trackInfo.bmp,
+                trackInfo.duration);
     }
 
     /**
@@ -297,8 +301,8 @@ public class TrackInfo {
      * @return a trackInfo if some information was updated, and an empty optional if: 1. information would be ovewritten
      * or 2. no change occured
      */
-    public Optional<TrackInfo> update(String name, String artist, String album, byte[] albumCover, String coverFormat, String data, String year, String genre, String duration, String bmp) {
-        if (isNew(name, artist, album, albumCover, albumCoverFormat, data, year, genre, duration, bmp))
+    public Optional<TrackInfo> update(String name, String artist, String album, byte[] albumCover, String coverFormat, String data, String year, String genre, String bmp, long duration) {
+        if (isNew(name, artist, album, albumCover, albumCoverFormat, data, year, genre, bmp, duration))
             return Optional.empty();
         boolean change = false;
         if (name != null && !name.equals(this.name)) {
@@ -325,7 +329,7 @@ public class TrackInfo {
         if (genre != null && !genre.equals(this.genre)) {
             change = true;
         }
-        if (duration != null && !duration.equals(this.duration)) {
+        if (duration > 0 && duration != this.duration) {
             change = true;
         }
         if (bmp != null && !bmp.equals(this.bmp)) {
@@ -342,8 +346,8 @@ public class TrackInfo {
                 this.data == null? data : this.data,
                 this.year == null? year : this.year,
                 this.genre == null? genre : this.genre,
-                this.duration == null? duration : this.duration,
-                this.bmp == null? bmp : this.bmp
+                this.bmp == null? bmp : this.bmp,
+                this.duration < 0 ? duration : this.duration
         ));
     }
 
@@ -378,12 +382,12 @@ public class TrackInfo {
             String artist = (String) hashMap.get(artistDescriptor);
             byte[] albumCover = (byte[]) hashMap.get(albumCoverDescriptor);
             String albumCoverFormat = (String) hashMap.get(albumCoverFormatDescriptor);
-            String id = (String) hashMap.get(dataDescriptor);
+            String data = (String) hashMap.get(dataDescriptor);
             String year = (String) hashMap.get(yearDescriptor);
             String genre = (String) hashMap.get(genreDescriptor);
-            String duration = (String) hashMap.get(durationDescriptor);
+            long duration = (Long) hashMap.get(durationDescriptor);
             String bmp = (String) hashMap.get(bmpDescriptor);
-            return Optional.of(new TrackInfo(name, artist, album, albumCover, albumCoverFormat, id, year, genre, bmp, duration));
+            return Optional.of(new TrackInfo(name, artist, album, albumCover, albumCoverFormat, data, year, genre, bmp, duration));
         } catch (ClassCastException e) {
             return Optional.empty();
         }
@@ -418,7 +422,7 @@ public class TrackInfo {
         if (year != null ? !year.equals(trackInfo.year) : trackInfo.year != null) return false;
         if (genre != null ? !genre.equals(trackInfo.genre) : trackInfo.genre != null) return false;
         if (bmp != null ? !bmp.equals(trackInfo.bmp) : trackInfo.bmp != null) return false;
-        return !(duration != null ? !duration.equals(trackInfo.duration) : trackInfo.duration != null);
+        return !(duration > 0l ? duration != trackInfo.duration : trackInfo.duration < 0);
 
     }
 
@@ -430,7 +434,7 @@ public class TrackInfo {
         result = 31 * result + (year != null ? year.hashCode() : 0);
         result = 31 * result + (genre != null ? genre.hashCode() : 0);
         result = 31 * result + (bmp != null ? bmp.hashCode() : 0);
-        result = 31 * result + (duration != null ? duration.hashCode() : 0);
+        result = (int) (31 * result + (duration > 0 ? duration : 0));
         return result;
     }
 }
