@@ -105,7 +105,7 @@ public class TrackInfo {
      * @return the optional Name
      */
     public Optional<String> getName() {
-        return Optional.of(name);
+        return getOptionalOrEmtpyIfNull(name);
     }
 
     /**
@@ -113,7 +113,7 @@ public class TrackInfo {
      * @return the optional Artist
      */
     public Optional<String> getArtist() {
-        return Optional.of(artist);
+        return getOptionalOrEmtpyIfNull(artist);
     }
 
     /**
@@ -121,7 +121,7 @@ public class TrackInfo {
      * @return the optional Artist
      */
     public Optional<String> getAlbum() {
-        return Optional.of(album);
+        return getOptionalOrEmtpyIfNull(album);
     }
 
     /**
@@ -129,7 +129,7 @@ public class TrackInfo {
      * @return the optional Album Cover
      */
     public Optional<byte[]> getAlbumCover() {
-        return Optional.of(albumCover);
+        return getOptionalOrEmtpyIfNull(albumCover);
     }
 
     /**
@@ -137,7 +137,7 @@ public class TrackInfo {
      * @return the optional Format
      */
     public Optional<String> getAlbumCoverFormat() {
-        return Optional.of(albumCoverFormat);
+        return getOptionalOrEmtpyIfNull(albumCoverFormat);
     }
 
     /**
@@ -148,7 +148,7 @@ public class TrackInfo {
      * @return the optional data
      */
     public Optional<String> getData() {
-        return Optional.of(data);
+        return getOptionalOrEmtpyIfNull(data);
     }
 
     /**
@@ -156,7 +156,7 @@ public class TrackInfo {
      * @return the optional Year of the release
      */
     public Optional<String> getYear() {
-        return Optional.of(year);
+        return getOptionalOrEmtpyIfNull(year);
     }
 
     /**
@@ -164,7 +164,7 @@ public class TrackInfo {
      * @return the optional Genre
      */
     public Optional<String> getGenre() {
-        return Optional.of(genre);
+        return getOptionalOrEmtpyIfNull(genre);
     }
 
     /**
@@ -172,7 +172,7 @@ public class TrackInfo {
      * @return the optional BMP
      */
     public Optional<String> getBmp() {
-        return Optional.of(bmp);
+        return getOptionalOrEmtpyIfNull(bmp);
     }
 
     /**
@@ -180,7 +180,15 @@ public class TrackInfo {
      * @return the optional Duration
      */
     public Optional<String> getDuration() {
-        return Optional.of(duration);
+        return getOptionalOrEmtpyIfNull(duration);
+    }
+
+    private <T> Optional<T> getOptionalOrEmtpyIfNull(T t) {
+        if (t == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(t);
+        }
     }
 
     /**
