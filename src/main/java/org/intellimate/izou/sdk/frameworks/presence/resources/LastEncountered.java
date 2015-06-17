@@ -25,7 +25,13 @@ public class LastEncountered extends Resource<Long> {
         super(ID, provider, timePassed);
     }
 
-    public Optional<Long> getTimePassed(EventModel eventModel) {
+    /**
+     * returns the time passed if available
+     * @param eventModel the event
+     * @return the optional long
+     */
+    @SuppressWarnings("unused")
+    public static Optional<Long> getTimePassed(EventModel eventModel) {
         if (eventModel.getListResourceContainer().containsResourcesFromSource(ID)) {
             return eventModel
                     .getListResourceContainer()
