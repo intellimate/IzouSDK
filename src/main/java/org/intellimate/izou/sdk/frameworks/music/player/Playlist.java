@@ -131,7 +131,6 @@ public class Playlist {
      * creates a new Playlist, with the next Track as head (or an illegal position if it is the last!!)
      * @return a new Playlist
      */
-
     public Playlist nextTrack() {
         return new Playlist(queue, name, playbackModes, position + 1);
     }
@@ -155,6 +154,31 @@ public class Playlist {
         List<TrackInfo> list = new ArrayList<>(queue);
         list.set(list.indexOf(old), newTrackInfo);
         return new Playlist(queue, name, playbackModes, position);
+    }
+
+    /**
+     * Shuffles the playlist and returns the shuffled playlist, so the original stays intact.
+     * Only the part of the playlist after the current position is shuffled.
+     *
+     * @return a shuffled copy of this playlist
+     */
+    public Playlist shuffle() {
+        int position = getPosition();
+        long seed = System.nanoTime();
+
+        if (position >= 0 && position < queue.size()) {
+            List<TrackInfo> trackInfos = queue.subList(0, position);
+            List<TrackInfo> notPlayed = queue.subList(position, queue.size());
+
+            List<TrackInfo> shuffledNotPlayed = new ArrayList<>(notPlayed);
+            Collections.shuffle(shuffledNotPlayed, new Random(seed));
+            trackInfos.addAll(shuffledNotPlayed);
+            return new Playlist(trackInfos);
+        } else {
+            List<TrackInfo> trackInfos = new ArrayList<>(queue);
+            Collections.shuffle(trackInfos, new Random(seed));
+            return new Playlist(trackInfos);
+        }
     }
 
     /**
