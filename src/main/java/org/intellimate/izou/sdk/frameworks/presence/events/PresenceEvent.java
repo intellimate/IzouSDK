@@ -33,7 +33,7 @@ public class PresenceEvent extends Event {
     /**
      * Means that the Addon encountered the user the first time IN THE SPECIFIED MODE (Strict/General) since he left.
      */
-    public static final String FIRST_ENCOUNTER_DESCRIPTOR = "izou.presence.knownuser";
+    public static final String FIRST_ENCOUNTER_DESCRIPTOR = "izou.presence.firstencounter";
     /**
      * it means that the addon can guarantee that the user entered an area near izou
      */
