@@ -167,8 +167,8 @@ public class Playlist {
         long seed = System.nanoTime();
 
         if (position >= 0 && position < queue.size()) {
-            List<TrackInfo> trackInfos = queue.subList(0, position + 1); // + 1 because exclusive
-            List<TrackInfo> notPlayed = queue.subList(position + 2, queue.size());
+            List<TrackInfo> trackInfos = queue.subList(0, position);
+            List<TrackInfo> notPlayed = queue.subList(position, queue.size());
 
             List<TrackInfo> shuffledNotPlayed = new ArrayList<>(notPlayed);
             Collections.shuffle(shuffledNotPlayed, new Random(seed));
