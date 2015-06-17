@@ -3,6 +3,7 @@ package org.intellimate.izou.sdk.frameworks.presence.events;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
+import org.intellimate.izou.sdk.frameworks.presence.resources.LastEncountered;
 
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +79,40 @@ public class PresenceEvent extends Event {
             descriptors.add(ID);
             PresenceEvent stopRequest = new PresenceEvent(source, descriptors);
             return Optional.of(stopRequest);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * creates a new PresenceEvent
+     * @param source the caller
+     * @param strict whether the addon can guarantee that the user is around
+     * @param known true if the addon knows if the person encountered is the (main) user
+     * @param firstEncounter if the user was first encountered in the specified mode
+     * @param descriptors the descriptors
+     * @param timePassed the time passed in seconds since the user was last encountered
+     * @return the optional PresenceEvent
+     */
+    public static Optional<PresenceEvent> createPresenceEvent(Identification source, boolean strict, boolean known,
+                                                              boolean firstEncounter, List<String> descriptors, Long timePassed) {
+        try {
+            if (strict) {
+                descriptors.add(STRICT_DESCRIPTOR);
+            } else {
+                descriptors.add(GENERAL_DESCRIPTOR);
+            }
+            if (known) {
+                descriptors.add(KNOWN_DESCRIPTOR);
+            } else {
+                descriptors.add(UNKNOWN_DESCRIPTOR);
+            }
+            if (firstEncounter)
+                descriptors.add(FIRST_ENCOUNTER_DESCRIPTOR);
+            descriptors.add(ID);
+            PresenceEvent presenceEvent = new PresenceEvent(source, descriptors);
+            presenceEvent.addResource(new LastEncountered(source, timePassed));
+            return Optional.of(presenceEvent);
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }

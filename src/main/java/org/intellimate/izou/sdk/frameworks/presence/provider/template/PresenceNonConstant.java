@@ -29,19 +29,28 @@ import java.util.concurrent.CompletableFuture;
  */
 @SuppressWarnings("unused")
 public abstract class PresenceNonConstant extends Activator implements EventListenerModel, ResourceUser {
-    private final boolean addResponseDescriptors;
     private boolean present = false;
     private boolean strictPresent = false;
     private LocalDateTime lastSeen = LocalDateTime.now();
     private final boolean strict;
     private final boolean fireUnknownIfNotPresent;
 
+    /**
+     * @deprecated addResponseDescriptors not used anymore
+     */
+    @Deprecated
     public PresenceNonConstant(Context context, String ID, boolean strict, boolean fireUnknownIfNotPresent,
                                                                                         boolean addResponseDescriptors) {
         super(context, ID);
         this.strict = strict;
         this.fireUnknownIfNotPresent = fireUnknownIfNotPresent;
-        this.addResponseDescriptors = addResponseDescriptors;
+        getContext().getEvents().registerEventListener(Arrays.asList(LeavingEvent.ID, PresenceEvent.ID), this);
+    }
+
+    public PresenceNonConstant(Context context, String ID, boolean strict, boolean fireUnknownIfNotPresent) {
+        super(context, ID);
+        this.strict = strict;
+        this.fireUnknownIfNotPresent = fireUnknownIfNotPresent;
         getContext().getEvents().registerEventListener(Arrays.asList(LeavingEvent.ID, PresenceEvent.ID), this);
     }
 
@@ -51,66 +60,32 @@ public abstract class PresenceNonConstant extends Activator implements EventList
     public void userEncountered() {
         Optional<PresenceEvent> presenceEvent;
         List<String> descriptors = new ArrayList<>();
+        /*
         if (strict && ((!present && !fireUnknownIfNotPresent)|| !strictPresent) && addResponseDescriptors) {
             if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMajorMinuteThresholdNotPresent()) {
-                //descriptors.add(CommonEvents.Response.MAJOR_RESPONSE_DESCRIPTOR);
+                descriptors.add(CommonEvents.Response.MAJOR_RESPONSE_DESCRIPTOR);
             } else if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMinorMinuteThresholdNotPresent()) {
-                //descriptors.add(CommonEvents.Response.MINOR_RESPONSE_DESCRIPTOR);
+                descriptors.add(CommonEvents.Response.MINOR_RESPONSE_DESCRIPTOR);
             }
         } else if (present && strict && addResponseDescriptors) {
             if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMajorMinuteThresholdPresent()) {
-                //descriptors.add(CommonEvents.Response.MAJOR_RESPONSE_DESCRIPTOR);
+                descriptors.add(CommonEvents.Response.MAJOR_RESPONSE_DESCRIPTOR);
             } else if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMinorMinuteThresholdNotPresent()) {
-                //descriptors.add(CommonEvents.Response.MINOR_RESPONSE_DESCRIPTOR);
+                descriptors.add(CommonEvents.Response.MINOR_RESPONSE_DESCRIPTOR);
             }
-        }
+        }*/
         descriptors.add(CommonEvents.Descriptors.NOT_INTERRUPT);
         boolean known = !fireUnknownIfNotPresent || present;
         boolean firstPresent = (!strict && !present) || (strict && !strictPresent);
+        long lastSeen = this.lastSeen.until(LocalDateTime.now(), ChronoUnit.SECONDS);
         presenceEvent = IdentificationManager.getInstance()
                 .getIdentification(this)
-                .flatMap(id -> PresenceEvent.createPresenceEvent(id, strict, firstPresent, !strictPresent, descriptors));
+                .flatMap(id -> PresenceEvent.createPresenceEvent(id, strict, firstPresent, !strictPresent, descriptors, lastSeen));
         if (!presenceEvent.isPresent()) {
             error("unable to create PresenceEvent");
         } else {
             fire(presenceEvent.get(), 5);
         }
-    }
-
-    /**
-     * the time-threshold that had to pass to fire the event with an MINOR_RESPONSE_DESCRIPTOR when the user was not
-     * registered present before, default is 40
-     * @return int in minutes
-     */
-    private int getMinorMinuteThresholdNotPresent() {
-        return 40;
-    }
-
-    /**
-     * the time-threshold that had to pass to fire the event with an MAJOR_RESPONSE_DESCRIPTOR when the user was not
-     * registered present before,default is 120
-     * @return int in minutes
-     */
-    private int getMajorMinuteThresholdNotPresent() {
-        return 120;
-    }
-
-    /**
-     * the time-threshold that had to pass to fire the event with an MINOR_RESPONSE_DESCRIPTOR when the user was
-     * present before, default is 60
-     * @return int in minutes
-     */
-    private int getMinorMinuteThresholdPresent() {
-        return 60;
-    }
-
-    /**
-     * the time-threshold that had to pass to fire the event with an MAJOR_RESPONSE_DESCRIPTOR when the user was
-     * present before, default is 120
-     * @return int in minutes
-     */
-    private int getMajorMinuteThresholdPresent() {
-        return 120;
     }
 
 
