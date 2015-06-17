@@ -162,8 +162,7 @@ public class Playlist {
      */
     public Playlist shuffle() {
         long seed = System.nanoTime();
-        List<TrackInfo> trackInfos = new ArrayList<>();
-        Collections.copy(trackInfos, queue);
+        List<TrackInfo> trackInfos = new ArrayList<>(queue);
         Collections.shuffle(trackInfos, new Random(seed));
         return new Playlist(trackInfos);
     }
