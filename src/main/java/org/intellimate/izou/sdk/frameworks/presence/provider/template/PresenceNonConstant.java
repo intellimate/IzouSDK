@@ -53,15 +53,15 @@ public abstract class PresenceNonConstant extends Activator implements EventList
         List<String> descriptors = new ArrayList<>();
         if (strict && ((!present && !fireUnknownIfNotPresent)|| !strictPresent) && addResponseDescriptors) {
             if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMajorMinuteThresholdNotPresent()) {
-                descriptors.add(CommonEvents.Response.MAJOR_RESPONSE_DESCRIPTOR);
+                //descriptors.add(CommonEvents.Response.MAJOR_RESPONSE_DESCRIPTOR);
             } else if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMinorMinuteThresholdNotPresent()) {
-                descriptors.add(CommonEvents.Response.MINOR_RESPONSE_DESCRIPTOR);
+                //descriptors.add(CommonEvents.Response.MINOR_RESPONSE_DESCRIPTOR);
             }
         } else if (present && strict && addResponseDescriptors) {
             if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMajorMinuteThresholdPresent()) {
-                descriptors.add(CommonEvents.Response.MAJOR_RESPONSE_DESCRIPTOR);
+                //descriptors.add(CommonEvents.Response.MAJOR_RESPONSE_DESCRIPTOR);
             } else if (lastSeen.until(LocalDateTime.now(), ChronoUnit.MINUTES) > getMinorMinuteThresholdNotPresent()) {
-                descriptors.add(CommonEvents.Response.MINOR_RESPONSE_DESCRIPTOR);
+                //descriptors.add(CommonEvents.Response.MINOR_RESPONSE_DESCRIPTOR);
             }
         }
         descriptors.add(CommonEvents.Descriptors.NOT_INTERRUPT);
