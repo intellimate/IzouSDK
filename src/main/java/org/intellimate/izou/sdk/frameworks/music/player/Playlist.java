@@ -157,14 +157,28 @@ public class Playlist {
     }
 
     /**
-     * Shuffles the playlist and returns the shuffled playlist, so the original stays intact
+     * Shuffles the playlist and returns the shuffled playlist, so the original stays intact.
+     * Only the part of the playlist after the current position is shuffled.
+     *
      * @return a shuffled copy of this playlist
      */
     public Playlist shuffle() {
+        int position = getPosition();
         long seed = System.nanoTime();
-        List<TrackInfo> trackInfos = new ArrayList<>(queue);
-        Collections.shuffle(trackInfos, new Random(seed));
-        return new Playlist(trackInfos);
+
+        if (position >= 0 && position < queue.size()) {
+            List<TrackInfo> trackInfos = queue.subList(0, position + 1); // + 1 because exclusive
+            List<TrackInfo> notPlayed = queue.subList(position + 2, queue.size());
+
+            List<TrackInfo> shuffledNotPlayed = new ArrayList<>(notPlayed);
+            Collections.shuffle(shuffledNotPlayed, new Random(seed));
+            trackInfos.addAll(shuffledNotPlayed);
+            return new Playlist(trackInfos);
+        } else {
+            List<TrackInfo> trackInfos = new ArrayList<>(queue);
+            Collections.shuffle(trackInfos, new Random(seed));
+            return new Playlist(trackInfos);
+        }
     }
 
     /**
