@@ -445,8 +445,9 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
             }
         };
         if (StartMusicRequest.verify(eventModel, capabilities, this, activators)) {
-            if (!isOutputRunning()) {
+            if (isOutputRunning()) {
                 playerError(PlayerError.ERROR_ALREADY_PLAYING);
+                return;
             }
             playingThread = submit((Runnable) () -> {
                 //noinspection RedundantIfStatement
@@ -519,10 +520,13 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      */
     public void rollBackToDefault() {
         playlist = new Playlist(new ArrayList<>());
-        playlist = new Playlist(new ArrayList<>());
         volume = Volume.createVolume(50).orElse(null);
         progress = new Progress(0,0);
         playbackState = PlaybackState.PLAY;
+        if (playingThread != null)
+            playingThread.cancel(true);
+        isRunning = false;
+        isPlaying = false;
     }
 
     /**

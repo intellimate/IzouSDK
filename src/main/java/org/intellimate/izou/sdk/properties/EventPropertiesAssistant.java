@@ -118,7 +118,8 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
      */
     public void registerEventID(String description, String key, String value) {
         if (getEventID(key) != null) {
-            fileLogger.debug("Did not add " + key + " event ID to local_events.properties because it already exists");
+            //results in spamming the log
+            //fileLogger.debug("Did not add " + key + " event ID to local_events.properties because it already exists");
             return;
         }
 

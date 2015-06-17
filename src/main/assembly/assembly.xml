@@ -22,10 +22,13 @@
                 <exclude>org.intellimate.izou:izou</exclude>
                 <exclude>org.intellimate.izou:pf4j</exclude>
                 <exclude>org.slf4j:slf4j-api</exclude>
-                <exclude>org.apache.logging.log4j:log4j-api</exclude>
-                <exclude>org.apache.logging.log4j:log4j-core</exclude>
-                <exclude>org.apache.logging.log4j:log4j-slf4j-impl</exclude>
+                <exclude>org.apache.logging.log4j:*</exclude>
                 <exclude>com.google.guava:guava</exclude>
+                <exclude>org.aspectj:*</exclude>
+                <exclude>org.bouncycastle:*</exclude>
+                <exclude>javax.mail:*</exclude>
+                <exclude>commons-cli:commons-cli</exclude>
+                <exclude>commons-codec:commons-codec</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>
