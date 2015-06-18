@@ -1,16 +1,16 @@
 package org.intellimate.izou.sdk.events;
 
 import org.intellimate.izou.events.EventBehaviourControllerModel;
+import org.intellimate.izou.events.EventLifeCycle;
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.resource.ListResourceProvider;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.resource.ListResourceProviderImpl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * This class represents an Event.
@@ -22,6 +22,7 @@ public class Event implements EventModel<Event> {
     private final List<String> descriptors;
     private final ListResourceProvider listResourceContainer;
     private final EventBehaviourController eventBehaviourController;
+    private final ConcurrentHashMap<EventLifeCycle, List<Consumer<EventLifeCycle>>> lifeCycleListeners = new ConcurrentHashMap<>();
 
     /**
      * Creates a new Event Object
@@ -221,6 +222,27 @@ public class Event implements EventModel<Event> {
     @Override
     public EventBehaviourControllerModel getEventBehaviourController() {
         return eventBehaviourController;
+    }
+
+    @Override
+    public void lifecycleCallback(EventLifeCycle eventLifeCycle) {
+        lifeCycleListeners.getOrDefault(eventLifeCycle, new LinkedList<>()).stream()
+                .forEach(eventLifeCycleConsumer -> eventLifeCycleConsumer.accept(eventLifeCycle));
+    }
+
+    /**
+     * adds the Consumer to the specified EventLifeCycle.
+     * In its current implementation the invocation of the Callback method is parallel, but the notificaton of the listners not.
+     * @param eventLifeCycle the EventLifeCycle to target
+     * @param cycleCallback the callback
+     */
+    public void addEventLifeCycleListener(EventLifeCycle eventLifeCycle, Consumer<EventLifeCycle> cycleCallback) {
+        lifeCycleListeners.compute(eventLifeCycle, (eventLifeCycle1, list) -> {
+            if (list == null)
+                list = new ArrayList<>();
+            list.add(cycleCallback);
+            return list;
+        });
     }
 
     @Override
