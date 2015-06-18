@@ -21,5 +21,4 @@ release:
     git config --global credential.helper 'cache --timeout 600'
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mvn javadoc:javadoc scm-publish:publish-scm
     mvn clean deploy --settings /home/r/settings.xml
