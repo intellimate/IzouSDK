@@ -236,6 +236,7 @@ public class Event implements EventModel<Event> {
      * @param eventLifeCycle the EventLifeCycle to target
      * @param cycleCallback the callback
      */
+    @SuppressWarnings("unused")
     public void addEventLifeCycleListener(EventLifeCycle eventLifeCycle, Consumer<EventLifeCycle> cycleCallback) {
         lifeCycleListeners.compute(eventLifeCycle, (eventLifeCycle1, list) -> {
             if (list == null)
