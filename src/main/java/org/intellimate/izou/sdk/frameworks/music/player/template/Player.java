@@ -54,9 +54,8 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     private boolean isRunning = false;
     private boolean isPlaying = false;
     private final List<Identifiable> activators;
-    private final CommandHandler commandHandler = createCommandHandler();
-    private final InformationProvider informationProvider = new InformationProvider(getContext(), getID(), this,
-            commandHandler);
+    private final CommandHandler commandHandler;
+    private final InformationProvider informationProvider;
     private final boolean isUsingJava;
 
     /**
@@ -90,6 +89,9 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
             capabilities.setPlaybackRepeat(true);
         if (playbackRepeatSong)
             capabilities.setPlaybackRepeatSong(true);
+        commandHandler = createCommandHandler();
+        informationProvider = new InformationProvider(getContext(), getID(), this,
+                commandHandler);
         getContext().getEvents().registerEventListener(Collections.singletonList(LeavingEvent.ID), this);
     }
 
@@ -147,6 +149,9 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
             capabilities.setPlaybackRepeat(true);
         if (playbackRepeatSong)
             capabilities.setPlaybackRepeatSong(true);
+        commandHandler = createCommandHandler();
+        informationProvider = new InformationProvider(getContext(), getID(), this,
+                commandHandler);
     }
 
     /**

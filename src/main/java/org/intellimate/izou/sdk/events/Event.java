@@ -237,13 +237,14 @@ public class Event implements EventModel<Event> {
      * @param cycleCallback the callback
      */
     @SuppressWarnings("unused")
-    public void addEventLifeCycleListener(EventLifeCycle eventLifeCycle, Consumer<EventLifeCycle> cycleCallback) {
+    public Event addEventLifeCycleListener(EventLifeCycle eventLifeCycle, Consumer<EventLifeCycle> cycleCallback) {
         lifeCycleListeners.compute(eventLifeCycle, (eventLifeCycle1, list) -> {
             if (list == null)
                 list = new ArrayList<>();
             list.add(cycleCallback);
             return list;
         });
+        return this;
     }
 
     @Override
