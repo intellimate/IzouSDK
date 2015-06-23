@@ -78,6 +78,12 @@ public abstract class PresenceNonConstant extends Activator implements EventList
         boolean known = !fireUnknownIfNotPresent || present;
         boolean firstPresent = (!strict && !present) || (strict && !strictPresent);
         long lastSeen = this.lastSeen.until(LocalDateTime.now(), ChronoUnit.SECONDS);
+        if (known) {
+            this.lastSeen = LocalDateTime.now();
+            if (strict)
+                this.strictPresent = true;
+            present = true;
+        }
         presenceEvent = IdentificationManager.getInstance()
                 .getIdentification(this)
                 .flatMap(id -> PresenceEvent.createPresenceEvent(id, strict, firstPresent, !strictPresent, descriptors, lastSeen));
@@ -115,7 +121,8 @@ public abstract class PresenceNonConstant extends Activator implements EventList
                 if (event.containsDescriptor(PresenceEvent.STRICT_DESCRIPTOR))
                     strictPresent = true;
             }
-            lastSeen = LocalDateTime.now();
+            if (event.containsDescriptor(PresenceEvent.STRICT_DESCRIPTOR))
+                lastSeen = LocalDateTime.now();
         }
     }
 
