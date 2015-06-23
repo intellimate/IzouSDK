@@ -22,27 +22,23 @@ public class Playlist {
     public static final String DATA_DESCRIPTOR = "izou.music.playlist.data";
     private final String data;
 
+    public Playlist(String name) {
+        this(Collections.emptyList(), name, Collections.emptyList(), 0, null);
+    }
+
     public Playlist(List<TrackInfo> queue) {
-        this.queue = Collections.unmodifiableList(queue);
-        this.name = "";
-        playbackModes = new ArrayList<>();
-        this.position = 0;
-        data = null;
+        this(queue, null, Collections.emptyList(), 0, null);
     }
 
     public Playlist(List<TrackInfo> queue, String name, List<PlaybackMode> playbackModes, int position) {
-        this.queue = Collections.unmodifiableList(queue);
-        this.name = name;
-        this.playbackModes = playbackModes;
-        this.position = position;
-        data = null;
+        this(queue, name, playbackModes, position, null);
     }
 
     public Playlist(List<TrackInfo> queue, String name, List<PlaybackMode> playbackModes, int position, String data) {
-        this.queue = queue;
+        this.queue = Collections.unmodifiableList(new ArrayList<>(queue));;
         this.position = position;
         this.name = name;
-        this.playbackModes = playbackModes;
+        this.playbackModes = new ArrayList<>(playbackModes);
         this.data = data;
     }
 
@@ -84,7 +80,11 @@ public class Playlist {
      * @return the optional name
      */
     public Optional<String> getName() {
-        return Optional.of(name);
+        if (name == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(name);
+        }
     }
 
     /**
@@ -100,7 +100,11 @@ public class Playlist {
      * @return the optional data-element
      */
     public Optional<String> getData() {
-        return Optional.of(data);
+        if (data == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(data);
+        }
     }
 
     @Override
