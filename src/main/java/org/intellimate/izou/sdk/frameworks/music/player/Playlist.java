@@ -35,7 +35,7 @@ public class Playlist {
     }
 
     public Playlist(List<TrackInfo> queue, String name, List<PlaybackMode> playbackModes, int position, String data) {
-        this.queue = Collections.unmodifiableList(new ArrayList<>(queue));;
+        this.queue = Collections.unmodifiableList(new ArrayList<>(queue));
         this.position = position;
         this.name = name;
         this.playbackModes = new ArrayList<>(playbackModes);

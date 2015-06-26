@@ -84,6 +84,7 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
         }
 
         ActivatorModel[] activatorModels = registerActivator();
+        getContext().getSystem.registerInitializedCallback(() -> {
         if (activatorModels != null) {
             for (ActivatorModel activator : activatorModels) {
                 try {
@@ -93,6 +94,7 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
                 }
             }
         }
+        });
     }
 
     /**

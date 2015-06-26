@@ -74,10 +74,9 @@ public class VolumeResource extends Resource<Integer> {
                     .map(ResourceModel::getResource)
                     .filter(ob -> ob instanceof Integer)
                     .map(ob -> (Integer) ob)
-                    .map(Volume::createVolume)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .findAny();
+                    .findAny()
+                    .flatMap(Volume::createVolume);
+
         } else {
             return Optional.empty();
         }

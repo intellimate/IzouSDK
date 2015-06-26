@@ -2,7 +2,6 @@ package org.intellimate.izou.sdk.frameworks.music.resources;
 
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identification;
-import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.frameworks.music.player.TrackInfo;
 import org.intellimate.izou.sdk.resource.Resource;
 
@@ -81,10 +80,8 @@ public class TrackInfoResource extends Resource<HashMap<String, Object>> {
                     .getListResourceContainer()
                     .provideResource(RESOURCE_ID)
                     .stream()
-                    .map(ResourceModel::getResource)
-                    .filter(ob -> ob instanceof TrackInfo)
-                    .map(ob -> (TrackInfo) ob)
-                    .findAny();
+                    .findAny()
+                    .flatMap(TrackInfo::importFromResource);
         } else {
             return Optional.empty();
         }

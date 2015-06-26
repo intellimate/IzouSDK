@@ -71,10 +71,9 @@ public class ProgressResource extends Resource<HashMap<String, Long>> {
                     .getListResourceContainer()
                     .provideResource(ID)
                     .stream()
-                    .map(Progress::importResource)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .findAny();
+                    .findAny()
+                    .flatMap(Progress::importResource);
+
         } else {
             return Optional.empty();
         }

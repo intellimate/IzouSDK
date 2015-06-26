@@ -70,10 +70,8 @@ public class PlaylistResource extends Resource<HashMap<String, Object>> {
                     .getListResourceContainer()
                     .provideResource(ID)
                     .stream()
-                    .map(Playlist::importResource)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .findAny();
+                    .findAny()
+                    .flatMap(Playlist::importResource);
         } else {
             return Optional.empty();
         }
