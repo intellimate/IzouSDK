@@ -10,6 +10,7 @@ import org.intellimate.izou.sdk.specification.ContentGeneratorModel;
 import org.intellimate.izou.sdk.specification.context.ContentGenerators;
 import org.intellimate.izou.system.context.*;
 import org.apache.logging.log4j.spi.ExtendedLogger;
+import org.intellimate.izou.system.context.System;
 
 import java.util.List;
 import java.util.Objects;
@@ -112,6 +113,11 @@ public class Context implements org.intellimate.izou.system.Context {
     @Override
     public Output getOutput() {
         return context.getOutput();
+    }
+
+    @Override
+    public System getSystem() {
+        return context.getSystem();
     }
 
     /**

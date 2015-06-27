@@ -84,7 +84,7 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
         }
 
         ActivatorModel[] activatorModels = registerActivator();
-        getContext().getSystem.registerInitializedCallback(() -> {
+        getContext().getSystem().registerInitializedListener(() -> {
         if (activatorModels != null) {
             for (ActivatorModel activator : activatorModels) {
                 try {
