@@ -199,7 +199,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     }
 
     /**
-     * this method has no effect if runsInPlay is enabled in the constructor.
+     * this method has no effect if runsInPlay is enabled in the constructor.<br>
      * stops the playing
      */
     public void stopMusicPlayback() {
@@ -386,7 +386,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     }
 
     /**
-     * This method is called to register what resources the object provides.
+     * This method is called to register what resources the object provides.<br>
      * just pass a List of Resources without Data in it.
      *
      * @return a List containing the resources the object provides
@@ -545,13 +545,13 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     public abstract void unMute();
 
     /**
-     * this method call must stop the sound.
-     * NEVER CALL THIS METHOD DIRECTLY, USED {@link #stopMusicPlayback()}.
+     * this method call must stop the sound.<br>
+     * NEVER CALL THIS METHOD DIRECTLY, USE {@link #stopMusicPlayback()}.
      */
     public abstract void stopSound();
 
     /**
-     * this method will be called if a request was cached which was eligible to start the music.
+     * this method will be called if a request was cached which was eligible to start the music.<br>
      * please check the events resources for parameters (if expected).
      * @param eventModel the cause
      */
