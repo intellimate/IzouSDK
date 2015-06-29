@@ -33,8 +33,8 @@ import java.util.function.Consumer;
  * <p>
  * <b>How to use it:</b><br>
  * Usage is pretty straightforward. Extend this class an override the abstract methods.<br>
- * To register further commands, use the getCommandHandler() method in the constructor.<br>
- * To start playing, use the PlayerController.startPlaying() methods, never call the play() method directly!.
+ *  - To register further commands, use the getCommandHandler() method in the constructor.<br>
+ *  - To start playing, use the PlayerController.startPlaying() methods, never call the play() method directly!
  * Also, don't call the stopSound() method directly, use stopMusicPlayback().
  * All basic methods are implemented in this class,but to code special behaviour fell free to explore the other
  * classes and interfaces.<br>
