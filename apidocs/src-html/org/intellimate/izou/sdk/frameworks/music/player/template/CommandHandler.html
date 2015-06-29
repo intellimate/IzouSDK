@@ -238,7 +238,7 @@
 <span class="sourceLineNo">230</span>     * @param name the name of the playlist<a name="line.230"></a>
 <span class="sourceLineNo">231</span>     * @return the playlist<a name="line.231"></a>
 <span class="sourceLineNo">232</span>     */<a name="line.232"></a>
-<span class="sourceLineNo">233</span>    public Playlist getPlaylistFromName(String name) {<a name="line.233"></a>
+<span class="sourceLineNo">233</span>    Playlist getPlaylistFromName(String name) {<a name="line.233"></a>
 <span class="sourceLineNo">234</span>        return playlistForNameFunction.apply(name);<a name="line.234"></a>
 <span class="sourceLineNo">235</span>    }<a name="line.235"></a>
 <span class="sourceLineNo">236</span><a name="line.236"></a>
@@ -246,7 +246,7 @@
 <span class="sourceLineNo">238</span>     * generates all available playlists.<a name="line.238"></a>
 <span class="sourceLineNo">239</span>     * @return a list containing the names of all available Playlists.<a name="line.239"></a>
 <span class="sourceLineNo">240</span>     */<a name="line.240"></a>
-<span class="sourceLineNo">241</span>    public List&lt;String&gt; getAvailablePlaylists() {<a name="line.241"></a>
+<span class="sourceLineNo">241</span>    List&lt;String&gt; getAvailablePlaylists() {<a name="line.241"></a>
 <span class="sourceLineNo">242</span>        return availablePlaylist.get();<a name="line.242"></a>
 <span class="sourceLineNo">243</span>    }<a name="line.243"></a>
 <span class="sourceLineNo">244</span>}<a name="line.244"></a>

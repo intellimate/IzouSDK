@@ -79,15 +79,14 @@
 <span class="sourceLineNo">071</span>                    .getListResourceContainer()<a name="line.71"></a>
 <span class="sourceLineNo">072</span>                    .provideResource(ID)<a name="line.72"></a>
 <span class="sourceLineNo">073</span>                    .stream()<a name="line.73"></a>
-<span class="sourceLineNo">074</span>                    .map(Progress::importResource)<a name="line.74"></a>
-<span class="sourceLineNo">075</span>                    .filter(Optional::isPresent)<a name="line.75"></a>
-<span class="sourceLineNo">076</span>                    .map(Optional::get)<a name="line.76"></a>
-<span class="sourceLineNo">077</span>                    .findAny();<a name="line.77"></a>
-<span class="sourceLineNo">078</span>        } else {<a name="line.78"></a>
-<span class="sourceLineNo">079</span>            return Optional.empty();<a name="line.79"></a>
-<span class="sourceLineNo">080</span>        }<a name="line.80"></a>
-<span class="sourceLineNo">081</span>    }<a name="line.81"></a>
-<span class="sourceLineNo">082</span>}<a name="line.82"></a>
+<span class="sourceLineNo">074</span>                    .findAny()<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                    .flatMap(Progress::importResource);<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>        } else {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>            return Optional.empty();<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        }<a name="line.79"></a>
+<span class="sourceLineNo">080</span>    }<a name="line.80"></a>
+<span class="sourceLineNo">081</span>}<a name="line.81"></a>
 
 
 
