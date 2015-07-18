@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -97,5 +98,38 @@ public interface ThreadPoolUser extends ContextProvider {
         return futures.stream()
                 .filter(Future::isDone)
                 .collect(Collectors.<V>toList());
+    }
+
+    /**
+     * Creates a new CompletableFuture, which inherit the CompletionStage from the supplied future or an exceptional
+     * completion with the TimeoutException.
+     * <p>
+     * It will NOT cancel/interrupt the original future!
+     * </p>
+     * @param future the future
+     * @param milliseconds the limit in milliseconds
+     * @param <U> the return type of the futures
+     * @return an new CompletableFuture
+     */
+    default <U> CompletableFuture<U> timeOut(CompletableFuture<U> future, int milliseconds) {
+        CompletableFuture<U> combiner = new CompletableFuture<>();
+        Future<?> timout = getContext().getThreadPool().getThreadPool().submit(() -> {
+            try {
+                Thread.sleep(milliseconds);
+            } catch (InterruptedException ignored) {}
+            if (!combiner.isDone())
+                combiner.completeExceptionally(new TimeoutException("timout of " + milliseconds + " exceeded"));
+        });
+        future.whenComplete((result, throwable) -> {
+            if (!combiner.isDone()) {
+                if (result != null) {
+                    combiner.complete(result);
+                } else {
+                    combiner.completeExceptionally(throwable);
+                }
+                timout.cancel(true);
+            }
+        });
+        return combiner;
     }
 }
