@@ -61,7 +61,7 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
     }
 
     private void createIzouPropertiesFiles() throws IOException {
-        String propertiesPath = new File(".").getCanonicalPath() + File.separator + "properties" + File.separator +
+        String propertiesPath = getContext().getFiles().getPropertiesLocation() + File.separator + "properties" + File.separator +
                 "local_events.properties";
 
         File file = new File(propertiesPath);

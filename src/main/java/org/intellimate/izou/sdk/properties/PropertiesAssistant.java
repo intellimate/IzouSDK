@@ -32,7 +32,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
         this.assistant = new EventPropertiesAssistant(context, addOnID + ".EventPropertiesAssistant");
         PluginWrapper plugin = getContext().getAddOn().getPlugin();
         if (plugin != null) {
-            this.defaultPropertiesPath = getContext().getFiles().getPropertiesLocation() +
+            this.defaultPropertiesPath = getContext().getFiles().getPropertiesLocation() + File.separator +
                     getContext().getAddOn().getPlugin().getPluginPath() + File.separator + "classes" + File.separator
                     + "default_properties.txt";
         } else {
@@ -153,13 +153,8 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
      */
     public void initProperties() {
         String propertiesPathTemp;
-        try {
-            propertiesPathTemp = new File(".").getCanonicalPath() + File.separator + "properties" + File.separator
+        propertiesPathTemp = getContext().getFiles().getPropertiesLocation() + File.separator
                     + getContext().getAddOn().getID() + ".properties";
-        } catch (IOException e) {
-            propertiesPathTemp = null;
-            error("Error while trying to build the propertiesPathTemp", e);
-        }
 
         propertiesPath = propertiesPathTemp;
         this.propertiesFile = new File(propertiesPath);
