@@ -1,14 +1,8 @@
 package org.intellimate.izou.sdk.frameworks.presence.consumer;
 
-import org.intellimate.izou.resource.ResourceMinimalImpl;
-import org.intellimate.izou.sdk.frameworks.presence.provider.Presence;
-import org.intellimate.izou.sdk.frameworks.presence.resources.PresenceResource;
-import org.intellimate.izou.sdk.util.ResourceUser;
+import org.intellimate.izou.sdk.frameworks.presence.resources.PresenceResourceHelper;
 import org.intellimate.izou.sdk.util.ThreadPoolUser;
 
-import java.util.Collections;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -19,7 +13,7 @@ import java.util.concurrent.TimeoutException;
  * @author LeanderK
  * @version 1.0
  */
-public interface PresenceResourceUser extends ResourceUser, ThreadPoolUser {
+public interface PresenceResourceUser extends PresenceResourceHelper, ThreadPoolUser {
     /**
      * returns a CompletableFuture containing true if present, else false.
      * if not presence-providers were found, it returns false.
@@ -70,23 +64,5 @@ public interface PresenceResourceUser extends ResourceUser, ThreadPoolUser {
             error("unable to get Value", e);
             return false;
         }
-    }
-
-    /**
-     * returns a CompletableFuture containing true if present, else false.
-     * if not presence-providers were found, it returns false.
-     * @param strict true if only addons where it is highly likely that the user is around should be creating the result
-     * @param ifNotPresent the default value
-     * @return a future true if present, false if not
-     */
-    default CompletableFuture<Boolean> getIsPresent(boolean strict, boolean ifNotPresent) {
-        return generateResource(PresenceResource.ID)
-                    .orElse(CompletableFuture.completedFuture(Collections.singletonList(new ResourceMinimalImpl<>("", null, ifNotPresent, null))))
-                    .thenApply(list -> list.stream()
-                            .map(Presence::importPresence)
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .filter(presence -> !strict || presence.isStrict())
-                            .anyMatch(Presence::isPresent));
     }
 }

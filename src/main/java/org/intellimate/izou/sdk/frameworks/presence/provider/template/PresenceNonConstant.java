@@ -1,15 +1,16 @@
 package org.intellimate.izou.sdk.frameworks.presence.provider.template;
 
+import org.intellimate.izou.events.EventLifeCycle;
 import org.intellimate.izou.events.EventListenerModel;
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.IdentificationManager;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.activator.Activator;
 import org.intellimate.izou.sdk.events.CommonEvents;
+import org.intellimate.izou.sdk.events.Event;
 import org.intellimate.izou.sdk.frameworks.presence.events.LeavingEvent;
 import org.intellimate.izou.sdk.frameworks.presence.events.PresenceEvent;
-import org.intellimate.izou.sdk.frameworks.presence.provider.Presence;
-import org.intellimate.izou.sdk.frameworks.presence.resources.PresenceResource;
+import org.intellimate.izou.sdk.frameworks.presence.resources.PresenceResourceHelper;
 import org.intellimate.izou.sdk.util.ResourceUser;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * the base class for all presence-things that have no CONSTANT information (for example a motion-sensor).
@@ -27,9 +30,8 @@ import java.util.concurrent.CompletableFuture;
  * @author LeanderK
  * @version 1.0
  */
-@SuppressWarnings("unused")
-public abstract class PresenceNonConstant extends Activator implements EventListenerModel, ResourceUser {
-    private boolean present = false;
+public abstract class PresenceNonConstant extends Activator implements PresenceResourceHelper, EventListenerModel, ResourceUser {
+    private boolean present;
     private boolean strictPresent = false;
     private LocalDateTime lastSeen = LocalDateTime.now();
     private final boolean strict;
@@ -41,24 +43,27 @@ public abstract class PresenceNonConstant extends Activator implements EventList
     @Deprecated
     public PresenceNonConstant(Context context, String ID, boolean strict, boolean fireUnknownIfNotPresent,
                                                                                         boolean addResponseDescriptors) {
-        super(context, ID);
-        this.strict = strict;
-        this.fireUnknownIfNotPresent = fireUnknownIfNotPresent;
-        getContext().getEvents().registerEventListener(Arrays.asList(LeavingEvent.ID, PresenceEvent.ID), this);
+       this(context, ID, strict, fireUnknownIfNotPresent);
     }
-
+    @SuppressWarnings("unused")
     public PresenceNonConstant(Context context, String ID, boolean strict, boolean fireUnknownIfNotPresent) {
         super(context, ID);
         this.strict = strict;
         this.fireUnknownIfNotPresent = fireUnknownIfNotPresent;
         getContext().getEvents().registerEventListener(Arrays.asList(LeavingEvent.ID, PresenceEvent.ID), this);
+        try {
+            present = getIsPresent(false, true)
+                    .get(1, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            present = true;
+        }
     }
 
     /**
      * call this method when you have encountered the user
      */
+    @SuppressWarnings("unused")
     public void userEncountered() {
-        Optional<PresenceEvent> presenceEvent;
         List<String> descriptors = new ArrayList<>();
         /*
         if (strict && ((!present && !fireUnknownIfNotPresent)|| !strictPresent) && addResponseDescriptors) {
@@ -78,9 +83,17 @@ public abstract class PresenceNonConstant extends Activator implements EventList
         boolean known = !fireUnknownIfNotPresent || present;
         boolean firstPresent = (!strict && !present) || (strict && !strictPresent);
         long lastSeen = this.lastSeen.until(LocalDateTime.now(), ChronoUnit.SECONDS);
-        presenceEvent = IdentificationManager.getInstance()
+        Optional<Event> presenceEvent = IdentificationManager.getInstance()
                 .getIdentification(this)
-                .flatMap(id -> PresenceEvent.createPresenceEvent(id, strict, firstPresent, !strictPresent, descriptors, lastSeen));
+                .flatMap(id -> PresenceEvent.createPresenceEvent(id, strict, known, firstPresent, descriptors, lastSeen))
+                .map(event -> event.addEventLifeCycleListener(EventLifeCycle.APPROVED, lifeCycle -> {
+                    if (known) {
+                        this.lastSeen = LocalDateTime.now();
+                        if (strict)
+                            this.strictPresent = true;
+                        present = true;
+                    }
+                }));
         if (!presenceEvent.isPresent()) {
             error("unable to create PresenceEvent");
         } else {
@@ -96,14 +109,6 @@ public abstract class PresenceNonConstant extends Activator implements EventList
      */
     @Override
     public void eventFired(EventModel event) {
-        if (this.isOwner(event.getSource())) {
-            if (event.containsDescriptor(Presence.KNOWN_DESCRIPTOR)) {
-                this.lastSeen = LocalDateTime.now();
-                if (strict)
-                    this.strictPresent = true;
-                present = true;
-            }
-        }
         if (event.containsDescriptor(LeavingEvent.ID) || event.containsDescriptor(PresenceEvent.ID)) {
             if (event.containsDescriptor(LeavingEvent.ID)) {
                 if (event.containsDescriptor(LeavingEvent.GENERAL_DESCRIPTOR)) {
@@ -124,18 +129,5 @@ public abstract class PresenceNonConstant extends Activator implements EventList
             if (event.containsDescriptor(PresenceEvent.STRICT_DESCRIPTOR))
                 lastSeen = LocalDateTime.now();
         }
-    }
-
-    /**
-     * updates the boolean whether it is the mode vague
-     */
-    private CompletableFuture<Boolean> nonStrictAvailable() {
-        return generateResource(PresenceResource.ID)
-                .orElse(CompletableFuture.completedFuture(new ArrayList<>()))
-                .thenApply(list -> list.stream()
-                    .map(Presence::importPresence)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .noneMatch(Presence::isStrict));
     }
 }

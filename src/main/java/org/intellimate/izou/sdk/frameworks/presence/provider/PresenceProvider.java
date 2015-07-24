@@ -5,12 +5,8 @@ import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.sdk.frameworks.presence.events.LeavingEvent;
 import org.intellimate.izou.sdk.frameworks.presence.events.PresenceEvent;
-import org.intellimate.izou.sdk.frameworks.presence.resources.PresenceResource;
+import org.intellimate.izou.sdk.frameworks.presence.resources.PresenceResourceHelper;
 import org.intellimate.izou.sdk.util.ResourceUser;
-
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * util class to provide information about the type of presence this addon can guarantee.
@@ -18,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
  * @author LeanderK
  * @version 1.0
  */
-public interface PresenceProvider extends Identifiable, EventListenerModel, ResourceUser {
+public interface PresenceProvider extends PresenceResourceHelper, Identifiable, EventListenerModel, ResourceUser {
     /**
      * true if the addon can guarantee that the user is around, false if not
      * @return true if it can guarantee it, false if not
@@ -85,18 +81,5 @@ public interface PresenceProvider extends Identifiable, EventListenerModel, Reso
                     setGlobalStrictPresent(true);
             }
         }
-    }
-
-    /**
-     * updates the boolean whether it is the mode vague
-     */
-    default CompletableFuture<Boolean> nonStrictAvailable() {
-        return generateResource(PresenceResource.ID)
-                .orElse(CompletableFuture.completedFuture(new ArrayList<>()))
-                .thenApply(list -> list.stream()
-                        .map(Presence::importPresence)
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .noneMatch(Presence::isStrict));
     }
 }
