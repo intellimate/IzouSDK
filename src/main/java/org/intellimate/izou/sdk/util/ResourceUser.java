@@ -16,6 +16,10 @@ import java.util.concurrent.CompletableFuture;
  * @author Leander Kurscheidt
  * @version 1.0
  */
+//TODO: Leander the return type optional is really unnecessary, i don't think the information resulting from it is
+// useful. We should implement the tip and return CompletableFuture and log if there was an error obtaining the ID.
+// The question is whether to archive this without breaking backwards compatibility (might turn really ugly and i like
+// the current method name)
 public interface ResourceUser extends ContextProvider, Identifiable {
     /**
      * generates the specified resource from the first matching ResourceBuilder (use the ID if you want to be sure).
