@@ -1,5 +1,6 @@
 package org.intellimate.izou.sdk;
 
+import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.intellimate.izou.addon.AddOnModel;
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
@@ -9,7 +10,6 @@ import org.intellimate.izou.sdk.properties.PropertiesAssistant;
 import org.intellimate.izou.sdk.specification.ContentGeneratorModel;
 import org.intellimate.izou.sdk.specification.context.ContentGenerators;
 import org.intellimate.izou.system.context.*;
-import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.intellimate.izou.system.context.System;
 
 import java.util.List;

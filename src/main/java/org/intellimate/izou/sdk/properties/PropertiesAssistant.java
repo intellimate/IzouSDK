@@ -32,12 +32,13 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
         this.assistant = new EventPropertiesAssistant(context, addOnID + ".EventPropertiesAssistant");
         PluginWrapper plugin = getContext().getAddOn().getPlugin();
         if (plugin != null) {
-            this.defaultPropertiesPath = getContext().getFiles().getPropertiesLocation() + File.separator +
+            this.defaultPropertiesPath = getContext().getFiles().getPropertiesLocation() +
                     getContext().getAddOn().getPlugin().getPluginPath() + File.separator + "classes" + File.separator
                     + "default_properties.txt";
         } else {
             //if we are debugging
-            this.defaultPropertiesPath = getContext().getAddOn().getClass().getClassLoader().getResource("default_properties.txt").getFile();
+            this.defaultPropertiesPath = getContext().getAddOn().getClass().getClassLoader().
+                    getResource("default_properties.txt").getFile();
         }
         initProperties();
     }
@@ -130,11 +131,12 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
     }
 
     /**
-     * Sets the path to properties file (the real properties file - as opposed to the {@code defaultProperties.txt} file)
+     * Sets the path to properties file (the real properties file - as opposed to the {@code default_properties.txt}
+     * file)
      *
      * @param propertiesPath to properties file
      */
-    @Deprecated//not used anywhere...what is the usage?
+    // Not depreciated - in case your default_properties.txt file is at a weird location, not used yet but can be used
     public void setPropertiesPath(String propertiesPath) {
         this.propertiesPath = propertiesPath;
     }
@@ -153,8 +155,13 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
      */
     public void initProperties() {
         String propertiesPathTemp;
-        propertiesPathTemp = getContext().getFiles().getPropertiesLocation() + File.separator
+        try {
+            propertiesPathTemp = new File(".").getCanonicalPath() + File.separator + "properties" + File.separator
                     + getContext().getAddOn().getID() + ".properties";
+        } catch (IOException e) {
+            propertiesPathTemp = null;
+            error("Error while trying to build the propertiesPathTemp", e);
+        }
 
         propertiesPath = propertiesPathTemp;
         this.propertiesFile = new File(propertiesPath);

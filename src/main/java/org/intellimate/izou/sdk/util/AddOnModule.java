@@ -23,7 +23,7 @@ public abstract class AddOnModule implements ContextProvider, Loggable, LoggedEx
         this.context = context;
         this.ID = ID;
         if(!IdentificationManager.getInstance().registerIdentification(this)) {
-            context.getLogger().fatal("Failed to register with identification manager" + getID());
+            context.getLogger().fatal("Failed to register with identification manager " + getID());
         }
     }
 
