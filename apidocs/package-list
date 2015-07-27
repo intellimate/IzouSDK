@@ -9,6 +9,7 @@ org.intellimate.izou.sdk.frameworks.music.events
 org.intellimate.izou.sdk.frameworks.music.player
 org.intellimate.izou.sdk.frameworks.music.player.template
 org.intellimate.izou.sdk.frameworks.music.resources
+org.intellimate.izou.sdk.frameworks.music.user
 org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events
 org.intellimate.izou.sdk.frameworks.permanentSoundOutput.output
 org.intellimate.izou.sdk.frameworks.permanentSoundOutput.resource

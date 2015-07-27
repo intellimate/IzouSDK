@@ -77,14 +77,14 @@
 <span class="sourceLineNo">069</span><a name="line.69"></a>
 <span class="sourceLineNo">070</span>    /**<a name="line.70"></a>
 <span class="sourceLineNo">071</span>     * creates the Playlist-Request<a name="line.71"></a>
-<span class="sourceLineNo">072</span>     * @param consumer the consumer who wants to ask for the playlist<a name="line.72"></a>
+<span class="sourceLineNo">072</span>     * @param provider the provider of the playlist<a name="line.72"></a>
 <span class="sourceLineNo">073</span>     * @param playlistName the name of the playlist<a name="line.73"></a>
 <span class="sourceLineNo">074</span>     * @return the resource<a name="line.74"></a>
 <span class="sourceLineNo">075</span>     */<a name="line.75"></a>
-<span class="sourceLineNo">076</span>    public static BroadcasterPlaylist createPlaylistRequest(Identification consumer, String playlistName) {<a name="line.76"></a>
+<span class="sourceLineNo">076</span>    public static BroadcasterPlaylist createPlaylistRequest(Identification provider, String playlistName) {<a name="line.76"></a>
 <span class="sourceLineNo">077</span>        HashMap&lt;String, Object&gt; hashMap = new HashMap&lt;&gt;();<a name="line.77"></a>
 <span class="sourceLineNo">078</span>        hashMap.put(RESOURCE_ID, playlistName);<a name="line.78"></a>
-<span class="sourceLineNo">079</span>        return new BroadcasterPlaylist(hashMap, consumer);<a name="line.79"></a>
+<span class="sourceLineNo">079</span>        return new BroadcasterPlaylist(provider, hashMap);<a name="line.79"></a>
 <span class="sourceLineNo">080</span>    }<a name="line.80"></a>
 <span class="sourceLineNo">081</span><a name="line.81"></a>
 <span class="sourceLineNo">082</span>    /**<a name="line.82"></a>

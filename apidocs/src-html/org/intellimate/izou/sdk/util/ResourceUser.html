@@ -24,46 +24,50 @@
 <span class="sourceLineNo">016</span> * @author Leander Kurscheidt<a name="line.16"></a>
 <span class="sourceLineNo">017</span> * @version 1.0<a name="line.17"></a>
 <span class="sourceLineNo">018</span> */<a name="line.18"></a>
-<span class="sourceLineNo">019</span>public interface ResourceUser extends ContextProvider, Identifiable {<a name="line.19"></a>
-<span class="sourceLineNo">020</span>    /**<a name="line.20"></a>
-<span class="sourceLineNo">021</span>     * generates the specified resource from the first matching ResourceBuilder (use the ID if you want to be sure).<a name="line.21"></a>
-<span class="sourceLineNo">022</span>     * tip: for a better coding experience: use the method<a name="line.22"></a>
-<span class="sourceLineNo">023</span>     * &lt;pre&gt;{@code<a name="line.23"></a>
-<span class="sourceLineNo">024</span>     * .orElse(CompletableFuture.completedFuture(new LinkedList&lt;&gt;()))<a name="line.24"></a>
-<span class="sourceLineNo">025</span>     * }&lt;/pre&gt;<a name="line.25"></a>
-<span class="sourceLineNo">026</span>     * to handle the empty case.<a name="line.26"></a>
-<span class="sourceLineNo">027</span>     * @param resourceID the id of the resource<a name="line.27"></a>
-<span class="sourceLineNo">028</span>     * @return an Optional containing a future of a list of results<a name="line.28"></a>
-<span class="sourceLineNo">029</span>     */<a name="line.29"></a>
-<span class="sourceLineNo">030</span>    default Optional&lt;CompletableFuture&lt;List&lt;ResourceModel&gt;&gt;&gt; generateResource(String resourceID) {<a name="line.30"></a>
-<span class="sourceLineNo">031</span>        return generateResource(resourceID, null);<a name="line.31"></a>
-<span class="sourceLineNo">032</span>    }<a name="line.32"></a>
-<span class="sourceLineNo">033</span><a name="line.33"></a>
-<span class="sourceLineNo">034</span>    /**<a name="line.34"></a>
-<span class="sourceLineNo">035</span>     * generates the specified resource from the specified ResourceBuilder.<a name="line.35"></a>
-<span class="sourceLineNo">036</span>     * tip: for a better coding experience: use the method<a name="line.36"></a>
-<span class="sourceLineNo">037</span>     * &lt;pre&gt;{@code<a name="line.37"></a>
-<span class="sourceLineNo">038</span>     * .orElse(CompletableFuture.completedFuture(new LinkedList&lt;&gt;()))<a name="line.38"></a>
-<span class="sourceLineNo">039</span>     * }&lt;/pre&gt;<a name="line.39"></a>
-<span class="sourceLineNo">040</span>     * to handle the empty case.<a name="line.40"></a>
-<span class="sourceLineNo">041</span>     * @param resourceID the id of the resource<a name="line.41"></a>
-<span class="sourceLineNo">042</span>     * @param provider the specified provider<a name="line.42"></a>
-<span class="sourceLineNo">043</span>     * @return an Optional containing a future of a list of results<a name="line.43"></a>
-<span class="sourceLineNo">044</span>     */<a name="line.44"></a>
-<span class="sourceLineNo">045</span>    default Optional&lt;CompletableFuture&lt;List&lt;ResourceModel&gt;&gt;&gt; generateResource(String resourceID, Identification provider) {<a name="line.45"></a>
-<span class="sourceLineNo">046</span>        return IdentificationManager.getInstance()<a name="line.46"></a>
-<span class="sourceLineNo">047</span>                .getIdentification(this)<a name="line.47"></a>
-<span class="sourceLineNo">048</span>                .map(id -&gt; new Resource(resourceID, provider, id))<a name="line.48"></a>
-<span class="sourceLineNo">049</span>                .flatMap(resource -&gt; {<a name="line.49"></a>
-<span class="sourceLineNo">050</span>                    try {<a name="line.50"></a>
-<span class="sourceLineNo">051</span>                        return getContext().getResources().generateResource(resource);<a name="line.51"></a>
-<span class="sourceLineNo">052</span>                    } catch (IllegalIDException e) {<a name="line.52"></a>
-<span class="sourceLineNo">053</span>                        getContext().getLogger().error("unable to generate Resource", e);<a name="line.53"></a>
-<span class="sourceLineNo">054</span>                        return Optional.empty();<a name="line.54"></a>
-<span class="sourceLineNo">055</span>                    }<a name="line.55"></a>
-<span class="sourceLineNo">056</span>                });<a name="line.56"></a>
-<span class="sourceLineNo">057</span>    }<a name="line.57"></a>
-<span class="sourceLineNo">058</span>}<a name="line.58"></a>
+<span class="sourceLineNo">019</span>//TODO: Leander the return type optional is really unnecessary, i don't think the information resulting from it is<a name="line.19"></a>
+<span class="sourceLineNo">020</span>// useful. We should implement the tip and return CompletableFuture and log if there was an error obtaining the ID.<a name="line.20"></a>
+<span class="sourceLineNo">021</span>// The question is whether to archive this without breaking backwards compatibility (might turn really ugly and i like<a name="line.21"></a>
+<span class="sourceLineNo">022</span>// the current method name)<a name="line.22"></a>
+<span class="sourceLineNo">023</span>public interface ResourceUser extends ContextProvider, Identifiable {<a name="line.23"></a>
+<span class="sourceLineNo">024</span>    /**<a name="line.24"></a>
+<span class="sourceLineNo">025</span>     * generates the specified resource from the first matching ResourceBuilder (use the ID if you want to be sure).<a name="line.25"></a>
+<span class="sourceLineNo">026</span>     * tip: for a better coding experience: use the method<a name="line.26"></a>
+<span class="sourceLineNo">027</span>     * &lt;pre&gt;{@code<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     * .orElse(CompletableFuture.completedFuture(new LinkedList&lt;&gt;()))<a name="line.28"></a>
+<span class="sourceLineNo">029</span>     * }&lt;/pre&gt;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>     * to handle the empty case.<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     * @param resourceID the id of the resource<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     * @return an Optional containing a future of a list of results<a name="line.32"></a>
+<span class="sourceLineNo">033</span>     */<a name="line.33"></a>
+<span class="sourceLineNo">034</span>    default Optional&lt;CompletableFuture&lt;List&lt;ResourceModel&gt;&gt;&gt; generateResource(String resourceID) {<a name="line.34"></a>
+<span class="sourceLineNo">035</span>        return generateResource(resourceID, null);<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    }<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span>    /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * generates the specified resource from the specified ResourceBuilder.<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     * tip: for a better coding experience: use the method<a name="line.40"></a>
+<span class="sourceLineNo">041</span>     * &lt;pre&gt;{@code<a name="line.41"></a>
+<span class="sourceLineNo">042</span>     * .orElse(CompletableFuture.completedFuture(new LinkedList&lt;&gt;()))<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     * }&lt;/pre&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * to handle the empty case.<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     * @param resourceID the id of the resource<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     * @param provider the specified provider<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     * @return an Optional containing a future of a list of results<a name="line.47"></a>
+<span class="sourceLineNo">048</span>     */<a name="line.48"></a>
+<span class="sourceLineNo">049</span>    default Optional&lt;CompletableFuture&lt;List&lt;ResourceModel&gt;&gt;&gt; generateResource(String resourceID, Identification provider) {<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        return IdentificationManager.getInstance()<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                .getIdentification(this)<a name="line.51"></a>
+<span class="sourceLineNo">052</span>                .map(id -&gt; new Resource(resourceID, provider, id))<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                .flatMap(resource -&gt; {<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                    try {<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                        return getContext().getResources().generateResource(resource);<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                    } catch (IllegalIDException e) {<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                        getContext().getLogger().error("unable to generate Resource", e);<a name="line.57"></a>
+<span class="sourceLineNo">058</span>                        return Optional.empty();<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                    }<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                });<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    }<a name="line.61"></a>
+<span class="sourceLineNo">062</span>}<a name="line.62"></a>
 
 
 
