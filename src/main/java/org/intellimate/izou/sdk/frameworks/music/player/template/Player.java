@@ -436,6 +436,19 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      */
     @Override
     public void renderFinalOutput(List<T> data, EventModel eventModel) {
+        if (StartMusicRequest.verify(eventModel, capabilities, this, activators)) {
+            handleStartMusicRequest(eventModel);
+        } else {
+
+        }
+        handleCommands(eventModel);
+    }
+
+    /**
+     * handles the commands encoded as Resources/EventIds
+     * @param eventModel the eventModel to check
+     */
+    private void handleCommands(EventModel eventModel) {
         Consumer<Runnable> checkOrCall = runnable -> {
             List<ResourceModel> resourceModels =
                     eventModel.getListResourceContainer().provideResource(SelectorResource.RESOURCE_ID);
@@ -451,11 +464,31 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
                         .ifPresent(id -> runnable.run());
             }
         };
-        if (StartMusicRequest.verify(eventModel, capabilities, this, activators)) {
-            if (isOutputRunning()) {
-                playerError(PlayerError.ERROR_ALREADY_PLAYING);
-                return;
-            }
+        if (eventModel.containsDescriptor(MuteEvent.ID)) {
+            checkOrCall.accept(this::mute);
+        }
+        if (eventModel.containsDescriptor(UnMuteEvent.ID)) {
+            checkOrCall.accept(this::unMute);
+        }
+        if (eventModel.containsDescriptor(StopEvent.ID)) {
+            checkOrCall.accept(this::stopMusicPlayback);
+        }
+        if (StopMusic.verify(eventModel, this)) {
+            stopMusicPlayback();
+        }
+        if (PlayerCommand.verify(eventModel, this)) {
+            getCommandHandler().handleCommandResources(eventModel);
+        }
+    }
+
+    /**
+     * handles the StartMusicRequest
+     * @param eventModel the StartMusicRequest
+     */
+    private void handleStartMusicRequest(EventModel eventModel) {
+        if (isOutputRunning()) {
+            playerError(PlayerError.ERROR_ALREADY_PLAYING);
+        } else {
             playingThread = submit((Runnable) () -> {
                 //noinspection RedundantIfStatement
                 if (runsInPlay) {
@@ -473,21 +506,6 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
                             endedSound();
                         }
                     });
-        }
-        if (eventModel.containsDescriptor(MuteEvent.ID)) {
-            checkOrCall.accept(this::mute);
-        }
-        if (eventModel.containsDescriptor(UnMuteEvent.ID)) {
-            checkOrCall.accept(this::unMute);
-        }
-        if (eventModel.containsDescriptor(StopEvent.ID)) {
-            checkOrCall.accept(this::stopMusicPlayback);
-        }
-        if (StopMusic.verify(eventModel, this)) {
-            stopMusicPlayback();
-        }
-        if (PlayerCommand.verify(eventModel, this)) {
-            getCommandHandler().handleCommandResources(eventModel);
         }
     }
 

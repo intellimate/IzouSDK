@@ -6,11 +6,16 @@ import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.resource.Resource;
 
 /**
- * if this classes resource is true the music-request was meant to be permanent.
+ * this resource signals that an addon requests playing.
+ * <p>
+ * It is mostly used for non-permanent Music-Usage which blocks the Event in the Output lifecycle.<br>
+ * For example if you are an alarm you can add this resource to an Event and it will play the alarm sound, blocking
+ * the execution for other outputPlugins.
+ * </p>
  * @author LeanderK
  * @version 1.0
  */
-public class PermanentResource extends Resource<Boolean> {
+public class MusicUsageResource extends Resource<Boolean> {
     @SuppressWarnings("SpellCheckingInspection")
     public static final String ID = "izou.music.resource.permanent";
 
@@ -20,7 +25,7 @@ public class PermanentResource extends Resource<Boolean> {
      * @param provider   the Provider of the Resource
      * @param permanent   true if permanent, false if not
      */
-    public PermanentResource(Identification provider, Boolean permanent) {
+    public MusicUsageResource(Identification provider, Boolean permanent) {
         super(ID, provider, permanent);
     }
 

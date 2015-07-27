@@ -139,11 +139,9 @@ public class PlayerRequest {
     @SuppressWarnings("unused")
     public List<ResourceModel> resourcesForExisting() {
         List<ResourceModel> resourceModels = new ArrayList<>();
-        if (permanent) {
-            IdentificationManager.getInstance().getIdentification(identifiable)
-                    .map(id -> new PermanentResource(id, true))
-                    .ifPresent(resourceModels::add);
-        }
+        IdentificationManager.getInstance().getIdentification(identifiable)
+                .map(id -> new MusicUsageResource(id, true))
+                .ifPresent(resourceModels::add);
         if (volume != null) {
             IdentificationManager.getInstance().getIdentification(identifiable)
                     .map(id -> new VolumeResource(id, volume))
