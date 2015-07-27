@@ -41,7 +41,6 @@ import java.util.function.Function;
  *              .orElseGet(ArrayList::new);
  * }
  * </pre>
- * </p>
  * @author LeanderK
  * @version 1.0
  */
@@ -96,7 +95,6 @@ public class PlaylistSelector {
      * asks the Player for more information about the playlist.
      * <p>
      * This method may block for 1 second.
-     * </p>
      * @param playlistName the name of the playlist
      * @return an optional answer of the player
      */
@@ -120,7 +118,6 @@ public class PlaylistSelector {
      * <p>
      * the resulting PlayerRequest is not permanent, which means that it will mute all other sound but is limited to
      * 10 minutes.
-     * </p>
      * @param playlistName the name of the Playlist
      * @return an optional PlayerRequest
      */
@@ -150,7 +147,6 @@ public class PlaylistSelector {
      *  <li>the players-capabilities must allow a requests with specified a specified playlist</li>
      *  <li>the players-capabilities signal its broadcasting playlists</li>
      * </ul>
-     * </p>
      * @param player the specified player
      * @param addOnModule the addOnModule used for Context etc.
      * @return the optional PlaylistSelector.

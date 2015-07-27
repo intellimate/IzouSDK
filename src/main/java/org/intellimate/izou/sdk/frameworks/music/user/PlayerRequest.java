@@ -41,8 +41,6 @@ import java.util.concurrent.TimeoutException;
  *          .orElseGet(ArrayList::new);
  * }
  * </pre>
- * </p>
- * </p>
  * @author LeanderK
  * @version 1.0
  */
@@ -133,7 +131,6 @@ public class PlayerRequest {
      * returns a List of Resources that can be added to an already existing event.
      * <p>
      * This causes the Addon to block the Event in the OutputPlugin lifecycle of the Event.
-     * </p>
      * @return a List of Resources
      */
     @SuppressWarnings("unused")
@@ -182,7 +179,6 @@ public class PlayerRequest {
      *  <li>the player must exist and be support the standard defined through the sdk</li>
      *  <li>the players-capabilities must allow requests from outside</li>
      * </ul>
-     * </p>
      * @param permanent true means the player can play indefinitely, but only if no one is currently using audio as
      *                  permanent. It will also not block. false is limited to 10 minutes playback, but will block.
      * @param player the player to target
@@ -227,7 +223,6 @@ public class PlayerRequest {
      *  <li>the players-capabilities must allow requests from outside</li>
      *  <li>the players-capabilities must allow a requests with specified a specified playlist/trackInfo</li>
      * </ul>
-     * </p>
      * @param trackInfo the trackInfo to pass with the request
      * @param player the player to target
      * @param source the addOnModule used for Context etc.
@@ -247,7 +242,6 @@ public class PlayerRequest {
      *  <li>the players-capabilities must allow requests from outside</li>
      *  <li>the players-capabilities must allow a requests with specified a specified playlist/trackInfo</li>
      * </ul>
-     * </p>
      * @param trackInfo the trackInfo to pass with the request
      * @param permanent true means the player can play indefinitely, but only if no one is currently using audio as
      *                  permanent. It will also not block. false is limited to 10 minutes playback, but will block.
@@ -297,7 +291,6 @@ public class PlayerRequest {
      *  <li>the players-capabilities must allow requests from outside</li>
      *  <li>the players-capabilities must allow a requests with specified a specified playlist/trackInfo</li>
      * </ul>
-     * </p>
      * @param playlist the playlist to pass with the request
      * @param player the player to target
      * @param source the addOnModule used for Context etc.
@@ -317,7 +310,6 @@ public class PlayerRequest {
      *  <li>the players-capabilities must allow requests from outside</li>
      *  <li>the players-capabilities must allow a requests with specified a specified playlist/trackInfo</li>
      * </ul>
-     * </p>
      * @param playlist the playlist to pass with the request
      * @param permanent true means the player can play indefinitely, but only if no one is currently using audio as
      *                  permanent. It will also not block. false is limited to 10 minutes playback, but will block.
