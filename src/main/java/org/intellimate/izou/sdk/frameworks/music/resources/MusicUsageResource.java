@@ -50,4 +50,18 @@ public class MusicUsageResource extends Resource<Boolean> {
             return false;
         }
     }
+
+    /**
+     * returns true if the resource is true, otherwise returns false
+     * @param resourceModel the resourceModel
+     * @return true if permanent
+     */
+    public static boolean isPermanent(ResourceModel resourceModel) {
+        Object resource = resourceModel.getResource();
+        try {
+            return (Boolean) resource;
+        } catch (ClassCastException e) {
+            return false;
+        }
+    }
 }

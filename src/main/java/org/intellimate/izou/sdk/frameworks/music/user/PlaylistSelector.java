@@ -132,7 +132,7 @@ public class PlaylistSelector {
      * asks the player for more information about the specified playlist and creates a PlayerRequest with the answer.
      * @param playlistName the name of the Playlist
      * @param permanent true means the player can play indefinitely, but only if no one is currently using audio as
-     *                  permanent, false is limited to 10 minutes playback.
+     *                  permanent. It will also not block. false is limited to 10 minutes playback, but will block.
      * @return the optional PlayerRequest
      */
     public Optional<PlayerRequest> getPlayerRequest(String playlistName, boolean permanent) {

@@ -184,7 +184,7 @@ public class PlayerRequest {
      * </ul>
      * </p>
      * @param permanent true means the player can play indefinitely, but only if no one is currently using audio as
-     *                  permanent, false is limited to 10 minutes playback.
+     *                  permanent. It will also not block. false is limited to 10 minutes playback, but will block.
      * @param player the player to target
      * @param source the addOnModule used for Context etc.
      * @return the optional PlayerRequest
@@ -250,7 +250,7 @@ public class PlayerRequest {
      * </p>
      * @param trackInfo the trackInfo to pass with the request
      * @param permanent true means the player can play indefinitely, but only if no one is currently using audio as
-     *                  permanent, false is limited to 10 minutes playback.
+     *                  permanent. It will also not block. false is limited to 10 minutes playback, but will block.
      * @param player the player to target
      * @param source the addOnModule used for Context etc.
      * @return the optional PlayerRequest
@@ -320,7 +320,7 @@ public class PlayerRequest {
      * </p>
      * @param playlist the playlist to pass with the request
      * @param permanent true means the player can play indefinitely, but only if no one is currently using audio as
-     *                  permanent, false is limited to 10 minutes playback.
+     *                  permanent. It will also not block. false is limited to 10 minutes playback, but will block.
      * @param player the player to target
      * @param source the addOnModule used for Context etc.
      * @return the optional PlayerRequest
