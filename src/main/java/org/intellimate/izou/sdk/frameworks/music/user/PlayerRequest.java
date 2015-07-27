@@ -1,6 +1,7 @@
 package org.intellimate.izou.sdk.frameworks.music.user;
 
 import org.intellimate.izou.identification.Identification;
+import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.frameworks.music.player.Playlist;
@@ -10,6 +11,7 @@ import org.intellimate.izou.sdk.frameworks.music.resources.CapabilitiesResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -18,8 +20,27 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * this is a simple class which should, added as a resource to an Event, request the Player to play the selected
- * track or playlist. If you use this class the player must handle request from outside
- * How to use: Create the PlayerRequest and as a last step call buildResource().
+ * track or playlist.
+ * <p>
+ * To use this class the player has to meet a few criteria:<br>
+ * <ul>
+ *  <li>the player must exist and be support the standard defined through the sdk</li>
+ *  <li>the players-capabilities must allow requests from outside</li>
+ *  <li>(maybe, depends on the create-method) the players-capabilities must allow a requests with specified a specified playlist/trackInfo</li>
+ * </ul><br>
+ * an example:<br>
+ * <pre>
+ * {@code
+ *
+ * Identification playerID;
+ * Playlist playlist;
+ * List<ResourceModel> resources = PlayerRequest.createPlayerRequest(playlist, player, this) //create a new PlayerRequest
+ *          .map(PlayerRequest::createResources) //creates the resources needed to add to the event
+ *          .orElseGet(ArrayList::new);
+ * }
+ * </pre>
+ * </p>
+ * </p>
  * @author LeanderK
  * @version 1.0
  */
@@ -32,13 +53,25 @@ public class PlayerRequest {
     private final Context context;
     private Volume volume;
 
-    protected PlayerRequest(TrackInfo trackInfo, Playlist playlist, boolean permanent, Identification player, Capabilities capabilities, Context context) {
+    protected PlayerRequest(TrackInfo trackInfo, Playlist playlist, boolean permanent, Identification player,
+                            Capabilities capabilities, Context context) {
         this.trackInfo = trackInfo;
         this.playlist = playlist;
         this.permanent = permanent;
         this.player = player;
         this.capabilities = capabilities;
         this.context = context;
+    }
+
+    protected PlayerRequest(TrackInfo trackInfo, Playlist playlist, boolean permanent, Identification player,
+                         Capabilities capabilities, Context context, Volume volume) {
+        this.trackInfo = trackInfo;
+        this.playlist = playlist;
+        this.permanent = permanent;
+        this.player = player;
+        this.capabilities = capabilities;
+        this.context = context;
+        this.volume = volume;
     }
 
     public boolean setVolume(Volume volume) {
@@ -49,8 +82,40 @@ public class PlayerRequest {
         return false;
     }
 
+    public PlayerRequest trySetVolume(Volume volume) {
+        if (capabilities.canChangeVolume()) {
+            return new PlayerRequest(trackInfo, playlist, permanent, player, capabilities, context, volume);
+        }
+        return this;
+    }
+
+    public List<ResourceModel> createResources() {
+
+    }
+
+    static PlayerRequest createPlayerRequest(Playlist playlist, boolean permanent, Identification player, Capabilities capabilities, Context context) {
+        return  new PlayerRequest(null, playlist, permanent, player, capabilities, context);
+    }
+
+    /**
+     * creates a new PlayerRequest.
+     * <p>
+     * For this method to return a non-empty Optional the following criteria must be met:<br>
+     * <ul>
+     *  <li>the player must exist and be support the standard defined through the sdk</li>
+     *  <li>the players-capabilities must allow requests from outside</li>
+     * </ul>
+     * </p>
+     * @param permanent true means the player can play indefinitely, but only if no one is currently using audio as
+     *                  permanent, false is limited to 10 minutes playback.
+     * @param player the player to target
+     * @param source the addOnModule used for Context etc.
+     * @return the optional PlayerRequest
+     */
     @SuppressWarnings("unused")
     public static Optional<PlayerRequest> createPlayerRequest(boolean permanent, Identification player, AddOnModule source) {
+        if (player == null || source == null)
+            return Optional.empty();
         try {
             return source.getContext().getResources()
                     .generateResource(new CapabilitiesResource(player))
@@ -74,8 +139,49 @@ public class PlayerRequest {
         }
     }
 
+    /**
+     * creates a new PlayerRequest.
+     * <p>
+     * the resulting PlayerRequest is not permanent, which means that it will mute all other sound but is limited to
+     * 10 minutes.<br>
+     * For this method to return a non-empty Optional the following criteria must be met:<br>
+     * <ul>
+     *  <li>the player must exist and be support the standard defined through the sdk</li>
+     *  <li>the players-capabilities must allow requests from outside</li>
+     *  <li>the players-capabilities must allow a requests with specified a specified playlist/trackInfo</li>
+     * </ul>
+     * </p>
+     * @param trackInfo the trackInfo to pass with the request
+     * @param player the player to target
+     * @param source the addOnModule used for Context etc.
+     * @return the optional PlayerRequest
+     */
+    @SuppressWarnings("unused")
+    public static Optional<PlayerRequest> createPlayerRequest(TrackInfo trackInfo, Identification player, AddOnModule source) {
+        return createPlayerRequest(trackInfo, false, player, source);
+    }
+
+    /**
+     * creates a new PlayerRequest.
+     * <p>
+     * For this method to return a non-empty Optional the following criteria must be met:<br>
+     * <ul>
+     *  <li>the player must exist and be support the standard defined through the sdk</li>
+     *  <li>the players-capabilities must allow requests from outside</li>
+     *  <li>the players-capabilities must allow a requests with specified a specified playlist/trackInfo</li>
+     * </ul>
+     * </p>
+     * @param trackInfo the trackInfo to pass with the request
+     * @param permanent true means the player can play indefinitely, but only if no one is currently using audio as
+     *                  permanent, false is limited to 10 minutes playback.
+     * @param player the player to target
+     * @param source the addOnModule used for Context etc.
+     * @return the optional PlayerRequest
+     */
     @SuppressWarnings("unused")
     public static Optional<PlayerRequest> createPlayerRequest(TrackInfo trackInfo, boolean permanent, Identification player, AddOnModule source) {
+        if (trackInfo == null ||player == null || source == null)
+            return Optional.empty();
         try {
             return source.getContext().getResources()
                     .generateResource(new CapabilitiesResource(player))
@@ -103,8 +209,49 @@ public class PlayerRequest {
         }
     }
 
+    /**
+     * creates a new PlayerRequest.
+     * <p>
+     * the resulting PlayerRequest is not permanent, which means that it will mute all other sound but is limited to
+     * 10 minutes.<br>
+     * For this method to return a non-empty Optional the following criteria must be met:<br>
+     * <ul>
+     *  <li>the player must exist and be support the standard defined through the sdk</li>
+     *  <li>the players-capabilities must allow requests from outside</li>
+     *  <li>the players-capabilities must allow a requests with specified a specified playlist/trackInfo</li>
+     * </ul>
+     * </p>
+     * @param playlist the playlist to pass with the request
+     * @param player the player to target
+     * @param source the addOnModule used for Context etc.
+     * @return the optional PlayerRequest
+     */
+    @SuppressWarnings("unused")
+    public static Optional<PlayerRequest> createPlayerRequest(Playlist playlist, Identification player, AddOnModule source) {
+        return createPlayerRequest(playlist, false, player, source);
+    }
+
+    /**
+     * creates a new PlayerRequest.
+     * <p>
+     * For this method to return a non-empty Optional the following criteria must be met:<br>
+     * <ul>
+     *  <li>the player must exist and be support the standard defined through the sdk</li>
+     *  <li>the players-capabilities must allow requests from outside</li>
+     *  <li>the players-capabilities must allow a requests with specified a specified playlist/trackInfo</li>
+     * </ul>
+     * </p>
+     * @param playlist the playlist to pass with the request
+     * @param permanent true means the player can play indefinitely, but only if no one is currently using audio as
+     *                  permanent, false is limited to 10 minutes playback.
+     * @param player the player to target
+     * @param source the addOnModule used for Context etc.
+     * @return the optional PlayerRequest
+     */
     @SuppressWarnings("unused")
     public static Optional<PlayerRequest> createPlayerRequest(Playlist playlist, boolean permanent, Identification player, AddOnModule source) {
+        if (playlist == null ||player == null || source == null)
+            return Optional.empty();
         try {
             return source.getContext().getResources()
                     .generateResource(new CapabilitiesResource(player))

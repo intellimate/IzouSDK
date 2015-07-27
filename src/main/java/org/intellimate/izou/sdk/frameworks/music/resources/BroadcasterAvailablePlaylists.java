@@ -1,9 +1,12 @@
 package org.intellimate.izou.sdk.frameworks.music.resources;
 
 import org.intellimate.izou.identification.Identification;
+import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.resource.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * If the player is able to broadcast the available playlists, this resource can be used to them.
@@ -38,10 +41,10 @@ public class BroadcasterAvailablePlaylists extends Resource<List<String>> {
      * This method is thread-safe.
      *
      * @param provider   the Provider of the Resource
-     * @param strings    the resource
+     * @param strings    the resource  (will get copied)
      */
     public BroadcasterAvailablePlaylists(Identification provider, List<String> strings) {
-        super(RESOURCE_ID, provider, strings);
+        super(RESOURCE_ID, provider, new ArrayList<String>(strings));
     }
 
     /**
@@ -60,10 +63,21 @@ public class BroadcasterAvailablePlaylists extends Resource<List<String>> {
      * This method is thread-safe.
      *
      * @param provider   the Provider of the Resource
-     * @param strings    the resource
+     * @param strings    the resource (will get copied)
      * @param consumer   the ID of the Consumer
      */
     public BroadcasterAvailablePlaylists(Identification provider, List<String> strings, Identification consumer) {
-        super(RESOURCE_ID, provider, strings, consumer);
+        super(RESOURCE_ID, provider, new ArrayList<String>(strings), consumer);
+    }
+
+    public static Optional<List<String>> getPlaylists(ResourceModel resourceModel) {
+        Object resource = resourceModel.getResource();
+        try {
+            @SuppressWarnings("unchecked")
+            List<String> playlists = (List<String>) resource;
+            return Optional.of(playlists);
+        } catch (ClassCastException e) {
+            return Optional.empty();
+        }
     }
 }
