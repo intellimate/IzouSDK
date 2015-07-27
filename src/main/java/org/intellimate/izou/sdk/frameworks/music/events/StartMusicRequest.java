@@ -103,6 +103,9 @@ public class StartMusicRequest extends Event {
                     .noneMatch(identifiable -> identifiable.isOwner(eventModel.getSource())))
                 return false;
         }
+        if (!PlaylistResource.getPlaylist(eventModel).map(playlist -> playlist.verify(capabilities)).orElse(true)) {
+            return false;
+        }
         return SelectorResource.isTarget(eventModel, player)
                 .orElse(false);
     }

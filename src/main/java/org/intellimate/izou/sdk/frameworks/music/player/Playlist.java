@@ -1,6 +1,7 @@
 package org.intellimate.izou.sdk.frameworks.music.player;
 
 import org.intellimate.izou.resource.ResourceModel;
+import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 
 import java.util.*;
 
@@ -183,6 +184,37 @@ public class Playlist {
             Collections.shuffle(trackInfos, new Random(seed));
             return new Playlist(trackInfos);
         }
+    }
+
+    /**
+     * returns true if all the active playbackModes are supported
+     * @param capabilities the Capabilities to match against
+     * @return true if the player is capable, false if not
+     */
+    public boolean verify(Capabilities capabilities) {
+        for (PlaybackMode playbackMode : playbackModes) {
+            switch (playbackMode) {
+                case REPEAT:
+                    if (!capabilities.canRepeatPlayback()) {
+                        return false;
+                    } else {
+                        break;
+                    }
+                case REPEAT_SONG:
+                    if (!capabilities.canRepeatPlaybackOfSong()) {
+                        return false;
+                    } else {
+                        break;
+                    }
+                case SHUFFLE:
+                    if (!capabilities.canShufflePlayback()) {
+                        return false;
+                    } else {
+                        break;
+                    }
+            }
+        }
+        return true;
     }
 
     /**

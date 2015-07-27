@@ -69,14 +69,14 @@ public class BroadcasterPlaylist extends Resource<HashMap<String, Object>> {
 
     /**
      * creates the Playlist-Request
-     * @param consumer the consumer who wants to ask for the playlist
+     * @param provider the provider of the playlist
      * @param playlistName the name of the playlist
      * @return the resource
      */
-    public static BroadcasterPlaylist createPlaylistRequest(Identification consumer, String playlistName) {
+    public static BroadcasterPlaylist createPlaylistRequest(Identification provider, String playlistName) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put(RESOURCE_ID, playlistName);
-        return new BroadcasterPlaylist(hashMap, consumer);
+        return new BroadcasterPlaylist(provider, hashMap);
     }
 
     /**

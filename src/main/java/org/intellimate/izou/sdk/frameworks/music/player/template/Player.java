@@ -4,6 +4,7 @@ import org.intellimate.izou.events.EventListenerModel;
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
+import org.intellimate.izou.identification.IdentificationManager;
 import org.intellimate.izou.resource.ResourceBuilderModel;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.Context;
@@ -14,10 +15,7 @@ import org.intellimate.izou.sdk.frameworks.music.events.PlayerError;
 import org.intellimate.izou.sdk.frameworks.music.events.StartMusicRequest;
 import org.intellimate.izou.sdk.frameworks.music.events.StopMusic;
 import org.intellimate.izou.sdk.frameworks.music.player.*;
-import org.intellimate.izou.sdk.frameworks.music.resources.PlaylistResource;
-import org.intellimate.izou.sdk.frameworks.music.resources.ProgressResource;
-import org.intellimate.izou.sdk.frameworks.music.resources.TrackInfoResource;
-import org.intellimate.izou.sdk.frameworks.music.resources.VolumeResource;
+import org.intellimate.izou.sdk.frameworks.music.resources.*;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.MuteEvent;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.StopEvent;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.UnMuteEvent;
@@ -26,7 +24,12 @@ import org.intellimate.izou.sdk.output.OutputPlugin;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * use this class to actually play music.
@@ -57,6 +60,8 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     private final CommandHandler commandHandler;
     private final InformationProvider informationProvider;
     private final boolean isUsingJava;
+    final Lock lock = new ReentrantLock();
+    Condition blockRequest = null;
 
     /**
      * creates a new output-plugin with a new id
@@ -80,7 +85,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         this.runsInPlay = runsInPlay;
         this.activators = activators;
         this.isUsingJava = isUsingJava;
-        capabilities = new Capabilities(context);
+        capabilities = new Capabilities();
         if (providesTrackInfo)
             capabilities.setProvidesTrackInfo(true);
         if (playbackShuffle)
@@ -137,10 +142,10 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         this.runsInPlay = runsInPlay;
         this.isUsingJava = isUsingJava;
         activators = null;
-        capabilities = new Capabilities(context);
+        capabilities = new Capabilities();
         capabilities.setPlayRequestOutside(true);
         if (playRequestTrackInfo)
-            capabilities.setPlayRequestTrackInfo(true);
+            capabilities.setPlayRequestDetailed(true);
         if (providesTrackInfo)
             capabilities.setProvidesTrackInfo(true);
         if (playbackShuffle)
@@ -207,6 +212,12 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     public void stopMusicPlayback() {
         if (runsInPlay || !isPlaying)
             return;
+        lock.lock();
+        try {
+            blockRequest.signal();
+        } finally {
+            lock.unlock();
+        }
         isPlaying = false;
         stopSound();
         endedSound();
@@ -436,6 +447,89 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      */
     @Override
     public void renderFinalOutput(List<T> data, EventModel eventModel) {
+        if (StartMusicRequest.verify(eventModel, capabilities, this, activators)) {
+            if (isOutputRunning()) {
+                playerError(PlayerError.ERROR_ALREADY_PLAYING, eventModel.getSource());
+            } else {
+                handleEventRequest(eventModel);
+            }
+        } else if (eventModel.getListResourceContainer()
+                .providesResource(Collections.singletonList(MusicUsageResource.ID))){
+            if (isOutputRunning()) {
+                eventModel.getListResourceContainer()
+                        .provideResource(MusicUsageResource.ID)
+                        .forEach(resourceModel ->
+                                playerError(PlayerError.ERROR_ALREADY_PLAYING, resourceModel.getProvider()));
+            } else {
+                handleResourceRequest(eventModel);
+            }
+        }
+        handleCommands(eventModel);
+    }
+
+    /**
+     * handles the a request to start playing music via Resource
+     * @param eventModel the eventModel
+     */
+    private void handleResourceRequest(EventModel eventModel) {
+        if (MusicUsageResource.isPermanent(eventModel)) {
+            ResourceModel resourceModel = eventModel.getListResourceContainer()
+                    .provideResource(MusicUsageResource.ID)
+                    .stream()
+                    .filter(MusicUsageResource::isPermanent)
+                    .findAny()
+                    .orElse(null);//should not happen
+
+            //a partially applied function which takes an Identification an returns an Optional StartMusicRequest
+            Function<Identification, Optional<StartMusicRequest>> getStartMusicRequest = own ->
+                    StartMusicRequest.createStartMusicRequest(resourceModel.getProvider(), own);
+
+            //if we have a trackInfo we create it with the trackInfo as a parameter
+            getStartMusicRequest = TrackInfoResource.getTrackInfo(eventModel)
+                    .map(trackInfo -> (Function<Identification, Optional<StartMusicRequest>>) own ->
+                            StartMusicRequest.createStartMusicRequest(resourceModel.getProvider(), own, trackInfo))
+                    .orElse(getStartMusicRequest);
+
+            //if we have a trackInfo we create it with the playlist as a parameter
+            getStartMusicRequest = PlaylistResource.getPlaylist(eventModel)
+                    .map(playlist -> (Function<Identification, Optional<StartMusicRequest>>) own ->
+                            StartMusicRequest.createStartMusicRequest(resourceModel.getProvider(), own, playlist))
+                    .orElse(getStartMusicRequest);
+
+            //composes a new Function which appends the Volume to the result
+            getStartMusicRequest = getStartMusicRequest.andThen(
+                    VolumeResource.getVolume(eventModel)
+                    .flatMap(volume -> IdentificationManager.getInstance().getIdentification(this)
+                            .map(identification -> new VolumeResource(identification, volume)))
+                    .map(resource -> (Function<Optional<StartMusicRequest>, Optional<StartMusicRequest>>) opt ->
+                                    opt.map(event -> (StartMusicRequest) event.addResource(resource))
+                    )
+                    .orElse(Function.identity())::apply);
+
+            IdentificationManager.getInstance().getIdentification(this)
+                    .flatMap(getStartMusicRequest::apply)
+                    .ifPresent(this::fire);
+        } else {
+            play(eventModel);
+            if (!runsInPlay) {
+                blockRequest = lock.newCondition();
+                lock.lock();
+                try {
+                    blockRequest.await(10, TimeUnit.MINUTES);
+                } catch (InterruptedException e) {
+                    debug("interrupted", e);
+                } finally {
+                    lock.unlock();
+                }
+            }
+        }
+    }
+
+    /**
+     * handles the commands encoded as Resources/EventIds
+     * @param eventModel the eventModel to check
+     */
+    private void handleCommands(EventModel eventModel) {
         Consumer<Runnable> checkOrCall = runnable -> {
             List<ResourceModel> resourceModels =
                     eventModel.getListResourceContainer().provideResource(SelectorResource.RESOURCE_ID);
@@ -451,29 +545,6 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
                         .ifPresent(id -> runnable.run());
             }
         };
-        if (StartMusicRequest.verify(eventModel, capabilities, this, activators)) {
-            if (isOutputRunning()) {
-                playerError(PlayerError.ERROR_ALREADY_PLAYING);
-                return;
-            }
-            playingThread = submit((Runnable) () -> {
-                //noinspection RedundantIfStatement
-                if (runsInPlay) {
-                    isRunning = false;
-                } else {
-                    isRunning = true;
-                }
-                isPlaying = true;
-                fireStartMusicRequest(eventModel);
-            }).thenRun(() -> play(eventModel))
-                    .thenRun(() -> {
-                        if (runsInPlay) {
-                            isRunning = false;
-                            isPlaying = false;
-                            endedSound();
-                        }
-                    });
-        }
         if (eventModel.containsDescriptor(MuteEvent.ID)) {
             checkOrCall.accept(this::mute);
         }
@@ -489,6 +560,31 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         if (PlayerCommand.verify(eventModel, this)) {
             getCommandHandler().handleCommandResources(eventModel);
         }
+    }
+
+    /**
+     * handles the a request to start playing music via Event
+     * @param eventModel the StartMusicRequest
+     */
+    private void handleEventRequest(EventModel eventModel) {
+        playingThread = submit((Runnable) () -> {
+                    //noinspection RedundantIfStatement
+                    if (runsInPlay) {
+                        isRunning = false;
+                    } else {
+                        isRunning = true;
+                    }
+                    isPlaying = true;
+                    fireStartMusicRequest(eventModel);
+                })
+                .thenRun(() -> play(eventModel))
+                .thenRun(() -> {
+                    if (runsInPlay) {
+                        isRunning = false;
+                        isPlaying = false;
+                        endedSound();
+                    }
+                });
     }
 
     /**
