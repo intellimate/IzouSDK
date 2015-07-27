@@ -142,7 +142,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         this.runsInPlay = runsInPlay;
         this.isUsingJava = isUsingJava;
         activators = null;
-        capabilities = new Capabilities(context);
+        capabilities = new Capabilities();
         capabilities.setPlayRequestOutside(true);
         if (playRequestTrackInfo)
             capabilities.setPlayRequestDetailed(true);
