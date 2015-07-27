@@ -1,8 +1,10 @@
 package org.intellimate.izou.sdk.frameworks.music;
 
+import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.Context;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 /**
  * This class has information about the capabilities of the Music-Player. The default is always false.
@@ -12,82 +14,52 @@ import java.util.HashMap;
 @SuppressWarnings("WeakerAccess")
 public class Capabilities {
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String playPauseControlDescriptor = "izou.music.capabilities.playpausecontrol";
+    protected static final String playPauseControlDescriptor = "izou.music.capabilities.playpausecontrol";
     private boolean playPauseControl = false;
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String playRequestOutsideDescriptor = "izou.music.capabilities.playrequestoutside";
+    protected static final String playRequestOutsideDescriptor = "izou.music.capabilities.playrequestoutside";
     private boolean playRequestOutside = false;
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String playRequestTrackInfoDescriptor = "izou.music.capabilities.playrequesttrackinfo";
+    protected static final String playRequestTrackInfoDescriptor = "izou.music.capabilities.playrequesttrackinfo";
     private boolean playRequestTrackInfo = false;
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String providesTrackInfoDescriptor = "izou.music.capabilities.providestrackinfo";
+    protected static final String providesTrackInfoDescriptor = "izou.music.capabilities.providestrackinfo";
     private boolean providesTrackInfo = false;
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String ableToSelectTrackDescriptor = "izou.music.capabilities.abletoselecttrack";
+    protected static final String ableToSelectTrackDescriptor = "izou.music.capabilities.abletoselecttrack";
     private boolean ableToSelectTrack = false;
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String nextPreviousDescriptor = "izou.music.capabilities.nextprevious";
+    protected static final String nextPreviousDescriptor = "izou.music.capabilities.nextprevious";
     private boolean nextPrevious = false;
-    public static final String ableToJumpDescriptor = "izou.music.capabilities.jump";
+    protected static final String ableToJumpDescriptor = "izou.music.capabilities.jump";
     private boolean ableToJump = false;
-    public static final String playbackShuffleDescriptor = "izou.music.capabilities.playback.shuffle";
+    protected static final String playbackShuffleDescriptor = "izou.music.capabilities.playback.shuffle";
     private boolean playbackShuffle = false;
-    public static final String playbackRepeatDescriptor = "izou.music.capabilities.playback.repeat";
+    protected static final String playbackRepeatDescriptor = "izou.music.capabilities.playback.repeat";
     private boolean playbackRepeat = false;
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String playbackRepeatSongDescriptor = "izou.music.capabilities.playback.repeatsong";
+    protected static final String playbackRepeatSongDescriptor = "izou.music.capabilities.playback.repeatsong";
     private boolean playbackRepeatSong = false;
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String playbackChangeableDescriptor = "izou.music.capabilities.playback.changable";
+    protected static final String playbackChangeableDescriptor = "izou.music.capabilities.playback.changable";
     private boolean playbackChangeable = false;
-    public static final String changeVolumeDescriptor = "izou.music.capabilities.volume";
+    protected static final String changeVolumeDescriptor = "izou.music.capabilities.volume";
     private boolean changeVolume = false;
     @SuppressWarnings("SpellCheckingInspection")
-    public static final String broadcastingDescriptor = "izou.music.capabilities.broadcasting";
+    protected static final String broadcastingDescriptor = "izou.music.capabilities.broadcasting";
     private boolean broadcasting = false;
-    private final Context context;
 
-    public static Capabilities constructCapabilites(HashMap<String, Boolean> data, Context context) {
-        Capabilities capabilities = new Capabilities(context);
-        data.keySet().forEach(descriptor -> {
-            switch (descriptor) {
-                case playPauseControlDescriptor: capabilities.setPlayPauseControl(data.get(descriptor));
-                    break;
-                case playRequestTrackInfoDescriptor: capabilities.setPlayRequestTrackInfo(data.get(descriptor));
-                    break;
-                case providesTrackInfoDescriptor: capabilities.setProvidesTrackInfo(data.get(descriptor));
-                    break;
-                case ableToSelectTrackDescriptor: capabilities.setAbleToSelectTrack(data.get(descriptor));
-                    break;
-                case nextPreviousDescriptor: capabilities.setNextPrevious(data.get(descriptor));
-                    break;
-                case playbackChangeableDescriptor: capabilities.setPlaybackChangeable(data.get(descriptor));
-                    break;
-                case playbackRepeatDescriptor: capabilities.setPlaybackRepeat(data.get(descriptor));
-                    break;
-                case playbackRepeatSongDescriptor: capabilities.setPlaybackRepeatSong(data.get(descriptor));
-                    break;
-                case playbackShuffleDescriptor: capabilities.setPlaybackShuffle(data.get(descriptor));
-                    break;
-                case playRequestOutsideDescriptor: capabilities.setPlayRequestOutside(data.get(descriptor));
-                    break;
-                case changeVolumeDescriptor: capabilities.setChangeVolume(data.get(descriptor));
-                    break;
-                case ableToJumpDescriptor: capabilities.setAbleToJump(data.get(descriptor));
-                    break;
-                case broadcastingDescriptor: capabilities.setBroadcasting(data.get(descriptor));
-                    break;
-                default: context.getLogger().error("unkown command: " + descriptor);
-                    break;
-            }
-        });
-        return capabilities;
+    /**
+     * creates a new Context
+     * @param context the context to use
+     * @deprecated context is not used anymore
+     */
+    @Deprecated
+    public Capabilities(Context context) {
     }
 
-    public Capabilities(Context context) {
-        if (context == null) throw new NullPointerException("context is null");
-        this.context = context;
+    public Capabilities() {
+
     }
 
     /**
@@ -298,14 +270,6 @@ public class Capabilities {
         this.broadcasting = broadcasting;
     }
 
-    /**
-     * the associated Context (mainly used for logging)
-     * @return the context
-     */
-    public Context getContext() {
-        return context;
-    }
-
     public HashMap<String, Boolean> write() {
         HashMap<String, Boolean> data = new HashMap<>();
         data.put(playPauseControlDescriptor, playPauseControl);
@@ -322,5 +286,58 @@ public class Capabilities {
         data.put(changeVolumeDescriptor, changeVolume);
         data.put(broadcastingDescriptor, broadcasting);
         return data;
+    }
+
+    public static Capabilities constructCapabilites(HashMap<String, Boolean> data, Context context) {
+        Capabilities capabilities = new Capabilities(context);
+        data.keySet().forEach(descriptor -> {
+            switch (descriptor) {
+                case playPauseControlDescriptor: capabilities.setPlayPauseControl(data.get(descriptor));
+                    break;
+                case playRequestTrackInfoDescriptor: capabilities.setPlayRequestTrackInfo(data.get(descriptor));
+                    break;
+                case providesTrackInfoDescriptor: capabilities.setProvidesTrackInfo(data.get(descriptor));
+                    break;
+                case ableToSelectTrackDescriptor: capabilities.setAbleToSelectTrack(data.get(descriptor));
+                    break;
+                case nextPreviousDescriptor: capabilities.setNextPrevious(data.get(descriptor));
+                    break;
+                case playbackChangeableDescriptor: capabilities.setPlaybackChangeable(data.get(descriptor));
+                    break;
+                case playbackRepeatDescriptor: capabilities.setPlaybackRepeat(data.get(descriptor));
+                    break;
+                case playbackRepeatSongDescriptor: capabilities.setPlaybackRepeatSong(data.get(descriptor));
+                    break;
+                case playbackShuffleDescriptor: capabilities.setPlaybackShuffle(data.get(descriptor));
+                    break;
+                case playRequestOutsideDescriptor: capabilities.setPlayRequestOutside(data.get(descriptor));
+                    break;
+                case changeVolumeDescriptor: capabilities.setChangeVolume(data.get(descriptor));
+                    break;
+                case ableToJumpDescriptor: capabilities.setAbleToJump(data.get(descriptor));
+                    break;
+                case broadcastingDescriptor: capabilities.setBroadcasting(data.get(descriptor));
+                    break;
+                default: context.getLogger().error("unkown command: " + descriptor);
+                    break;
+            }
+        });
+        return capabilities;
+    }
+
+    /**
+     * creates a TrackInfo from the resourceModel
+     * @param resourceModel the resourceModel
+     * @return the optional TrackInfo
+     */
+    public static Optional<Capabilities> importFromResource(ResourceModel resourceModel, Context context) {
+        Object resource = resourceModel.getResource();
+        try {
+            @SuppressWarnings("unchecked")
+            HashMap<String, Boolean> hashMap = (HashMap<String, Boolean>) resource;
+            return Optional.of(constructCapabilites(hashMap, context));
+        } catch (ClassCastException e) {
+            return Optional.empty();
+        }
     }
 }
