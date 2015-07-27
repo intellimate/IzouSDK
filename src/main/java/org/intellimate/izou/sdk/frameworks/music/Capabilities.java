@@ -20,8 +20,8 @@ public class Capabilities {
     protected static final String playRequestOutsideDescriptor = "izou.music.capabilities.playrequestoutside";
     private boolean playRequestOutside = false;
     @SuppressWarnings("SpellCheckingInspection")
-    protected static final String playRequestTrackInfoDescriptor = "izou.music.capabilities.playrequesttrackinfo";
-    private boolean playRequestTrackInfo = false;
+    protected static final String playRequestDetailedDescriptor = "izou.music.capabilities.playrequestdetailed";
+    private boolean playRequestDetailed = false;
     @SuppressWarnings("SpellCheckingInspection")
     protected static final String providesTrackInfoDescriptor = "izou.music.capabilities.providestrackinfo";
     private boolean providesTrackInfo = false;
@@ -111,19 +111,19 @@ public class Capabilities {
     }
 
     /**
-     * returns whether you can pause the playback without ending the player
+     * whether you can request a track with providing a TrackInfo/Playlist
      * @return true if able to, false if not
      */
-    public boolean hasPlayRequestTrackInfo() {
-        return playRequestTrackInfo;
+    public boolean hasPlayRequestDetailed() {
+        return playRequestDetailed;
     }
 
     /**
-     * sets whether you can request a track with providing a TrackInfo
-     * @param playRequestTrackInfo true if the player is capable, false if not
+     * sets whether you can request a track with providing a TrackInfo/Playlist
+     * @param playRequestDetailed true if the player is capable, false if not
      */
-    public void setPlayRequestTrackInfo(boolean playRequestTrackInfo) {
-        this.playRequestTrackInfo = playRequestTrackInfo;
+    public void setPlayRequestDetailed(boolean playRequestDetailed) {
+        this.playRequestDetailed = playRequestDetailed;
     }
 
     /**
@@ -194,7 +194,7 @@ public class Capabilities {
      * whether one is able to shuffle songs in a playlist
      * @return true if able, false if not
      */
-    public boolean isPlaybackRepeat() {
+    public boolean canRepeatPlayback() {
         return playbackRepeat;
     }
 
@@ -210,7 +210,7 @@ public class Capabilities {
      * whether one is able to repeat songs in a playlist
      * @return true if able, false if not
      */
-    public boolean isPlaybackRepeatSong() {
+    public boolean canRepeatPlaybackOfSong() {
         return playbackRepeatSong;
     }
 
@@ -242,7 +242,7 @@ public class Capabilities {
      * whether one is able to shuffle the playback
      * @return true if able, false if not
      */
-    public boolean isPlaybackShuffle() {
+    public boolean canShufflePlayback() {
         return playbackShuffle;
     }
 
@@ -273,7 +273,7 @@ public class Capabilities {
     public HashMap<String, Boolean> write() {
         HashMap<String, Boolean> data = new HashMap<>();
         data.put(playPauseControlDescriptor, playPauseControl);
-        data.put(playRequestTrackInfoDescriptor, playRequestTrackInfo);
+        data.put(playRequestDetailedDescriptor, playRequestDetailed);
         data.put(providesTrackInfoDescriptor, providesTrackInfo);
         data.put(ableToSelectTrackDescriptor, ableToSelectTrack);
         data.put(nextPreviousDescriptor, nextPrevious);
@@ -289,12 +289,12 @@ public class Capabilities {
     }
 
     public static Capabilities constructCapabilites(HashMap<String, Boolean> data, Context context) {
-        Capabilities capabilities = new Capabilities(context);
+        Capabilities capabilities = new Capabilities();
         data.keySet().forEach(descriptor -> {
             switch (descriptor) {
                 case playPauseControlDescriptor: capabilities.setPlayPauseControl(data.get(descriptor));
                     break;
-                case playRequestTrackInfoDescriptor: capabilities.setPlayRequestTrackInfo(data.get(descriptor));
+                case playRequestDetailedDescriptor: capabilities.setPlayRequestDetailed(data.get(descriptor));
                     break;
                 case providesTrackInfoDescriptor: capabilities.setProvidesTrackInfo(data.get(descriptor));
                     break;

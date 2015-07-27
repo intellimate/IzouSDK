@@ -5,6 +5,7 @@ import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.frameworks.music.player.Playlist;
 import org.intellimate.izou.sdk.frameworks.music.player.TrackInfo;
+import org.intellimate.izou.sdk.frameworks.music.player.Volume;
 import org.intellimate.izou.sdk.frameworks.music.resources.CapabilitiesResource;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
@@ -29,6 +30,7 @@ public class PlayerRequest {
     private final Identification player;
     private final Capabilities capabilities;
     private final Context context;
+    private Volume volume;
 
     protected PlayerRequest(TrackInfo trackInfo, Playlist playlist, boolean permanent, Identification player, Capabilities capabilities, Context context) {
         this.trackInfo = trackInfo;
@@ -37,6 +39,39 @@ public class PlayerRequest {
         this.player = player;
         this.capabilities = capabilities;
         this.context = context;
+    }
+
+    public boolean setVolume(Volume volume) {
+        if (capabilities.canChangeVolume()) {
+            this.volume = volume;
+            return true;
+        }
+        return false;
+    }
+
+    @SuppressWarnings("unused")
+    public static Optional<PlayerRequest> createPlayerRequest(boolean permanent, Identification player, AddOnModule source) {
+        try {
+            return source.getContext().getResources()
+                    .generateResource(new CapabilitiesResource(player))
+                    .orElse(CompletableFuture.completedFuture(new ArrayList<>()))
+                    .thenApply(list -> list.stream()
+                                    .filter(resourceModel -> resourceModel.getProvider().equals(player))
+                                    .findAny()
+                                    .flatMap(resource -> Capabilities.importFromResource(resource, source.getContext()))
+                    ).get(1, TimeUnit.SECONDS)
+                    .filter(capabilities -> {
+                        if (!capabilities.handlesPlayRequestFromOutside()) {
+                            source.getContext().getLogger().error("player does not handle play-request from outside");
+                            return false;
+                        }
+                        return true;
+                    })
+                    .map(capabilities -> new PlayerRequest(null, null, permanent, player, capabilities, source.getContext()));
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            source.getContext().getLogger().error("unable to obtain capabilities");
+            return Optional.empty();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -53,6 +88,10 @@ public class PlayerRequest {
                     .filter(capabilities -> {
                         if (!capabilities.handlesPlayRequestFromOutside()) {
                             source.getContext().getLogger().error("player does not handle play-request from outside");
+                            return false;
+                        }
+                        if (!capabilities.hasPlayRequestDetailed()) {
+                            source.getContext().getLogger().error("player does not handle trackInfo-request from outside");
                             return false;
                         }
                         return true;
@@ -78,6 +117,14 @@ public class PlayerRequest {
                     .filter(capabilities -> {
                         if (!capabilities.handlesPlayRequestFromOutside()) {
                             source.getContext().getLogger().error("player does not handle play-request from outside");
+                            return false;
+                        }
+                        if (!capabilities.hasPlayRequestDetailed()) {
+                            source.getContext().getLogger().error("player does not handle playlist-request from outside");
+                            return false;
+                        }
+                        if (!playlist.verify(capabilities)) {
+                            source.getContext().getLogger().error("player can not handle the playlist, probably illegal PlaybackModes");
                             return false;
                         }
                         return true;

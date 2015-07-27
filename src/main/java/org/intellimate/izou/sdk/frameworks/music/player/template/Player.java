@@ -80,7 +80,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         this.runsInPlay = runsInPlay;
         this.activators = activators;
         this.isUsingJava = isUsingJava;
-        capabilities = new Capabilities(context);
+        capabilities = new Capabilities();
         if (providesTrackInfo)
             capabilities.setProvidesTrackInfo(true);
         if (playbackShuffle)
@@ -140,7 +140,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
         capabilities = new Capabilities(context);
         capabilities.setPlayRequestOutside(true);
         if (playRequestTrackInfo)
-            capabilities.setPlayRequestTrackInfo(true);
+            capabilities.setPlayRequestDetailed(true);
         if (providesTrackInfo)
             capabilities.setProvidesTrackInfo(true);
         if (playbackShuffle)
