@@ -1,5 +1,6 @@
 package org.intellimate.izou.sdk.frameworks.music.user;
 
+import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.Context;
@@ -36,7 +37,7 @@ import java.util.function.Function;
  * Identification playerID;
  * List<ResourceModel> resources = PlaylistSelector.getPlaylistsFromPlayer(playerID, this) //create a new PlaylistSelector
  *              .flatMap(playlistSelector -> playlistSelector.getPlayerRequest("jazz")) //maps to a PlayerRequest which should hold the playlist jazz
- *              .map(PlayerRequest::createResources) //creates the resources needed to add to the event
+ *              .map(PlayerRequest::resourcesForExisting) //creates the resources needed to add to the event
  *              .orElseGet(ArrayList::new);
  * }
  * </pre>
@@ -49,6 +50,7 @@ public class PlaylistSelector {
     private final Capabilities capabilities;
     private final List<String> playlists;
     private final Context context;
+    private final Identifiable identifiable;
 
     /**
      * creates a new PlaylistSelector
@@ -56,12 +58,14 @@ public class PlaylistSelector {
      * @param capabilities the capabilities
      * @param playlists the playlists
      * @param context the context
+     * @param identifiable
      */
-    protected PlaylistSelector(Identification player, Capabilities capabilities, List<String> playlists, Context context) {
+    protected PlaylistSelector(Identification player, Capabilities capabilities, List<String> playlists, Context context, Identifiable identifiable) {
         this.player = player;
         this.capabilities = capabilities;
         this.playlists = playlists;
         this.context = context;
+        this.identifiable = identifiable;
     }
 
     /**
@@ -133,7 +137,7 @@ public class PlaylistSelector {
      */
     public Optional<PlayerRequest> getPlayerRequest(String playlistName, boolean permanent) {
         return getPlaylist(playlistName)
-                .map(playlist -> PlayerRequest.createPlayerRequest(playlist, permanent, player, capabilities, context));
+                .map(playlist -> PlayerRequest.createPlayerRequest(playlist, permanent, player, capabilities, context, identifiable));
     }
 
     /**
@@ -164,7 +168,7 @@ public class PlaylistSelector {
                                 .findAny()
                                 .flatMap(BroadcasterAvailablePlaylists::getPlaylists)
                                 .map(playlists ->
-                                        new PlaylistSelector(player, capabilities, playlists, addOnModule.getContext()))
+                                        new PlaylistSelector(player, capabilities, playlists, addOnModule.getContext(), addOnModule))
                 );
 
 

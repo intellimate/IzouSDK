@@ -1,13 +1,15 @@
 package org.intellimate.izou.sdk.frameworks.music.user;
 
+import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
+import org.intellimate.izou.identification.IdentificationManager;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.frameworks.music.player.Playlist;
 import org.intellimate.izou.sdk.frameworks.music.player.TrackInfo;
 import org.intellimate.izou.sdk.frameworks.music.player.Volume;
-import org.intellimate.izou.sdk.frameworks.music.resources.CapabilitiesResource;
+import org.intellimate.izou.sdk.frameworks.music.resources.*;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ import java.util.concurrent.TimeoutException;
  * Identification playerID;
  * Playlist playlist;
  * List<ResourceModel> resources = PlayerRequest.createPlayerRequest(playlist, player, this) //create a new PlayerRequest
- *          .map(PlayerRequest::createResources) //creates the resources needed to add to the event
+ *          .map(PlayerRequest::resourcesForExisting) //creates the resources needed to add to the event
  *          .orElseGet(ArrayList::new);
  * }
  * </pre>
@@ -51,29 +53,58 @@ public class PlayerRequest {
     private final Identification player;
     private final Capabilities capabilities;
     private final Context context;
-    private Volume volume;
+    private final Identifiable identifiable;
+    private Volume volume = null;
 
+    /**
+     * internal Constructor
+     * @param trackInfo the trackInfo
+     * @param playlist the playlist
+     * @param permanent whether the Request is permanent
+     * @param player the player
+     * @param capabilities the capabilities
+     * @param context the context
+     * @param identifiable the identifiable
+     */
     protected PlayerRequest(TrackInfo trackInfo, Playlist playlist, boolean permanent, Identification player,
-                            Capabilities capabilities, Context context) {
+                            Capabilities capabilities, Context context, Identifiable identifiable) {
         this.trackInfo = trackInfo;
         this.playlist = playlist;
         this.permanent = permanent;
         this.player = player;
         this.capabilities = capabilities;
         this.context = context;
+        this.identifiable = identifiable;
     }
 
+    /**
+     * internal Constructor
+     * @param trackInfo the trackInfo
+     * @param playlist the playlist
+     * @param permanent whether the Request is permanent
+     * @param player the player
+     * @param capabilities the capabilities
+     * @param context the Context
+     * @param identifiable the identifiable
+     * @param volume the Volume to set to
+     */
     protected PlayerRequest(TrackInfo trackInfo, Playlist playlist, boolean permanent, Identification player,
-                         Capabilities capabilities, Context context, Volume volume) {
+                            Capabilities capabilities, Context context, Identifiable identifiable, Volume volume) {
         this.trackInfo = trackInfo;
         this.playlist = playlist;
         this.permanent = permanent;
         this.player = player;
         this.capabilities = capabilities;
         this.context = context;
+        this.identifiable = identifiable;
         this.volume = volume;
     }
 
+    /**
+     * sets the Volume if the Player supports it.
+     * @param volume the Volume to set to
+     * @return true if the Player supports setting the Volume
+     */
     public boolean setVolume(Volume volume) {
         if (capabilities.canChangeVolume()) {
             this.volume = volume;
@@ -82,19 +113,67 @@ public class PlayerRequest {
         return false;
     }
 
+    /**
+     * tries to set the Volume of the PlayerRequest.
+     * <p>
+     * if the Player supports the Change of the Volume, it will create a new PlayerRequest and return it, if not it
+     * returns this.
+     * </p>
+     * @param volume the Volume to set to
+     * @return a new PlayerRequest or this.
+     */
     public PlayerRequest trySetVolume(Volume volume) {
         if (capabilities.canChangeVolume()) {
-            return new PlayerRequest(trackInfo, playlist, permanent, player, capabilities, context, volume);
+            return new PlayerRequest(trackInfo, playlist, permanent, player, capabilities, context, identifiable, volume);
         }
         return this;
     }
 
-    public List<ResourceModel> createResources() {
-
+    /**
+     * returns a List of Resources that can be added to an already existing event.
+     * <p>
+     * This causes the Addon to block the Event in the OutputPlugin lifecycle of the Event.
+     * </p>
+     * @return a List of Resources
+     */
+    @SuppressWarnings("unused")
+    public List<ResourceModel> resourcesForExisting() {
+        List<ResourceModel> resourceModels = new ArrayList<>();
+        if (permanent) {
+            IdentificationManager.getInstance().getIdentification(identifiable)
+                    .map(id -> new PermanentResource(id, true))
+                    .ifPresent(resourceModels::add);
+        }
+        if (volume != null) {
+            IdentificationManager.getInstance().getIdentification(identifiable)
+                    .map(id -> new VolumeResource(id, volume))
+                    .ifPresent(resourceModels::add);
+        }
+        if (playlist != null) {
+            IdentificationManager.getInstance().getIdentification(identifiable)
+                    .map(id -> new PlaylistResource(id, playlist))
+                    .ifPresent(resourceModels::add);
+        }
+        if (trackInfo != null) {
+            IdentificationManager.getInstance().getIdentification(identifiable)
+                    .map(id -> new TrackInfoResource(id, trackInfo))
+                    .ifPresent(resourceModels::add);
+        }
+        return resourceModels;
     }
 
-    static PlayerRequest createPlayerRequest(Playlist playlist, boolean permanent, Identification player, Capabilities capabilities, Context context) {
-        return  new PlayerRequest(null, playlist, permanent, player, capabilities, context);
+    /**
+     * helper method for PlaylistSelector
+     * @param playlist the playlist selected
+     * @param permanent the permanent addon
+     * @param player the player
+     * @param capabilities the capabilities
+     * @param context the context
+     * @param identifiable the identifiable
+     * @return a PlayerRequest
+     */
+    static PlayerRequest createPlayerRequest(Playlist playlist, boolean permanent, Identification player, Capabilities capabilities, Context context, Identifiable identifiable) {
+        return  new PlayerRequest(null, playlist, permanent, player, capabilities, context, identifiable);
     }
 
     /**
@@ -132,7 +211,7 @@ public class PlayerRequest {
                         }
                         return true;
                     })
-                    .map(capabilities -> new PlayerRequest(null, null, permanent, player, capabilities, source.getContext()));
+                    .map(capabilities -> new PlayerRequest(null, null, permanent, player, capabilities, source.getContext(), source));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             source.getContext().getLogger().error("unable to obtain capabilities");
             return Optional.empty();
@@ -202,7 +281,7 @@ public class PlayerRequest {
                         }
                         return true;
                     })
-                    .map(capabilities -> new PlayerRequest(trackInfo, null, permanent, player, capabilities, source.getContext()));
+                    .map(capabilities -> new PlayerRequest(trackInfo, null, permanent, player, capabilities, source.getContext(), source));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             source.getContext().getLogger().error("unable to obtain capabilities");
             return Optional.empty();
@@ -276,7 +355,7 @@ public class PlayerRequest {
                         }
                         return true;
                     })
-                    .map(capabilities -> new PlayerRequest(null, playlist, permanent, player, capabilities, source.getContext()));
+                    .map(capabilities -> new PlayerRequest(null, playlist, permanent, player, capabilities, source.getContext(), source));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             source.getContext().getLogger().debug("unable to obtain capabilities");
             return Optional.empty();
