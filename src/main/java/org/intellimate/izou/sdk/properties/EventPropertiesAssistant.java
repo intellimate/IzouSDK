@@ -1,7 +1,5 @@
 package org.intellimate.izou.sdk.properties;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.contentgenerator.EventListener;
 import org.intellimate.izou.sdk.events.CommonEvents;
@@ -9,7 +7,11 @@ import org.intellimate.izou.sdk.util.AddOnModule;
 import org.intellimate.izou.system.file.ReloadableFile;
 
 import java.io.*;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 /**
  * EventPropertiesManager manages all events written in the local_events.properties file. You can register (add)
@@ -23,7 +25,6 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
     private final String eventPropertiesPath = getContext().getFiles().getPropertiesLocation() + File.separator +
             "local_events.properties";
     private Properties properties;
-    private final Logger fileLogger = LogManager.getLogger(this.getClass());
 
     /**
      * Creates a new EventPropertiesManager
@@ -39,6 +40,14 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
         } catch (IOException e) {
             context.getLogger().error("Unable to initialize local_events.properties file", e);
         }
+
+        try {
+            getContext().getFiles().registerFileDir(getContext().getFiles().getPropertiesLocation().toPath(), getID(), this);
+        } catch (IOException e) {
+            error("Unable to register EventPropertiesAssistant with file manager " +
+                    "(file reload service)", e);
+        }
+
         registerStandardEvents();
     }
 
@@ -61,7 +70,7 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
     }
 
     private void createIzouPropertiesFiles() throws IOException {
-        String propertiesPath = getContext().getFiles().getPropertiesLocation() + File.separator + "properties" + File.separator +
+        String propertiesPath = getContext().getFiles().getPropertiesLocation() + File.separator +
                 "local_events.properties";
 
         File file = new File(propertiesPath);
@@ -117,31 +126,61 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
      * @param value the complete event ID
      */
     public void registerEventID(String description, String key, String value) {
-        if (getEventID(key) != null) {
-            //results in spamming the log
-            //fileLogger.debug("Did not add " + key + " event ID to local_events.properties because it already exists");
-            return;
-        }
-
-        BufferedWriter bufferedWriterInit = null;
+        BufferedWriter bufferedWriter;
+        FileOutputStream out = null;
         try {
-            bufferedWriterInit = new BufferedWriter(new FileWriter(eventPropertiesPath, true));
-        } catch (IOException e) {
-            fileLogger.error("Unable to create buffered writer", e);
-        }
-        try {
-            if (bufferedWriterInit != null) {
-                bufferedWriterInit.write("\n\n" + key + "_DESCRIPTION = " + description + "\n" + key + " = " + value);
-            }
-        } catch (IOException e) {
-            fileLogger.error("Unable to write to local_events.properties file", e);
+            out = new FileOutputStream(eventPropertiesPath, true);
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(out));
+            doWithLock(out.getChannel(), lock -> {
+                unlockedReloadFile();
+                if (getEventID(key) != null) {
+                    return;
+                }
+                try {
+                    bufferedWriter.write("\n\n" + key + "_DESCRIPTION = " + description + "\n" + key + " = " + value);
+                    bufferedWriter.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (FileNotFoundException e) {
+            error("Unable find file", e);
         } finally {
             try {
-                if (bufferedWriterInit != null) {
-                    bufferedWriterInit.close();
+                if (out != null) {
+                    out.close();
                 }
             } catch (IOException e) {
-                fileLogger.error("Unable to close buffered writer", e);
+                error("Unable to close lock", e);
+            }
+        }
+    }
+
+    /**
+     * executes with a lock
+     * @param channel the channel where the lock is acquired from
+     * @param consumer the consumer to execute
+     */
+    private void doWithLock(FileChannel channel, Consumer<FileLock> consumer) {
+        FileLock lock = null;
+        try {
+            while (lock == null) {
+                try {
+                    lock = channel.tryLock();
+                } catch (OverlappingFileLockException e) {
+                    Thread.sleep(500);
+                }
+            }
+            consumer.accept(lock);
+        } catch (IOException | InterruptedException e) {
+            error("Unable to write", e);
+        } finally {
+            try {
+                if (lock != null) {
+                    lock.release();
+                }
+            } catch (IOException e) {
+                error("Unable to close lock", e);
             }
         }
     }
@@ -155,52 +194,86 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
         properties.remove(eventKey + "_DESCRIPTION");
         properties.remove(eventKey);
 
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(eventPropertiesPath, true));
-        } catch (IOException e) {
-            fileLogger.error("Unable to create buffered writer", e);
-        }
+        FileOutputStream out = null;
+        BufferedReader reader = null;
+        BufferedWriter writer = null;
 
         try {
-            if (bufferedWriter != null) {
-                properties.store(bufferedWriter, null);
-            }
+            out = new FileOutputStream(eventPropertiesPath, true);
+
+            final File tempFile = new File(eventPropertiesPath + "temp.properties");
+            final BufferedReader readerFinal = new BufferedReader(new FileReader(eventPropertiesPath));
+            final BufferedWriter writerFinal = new BufferedWriter(new FileWriter(tempFile));
+
+            doWithLock(out.getChannel(), lock -> {
+                unlockedReloadFile();
+                if (getEventID(eventKey) != null) {
+                    return;
+                }
+
+                try {
+                    String currentLine = readerFinal.readLine();
+                    while(currentLine != null) {
+                        String trimmedLine = currentLine.trim();
+                        if(trimmedLine.equals(eventKey + "_DESCRIPTION") || trimmedLine.equals(eventKey)) continue;
+                        writerFinal.write(currentLine + System.getProperty("line.separator"));
+                        currentLine = readerFinal.readLine();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            reader = readerFinal;
+            writer = writerFinal;
+            tempFile.renameTo(new File(eventPropertiesPath));
         } catch (IOException e) {
-            fileLogger.error("Unable to delete the event from the properties file", e);
+            error("Unable find file", e);
         } finally {
             try {
-                if (bufferedWriter != null) {
-                    bufferedWriter.close();
+                if (out != null) {
+                    out.close();
+                }
+                if (writer != null) {
+                    writer.close();
+                }
+                if (reader != null) {
+                    reader.close();
                 }
             } catch (IOException e) {
-                fileLogger.error("Unable to close buffered writer", e);
+                error("Unable to close lock", e);
             }
         }
-
-        reloadFile(null);
     }
 
-
-    @Override
-    public void reloadFile(String eventType) {
-        Properties temp = new Properties();
+    private void unlockedReloadFile() {
+        Properties tmpProperties = new Properties();
         BufferedReader in = null;
         try {
-            File properties = new File(eventPropertiesPath);
-            in = new BufferedReader(new InputStreamReader(new FileInputStream(properties), "UTF8"));
-            temp.load(in);
-            this.properties = temp;
+            File eventFile = new File(eventPropertiesPath);
+            FileInputStream fileInputStream = new FileInputStream(eventFile);
+            in = new BufferedReader(new InputStreamReader(fileInputStream, "UTF8"));
+            tmpProperties.load(in);
+            this.properties = tmpProperties;
         } catch(IOException e) {
-            fileLogger.error("Error while trying to load local_events.properties", e);
+            error("Error while trying to load local_events.properties", e);
         } finally {
             if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    fileLogger.error("Unable to close input stream", e);
+                    error("Unable to close input stream", e);
                 }
             }
+        }
+    }
+
+    @Override
+    public void reloadFile(String eventType) {
+        try (FileOutputStream outputStream = new FileOutputStream(eventPropertiesPath, true)) {
+            doWithLock(outputStream.getChannel(), lock ->  unlockedReloadFile());
+        } catch (IOException e) {
+            error("Unable to reload local_events.properties file", e);
         }
     }
 }

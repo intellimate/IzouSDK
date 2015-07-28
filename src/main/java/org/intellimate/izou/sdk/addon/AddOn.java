@@ -45,7 +45,7 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
         if (contentGenerators != null) {
             for (ContentGenerator contentGenerator : contentGenerators) {
                 try {
-                    getContext().getResources().registerResourceBuilder(contentGenerator);
+                    getContext().getContentGenerators().registerContentGenerator(contentGenerator);
                 } catch (IllegalIDException e) {
                     context.getLogger().fatal("Illegal Id for Module: " + contentGenerator.getID(), e);
                 }
