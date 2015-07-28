@@ -463,8 +463,9 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
             } else {
                 handleResourceRequest(eventModel);
             }
+        } else {
+            handleCommands(eventModel);
         }
-        handleCommands(eventModel);
     }
 
     /**
@@ -531,8 +532,8 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
      */
     private void handleCommands(EventModel eventModel) {
         Consumer<Runnable> checkOrCall = runnable -> {
-            List<ResourceModel> resourceModels =
-                    eventModel.getListResourceContainer().provideResource(SelectorResource.RESOURCE_ID);
+            List<ResourceModel> resourceModels = eventModel.getListResourceContainer()
+                    .provideResource(SelectorResource.RESOURCE_ID);
             if (resourceModels.isEmpty()) {
                 runnable.run();
             } else {
