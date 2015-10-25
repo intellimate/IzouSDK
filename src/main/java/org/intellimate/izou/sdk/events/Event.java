@@ -6,7 +6,7 @@ import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.resource.ListResourceProvider;
 import org.intellimate.izou.resource.ResourceModel;
-import org.intellimate.izou.sdk.resource.ListResourceProviderImpl;
+import org.intellimate.izou.sdk.resource.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -238,7 +238,7 @@ public class Event implements EventModel<Event> {
      */
     @SuppressWarnings("unused")
     public Event addEventLifeCycleListener(EventLifeCycle eventLifeCycle, Consumer<EventLifeCycle> cycleCallback) {
-        lifeCycleListeners.compute(eventLifeCycle, (eventLifeCycle1, list) -> {
+        lifeCycleListeners.compute(eventLifeCycle, (unused, list) -> {
             if (list == null)
                 list = new ArrayList<>();
             list.add(cycleCallback);

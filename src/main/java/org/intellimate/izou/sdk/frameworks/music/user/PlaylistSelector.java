@@ -3,13 +3,11 @@ package org.intellimate.izou.sdk.frameworks.music.user;
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.resource.ResourceModel;
-import org.intellimate.izou.sdk.Context;
-import org.intellimate.izou.sdk.frameworks.music.Capabilities;
-import org.intellimate.izou.sdk.frameworks.music.player.Playlist;
-import org.intellimate.izou.sdk.frameworks.music.resources.BroadcasterAvailablePlaylists;
-import org.intellimate.izou.sdk.frameworks.music.resources.BroadcasterPlaylist;
-import org.intellimate.izou.sdk.frameworks.music.resources.CapabilitiesResource;
-import org.intellimate.izou.sdk.util.AddOnModule;
+import org.intellimate.izou.sdk.*;
+import org.intellimate.izou.sdk.frameworks.music.*;
+import org.intellimate.izou.sdk.frameworks.music.player.*;
+import org.intellimate.izou.sdk.frameworks.music.resources.*;
+import org.intellimate.izou.sdk.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
