@@ -214,7 +214,8 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
             return;
         lock.lock();
         try {
-            blockRequest.signal();
+            if (blockRequest != null)
+                blockRequest.signal();
         } finally {
             lock.unlock();
         }
