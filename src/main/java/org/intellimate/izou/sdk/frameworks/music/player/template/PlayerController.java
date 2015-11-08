@@ -43,6 +43,10 @@ public abstract class PlayerController extends Activator {
         this.player = player;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     /**
      * starts the playing command
      */
@@ -63,7 +67,7 @@ public abstract class PlayerController extends Activator {
             error("unable to obtain identification");
             return;
         }
-        StartMusicRequest.createStartMusicRequest(ownIdentification.get(), playerIdentification.get(), trackInfo)
+        StartMusicRequest.createStartMusicRequest(ownIdentification.get(), playerIdentification.get(), trackInfo, player.isUsingJava)
                 .ifPresent(event -> fire(event, 5));
 
     }
@@ -81,7 +85,7 @@ public abstract class PlayerController extends Activator {
             error("unable to obtain identification");
             return;
         }
-        StartMusicRequest.createStartMusicRequest(ownIdentification.get(), playerIdentification.get(), playlist)
+        StartMusicRequest.createStartMusicRequest(ownIdentification.get(), playerIdentification.get(), playlist, player.isUsingJava)
                 .ifPresent(event -> fire(event, 5));
 
     }

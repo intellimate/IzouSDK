@@ -11,8 +11,9 @@ import org.intellimate.izou.sdk.frameworks.music.player.Playlist;
 import org.intellimate.izou.sdk.frameworks.music.player.TrackInfo;
 import org.intellimate.izou.sdk.frameworks.music.resources.PlaylistResource;
 import org.intellimate.izou.sdk.frameworks.music.resources.TrackInfoResource;
+import org.intellimate.izou.system.sound.SoundIDs;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,10 +30,14 @@ public class StartMusicRequest extends Event {
      * Creates a new Event Object
      *
      * @param source      the source of the Event, most likely a this reference.
+     * @param isUsingJava true if the player is using java
      * @throws IllegalArgumentException if one of the Arguments is null or empty
      */
-    protected StartMusicRequest(Identification source) throws IllegalArgumentException {
-        super(CommonEvents.Type.RESPONSE_TYPE, source, Collections.singletonList(ID));
+    protected StartMusicRequest(Identification source, boolean isUsingJava) throws IllegalArgumentException {
+        super(CommonEvents.Type.RESPONSE_TYPE, source,
+                isUsingJava ? Arrays.asList(ID, SoundIDs.StartEvent.descriptor) : Arrays.asList(ID,
+                        SoundIDs.StartEvent.descriptor, SoundIDs.StartEvent.isUsingNonJava)
+        );
     }
 
     /**
@@ -53,10 +58,22 @@ public class StartMusicRequest extends Event {
      * @return the optional StartMusicRequest
      */
     public static Optional<StartMusicRequest> createStartMusicRequest(Identification source, Identification target, TrackInfo trackInfo) {
+        return createStartMusicRequest(source, target, trackInfo, false);
+    }
+
+    /**
+     * creates a new StartRequest
+     * @param source the caller
+     * @param target the target who should start playing
+     * @param trackInfo the track to play
+     * @param isUsingJava true if the player is using java
+     * @return the optional StartMusicRequest
+     */
+    public static Optional<StartMusicRequest> createStartMusicRequest(Identification source, Identification target, TrackInfo trackInfo, boolean isUsingJava) {
         if (target.equals(source))
             return Optional.empty();
         try {
-            StartMusicRequest request = new StartMusicRequest(source);
+            StartMusicRequest request = new StartMusicRequest(source, isUsingJava);
             request.addResource(new SelectorResource(source, target));
             if (trackInfo != null)
                 request.addResource(new TrackInfoResource(target, trackInfo, source));
@@ -74,10 +91,22 @@ public class StartMusicRequest extends Event {
      * @return the optional StartMusicRequest
      */
     public static Optional<StartMusicRequest> createStartMusicRequest(Identification source, Identification target, Playlist playlist) {
+        return createStartMusicRequest(source, target, playlist, false);
+    }
+
+    /**
+     * creates a new StartRequest
+     * @param source the caller
+     * @param target the target who should start playing
+     * @param playlist the playlist to play
+     * @param isUsingJava true if the player is using java
+     * @return the optional StartMusicRequest
+     */
+    public static Optional<StartMusicRequest> createStartMusicRequest(Identification source, Identification target, Playlist playlist, boolean isUsingJava) {
         if (target.equals(source))
             return Optional.empty();
         try {
-            StartMusicRequest request = new StartMusicRequest(source);
+            StartMusicRequest request = new StartMusicRequest(source, isUsingJava);
             request.addResource(new SelectorResource(source, target));
             if (playlist != null)
                 request.addResource(new PlaylistResource(target, playlist, source));

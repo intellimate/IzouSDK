@@ -59,7 +59,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     private final List<Identifiable> activators;
     private final CommandHandler commandHandler;
     private final InformationProvider informationProvider;
-    private final boolean isUsingJava;
+    final boolean isUsingJava;
     private final Lock lock = new ReentrantLock();
     Condition blockRequest = null;
 
