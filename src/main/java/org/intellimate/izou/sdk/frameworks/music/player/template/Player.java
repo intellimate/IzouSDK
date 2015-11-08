@@ -60,7 +60,7 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
     private final CommandHandler commandHandler;
     private final InformationProvider informationProvider;
     private final boolean isUsingJava;
-    final Lock lock = new ReentrantLock();
+    private final Lock lock = new ReentrantLock();
     Condition blockRequest = null;
 
     /**
