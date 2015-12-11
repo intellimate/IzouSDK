@@ -41,6 +41,12 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
                     getResource("default_properties.txt").getFile();
         }
         initProperties();
+        try {
+            getContext().getFiles().registerFileDir(propertiesFile.getParentFile().toPath(),
+                    propertiesFile.getName(), this);
+        } catch (IOException e) {
+            error("Error registering reloadablefile with file manager", e);
+        }
     }
 
     /**
