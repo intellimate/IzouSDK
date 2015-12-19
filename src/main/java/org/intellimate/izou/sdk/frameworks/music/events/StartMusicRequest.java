@@ -23,6 +23,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class StartMusicRequest extends Event {
+    //TODO in izou
     @SuppressWarnings("SpellCheckingInspection")
     public static final String ID = "izou.music.events.startrequest";
 
@@ -35,8 +36,7 @@ public class StartMusicRequest extends Event {
      */
     protected StartMusicRequest(Identification source, boolean isUsingJava) throws IllegalArgumentException {
         super(CommonEvents.Type.RESPONSE_TYPE, source,
-                isUsingJava ? Arrays.asList(ID, SoundIDs.StartEvent.descriptor) : Arrays.asList(ID,
-                        SoundIDs.StartEvent.descriptor, SoundIDs.StartEvent.isUsingNonJava)
+                isUsingJava ? Arrays.asList(ID) : Arrays.asList(ID, SoundIDs.StartEvent.isUsingNonJava)
         );
     }
 

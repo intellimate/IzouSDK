@@ -15,6 +15,7 @@ import java.util.Optional;
  * @version 1.0
  */
 public class StopEvent extends Event {
+    //TODO merge with new Izou...built in
     public static final String ID = "izou.sound.events.stop";
     /**
      * Creates a new Event Object
