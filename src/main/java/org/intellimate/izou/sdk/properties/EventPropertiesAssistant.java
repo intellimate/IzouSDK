@@ -27,12 +27,12 @@ public class EventPropertiesAssistant extends AddOnModule implements ReloadableF
     private Properties properties;
 
     /**
-     * Creates a new EventPropertiesManager
+     * Creates a new EventPropertiesAssistant
      * @param context the context to use
      * @param id the id of the addon
      */
     public EventPropertiesAssistant(Context context, String id) {
-        super(context, id + ".EventPropertiesAssistant");
+        super(context, id);
         properties = new Properties();
         try {
             createIzouPropertiesFiles();

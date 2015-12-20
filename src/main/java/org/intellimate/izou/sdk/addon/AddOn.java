@@ -13,8 +13,6 @@ import org.intellimate.izou.sdk.util.Loggable;
 import org.intellimate.izou.sdk.util.LoggedExceptionCallback;
 import ro.fortsoft.pf4j.PluginWrapper;
 
-import java.io.IOException;
-
 /**
  * All AddOns must extend this Class.
  *
@@ -147,13 +145,6 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
     @Override
     public void initAddOn(org.intellimate.izou.system.Context context) {
         this.context = new Context(context);
-        try {
-            this.context.getFiles().registerFileDir(this.context.getFiles().getPropertiesLocation().toPath(), getID(),
-                    this.context.getPropertiesAssistant());
-        } catch (IOException e) {
-            this.context.getLogger().error("Unable to register " + addOnID + " with the file manager (reloadable file" +
-                    "service");
-        }
     }
 
     /**
