@@ -66,21 +66,6 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
      *
      * @param key the property key.
      * @return the value in this property list with the specified key value.
-     * @deprecated wrong method name, use {@link #getProperty(String)}
-     */
-    @Deprecated
-    public String getProperties(String key) {
-        return properties.getProperty(key);
-    }
-
-    /**
-     * Searches for the property with the specified key in this property list.
-     *
-     * If the key is not found in this property list, the default property list, and its defaults, recursively, are
-     * then checked. The method returns null if the property is not found.
-     *
-     * @param key the property key.
-     * @return the value in this property list with the specified key value.
      */
     public String getProperty(String key) {
         return properties.getProperty(key);
@@ -134,16 +119,6 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
     public void registerUpdateListener(Consumer<PropertiesAssistant> listener) {
         if (listener != null)
             listeners.add(new WeakReference<>(listener));
-    }
-
-    /**
-     * Sets the path to properties file (the real properties file - as opposed to the {@code defaultProperties.txt} file)
-     *
-     * @param propertiesPath to properties file
-     */
-    @Deprecated//not used anywhere...what is the usage?
-    public void setPropertiesPath(String propertiesPath) {
-        this.propertiesPath = propertiesPath;
     }
 
     /**
