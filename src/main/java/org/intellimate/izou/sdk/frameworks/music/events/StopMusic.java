@@ -31,10 +31,10 @@ public class StopMusic extends Event {
     }
 
     /**
-     * creates a new StartRequest
+     * creates a new StopRequest
      * @param source the caller
      * @param target the target who should start playing
-     * @return the optional StartMusicRequest
+     * @return the optional StopMusicRequest
      */
     public static Optional<StopMusic> createStopMusic(Identification source, Identification target) {
         if (target == null || target.equals(source))
