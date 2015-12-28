@@ -200,7 +200,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
     }
 
     /**
-     * reloads the propertiesFile into the propertiesContainer
+     * reloads the propertiesFile into the properties object
      */
     private void reloadProperties() {
         Properties temp = new Properties();
