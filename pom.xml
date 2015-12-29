@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.intellimate.izou</groupId>
             <artifactId>izou</artifactId>
-            <version>[1.5,2.0)</version>
+            <version>1.12.0</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
