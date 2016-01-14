@@ -23,71 +23,72 @@
 <span class="sourceLineNo">015</span> * @version 1.0<a name="line.15"></a>
 <span class="sourceLineNo">016</span> */<a name="line.16"></a>
 <span class="sourceLineNo">017</span>public class SelectorResource extends Resource&lt;Identification&gt; {<a name="line.17"></a>
-<span class="sourceLineNo">018</span>    public static final String RESOURCE_ID = "izou.common.resource.selector";<a name="line.18"></a>
-<span class="sourceLineNo">019</span><a name="line.19"></a>
-<span class="sourceLineNo">020</span>    /**<a name="line.20"></a>
-<span class="sourceLineNo">021</span>     * creates a new Resource.<a name="line.21"></a>
-<span class="sourceLineNo">022</span>     * This method is thread-safe.<a name="line.22"></a>
-<span class="sourceLineNo">023</span>     *<a name="line.23"></a>
-<span class="sourceLineNo">024</span>     * @param consumer   the Provider of the Resource<a name="line.24"></a>
-<span class="sourceLineNo">025</span>     */<a name="line.25"></a>
-<span class="sourceLineNo">026</span>    public SelectorResource(Identification consumer) {<a name="line.26"></a>
-<span class="sourceLineNo">027</span>        super(RESOURCE_ID, null, null, consumer);<a name="line.27"></a>
-<span class="sourceLineNo">028</span>    }<a name="line.28"></a>
-<span class="sourceLineNo">029</span><a name="line.29"></a>
-<span class="sourceLineNo">030</span>    /**<a name="line.30"></a>
-<span class="sourceLineNo">031</span>     * creates a new Resource.<a name="line.31"></a>
-<span class="sourceLineNo">032</span>     * This method is thread-safe.<a name="line.32"></a>
-<span class="sourceLineNo">033</span>     *<a name="line.33"></a>
-<span class="sourceLineNo">034</span>     * @param consumer       the consumer of the Resource<a name="line.34"></a>
-<span class="sourceLineNo">035</span>     * @param identification the resource<a name="line.35"></a>
-<span class="sourceLineNo">036</span>     */<a name="line.36"></a>
-<span class="sourceLineNo">037</span>    public SelectorResource(Identification consumer, Identification identification) {<a name="line.37"></a>
-<span class="sourceLineNo">038</span>        super(RESOURCE_ID, identification, identification, consumer);<a name="line.38"></a>
-<span class="sourceLineNo">039</span>    }<a name="line.39"></a>
-<span class="sourceLineNo">040</span><a name="line.40"></a>
-<span class="sourceLineNo">041</span>    /**<a name="line.41"></a>
-<span class="sourceLineNo">042</span>     * returns true if the identifiable is the target of the EventModel<a name="line.42"></a>
-<span class="sourceLineNo">043</span>     * @param eventModel the EventModel to check<a name="line.43"></a>
-<span class="sourceLineNo">044</span>     * @param identifiable the identifiable to check against<a name="line.44"></a>
-<span class="sourceLineNo">045</span>     * @return maybe true if found<a name="line.45"></a>
-<span class="sourceLineNo">046</span>     */<a name="line.46"></a>
-<span class="sourceLineNo">047</span>    public static Optional&lt;Boolean&gt; isTarget(EventModel eventModel, Identifiable identifiable) {<a name="line.47"></a>
-<span class="sourceLineNo">048</span>        if (eventModel.getListResourceContainer()<a name="line.48"></a>
-<span class="sourceLineNo">049</span>                .providesResource(Collections.singletonList(SelectorResource.RESOURCE_ID))) {<a name="line.49"></a>
-<span class="sourceLineNo">050</span>               return Optional.of(eventModel.getListResourceContainer()<a name="line.50"></a>
-<span class="sourceLineNo">051</span>                       .provideResource(SelectorResource.RESOURCE_ID)<a name="line.51"></a>
-<span class="sourceLineNo">052</span>                       .stream()<a name="line.52"></a>
-<span class="sourceLineNo">053</span>                       .map(ResourceModel::getResource)<a name="line.53"></a>
-<span class="sourceLineNo">054</span>                       .filter(resource -&gt; resource instanceof Identification)<a name="line.54"></a>
-<span class="sourceLineNo">055</span>                       .map(object -&gt; (Identification) object)<a name="line.55"></a>
-<span class="sourceLineNo">056</span>                       .anyMatch(identifiable::isOwner));<a name="line.56"></a>
-<span class="sourceLineNo">057</span>        } else {<a name="line.57"></a>
-<span class="sourceLineNo">058</span>            return Optional.empty();<a name="line.58"></a>
-<span class="sourceLineNo">059</span>        }<a name="line.59"></a>
-<span class="sourceLineNo">060</span>    }<a name="line.60"></a>
-<span class="sourceLineNo">061</span><a name="line.61"></a>
-<span class="sourceLineNo">062</span>    /**<a name="line.62"></a>
-<span class="sourceLineNo">063</span>     * returns true if the identifiable is the target of the EventModel<a name="line.63"></a>
-<span class="sourceLineNo">064</span>     * @param eventModel the EventModel to check<a name="line.64"></a>
-<span class="sourceLineNo">065</span>     * @param identification the identification to check against<a name="line.65"></a>
-<span class="sourceLineNo">066</span>     * @return maybe true if found<a name="line.66"></a>
-<span class="sourceLineNo">067</span>     */<a name="line.67"></a>
-<span class="sourceLineNo">068</span>    public static Optional&lt;Boolean&gt; isTarget(EventModel eventModel, Identification identification) {<a name="line.68"></a>
-<span class="sourceLineNo">069</span>        if (eventModel.getListResourceContainer()<a name="line.69"></a>
-<span class="sourceLineNo">070</span>                .providesResource(Collections.singletonList(SelectorResource.RESOURCE_ID))) {<a name="line.70"></a>
-<span class="sourceLineNo">071</span>            return Optional.of(eventModel.getListResourceContainer()<a name="line.71"></a>
-<span class="sourceLineNo">072</span>                    .provideResource(SelectorResource.RESOURCE_ID)<a name="line.72"></a>
-<span class="sourceLineNo">073</span>                    .stream()<a name="line.73"></a>
-<span class="sourceLineNo">074</span>                    .map(ResourceModel::getResource)<a name="line.74"></a>
-<span class="sourceLineNo">075</span>                    .filter(resource -&gt; resource instanceof Identification)<a name="line.75"></a>
-<span class="sourceLineNo">076</span>                    .map(object -&gt; (Identification) object)<a name="line.76"></a>
-<span class="sourceLineNo">077</span>                    .anyMatch(identification::equals));<a name="line.77"></a>
-<span class="sourceLineNo">078</span>        } else {<a name="line.78"></a>
-<span class="sourceLineNo">079</span>            return Optional.empty();<a name="line.79"></a>
-<span class="sourceLineNo">080</span>        }<a name="line.80"></a>
-<span class="sourceLineNo">081</span>    }<a name="line.81"></a>
-<span class="sourceLineNo">082</span>}<a name="line.82"></a>
+<span class="sourceLineNo">018</span>    //also used in izou!<a name="line.18"></a>
+<span class="sourceLineNo">019</span>    public static final String RESOURCE_ID = "izou.common.resource.selector";<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>    /**<a name="line.21"></a>
+<span class="sourceLineNo">022</span>     * creates a new Resource.<a name="line.22"></a>
+<span class="sourceLineNo">023</span>     * This method is thread-safe.<a name="line.23"></a>
+<span class="sourceLineNo">024</span>     *<a name="line.24"></a>
+<span class="sourceLineNo">025</span>     * @param consumer   the Provider of the Resource<a name="line.25"></a>
+<span class="sourceLineNo">026</span>     */<a name="line.26"></a>
+<span class="sourceLineNo">027</span>    public SelectorResource(Identification consumer) {<a name="line.27"></a>
+<span class="sourceLineNo">028</span>        super(RESOURCE_ID, null, null, consumer);<a name="line.28"></a>
+<span class="sourceLineNo">029</span>    }<a name="line.29"></a>
+<span class="sourceLineNo">030</span><a name="line.30"></a>
+<span class="sourceLineNo">031</span>    /**<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     * creates a new Resource.<a name="line.32"></a>
+<span class="sourceLineNo">033</span>     * This method is thread-safe.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     *<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     * @param consumer       the consumer of the Resource<a name="line.35"></a>
+<span class="sourceLineNo">036</span>     * @param identification the resource<a name="line.36"></a>
+<span class="sourceLineNo">037</span>     */<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    public SelectorResource(Identification consumer, Identification identification) {<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        super(RESOURCE_ID, identification, identification, consumer);<a name="line.39"></a>
+<span class="sourceLineNo">040</span>    }<a name="line.40"></a>
+<span class="sourceLineNo">041</span><a name="line.41"></a>
+<span class="sourceLineNo">042</span>    /**<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     * returns true if the identifiable is the target of the EventModel<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * @param eventModel the EventModel to check<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     * @param identifiable the identifiable to check against<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     * @return maybe true if found<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     */<a name="line.47"></a>
+<span class="sourceLineNo">048</span>    public static Optional&lt;Boolean&gt; isTarget(EventModel eventModel, Identifiable identifiable) {<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        if (eventModel.getListResourceContainer()<a name="line.49"></a>
+<span class="sourceLineNo">050</span>                .providesResource(Collections.singletonList(SelectorResource.RESOURCE_ID))) {<a name="line.50"></a>
+<span class="sourceLineNo">051</span>               return Optional.of(eventModel.getListResourceContainer()<a name="line.51"></a>
+<span class="sourceLineNo">052</span>                       .provideResource(SelectorResource.RESOURCE_ID)<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                       .stream()<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                       .map(ResourceModel::getResource)<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                       .filter(resource -&gt; resource instanceof Identification)<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                       .map(object -&gt; (Identification) object)<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                       .anyMatch(identifiable::isOwner));<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        } else {<a name="line.58"></a>
+<span class="sourceLineNo">059</span>            return Optional.empty();<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        }<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    }<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>    /**<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     * returns true if the identifiable is the target of the EventModel<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     * @param eventModel the EventModel to check<a name="line.65"></a>
+<span class="sourceLineNo">066</span>     * @param identification the identification to check against<a name="line.66"></a>
+<span class="sourceLineNo">067</span>     * @return maybe true if found<a name="line.67"></a>
+<span class="sourceLineNo">068</span>     */<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    public static Optional&lt;Boolean&gt; isTarget(EventModel eventModel, Identification identification) {<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        if (eventModel.getListResourceContainer()<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                .providesResource(Collections.singletonList(SelectorResource.RESOURCE_ID))) {<a name="line.71"></a>
+<span class="sourceLineNo">072</span>            return Optional.of(eventModel.getListResourceContainer()<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                    .provideResource(SelectorResource.RESOURCE_ID)<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                    .stream()<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                    .map(ResourceModel::getResource)<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                    .filter(resource -&gt; resource instanceof Identification)<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                    .map(object -&gt; (Identification) object)<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                    .anyMatch(identification::equals));<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        } else {<a name="line.79"></a>
+<span class="sourceLineNo">080</span>            return Optional.empty();<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        }<a name="line.81"></a>
+<span class="sourceLineNo">082</span>    }<a name="line.82"></a>
+<span class="sourceLineNo">083</span>}<a name="line.83"></a>
 
 
 

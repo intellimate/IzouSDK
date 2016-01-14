@@ -14,7 +14,7 @@
 <span class="sourceLineNo">006</span>import org.intellimate.izou.identification.Identification;<a name="line.6"></a>
 <span class="sourceLineNo">007</span>import org.intellimate.izou.resource.ListResourceProvider;<a name="line.7"></a>
 <span class="sourceLineNo">008</span>import org.intellimate.izou.resource.ResourceModel;<a name="line.8"></a>
-<span class="sourceLineNo">009</span>import org.intellimate.izou.sdk.resource.ListResourceProviderImpl;<a name="line.9"></a>
+<span class="sourceLineNo">009</span>import org.intellimate.izou.sdk.resource.*;<a name="line.9"></a>
 <span class="sourceLineNo">010</span><a name="line.10"></a>
 <span class="sourceLineNo">011</span>import java.util.*;<a name="line.11"></a>
 <span class="sourceLineNo">012</span>import java.util.concurrent.ConcurrentHashMap;<a name="line.12"></a>
@@ -246,7 +246,7 @@
 <span class="sourceLineNo">238</span>     */<a name="line.238"></a>
 <span class="sourceLineNo">239</span>    @SuppressWarnings("unused")<a name="line.239"></a>
 <span class="sourceLineNo">240</span>    public Event addEventLifeCycleListener(EventLifeCycle eventLifeCycle, Consumer&lt;EventLifeCycle&gt; cycleCallback) {<a name="line.240"></a>
-<span class="sourceLineNo">241</span>        lifeCycleListeners.compute(eventLifeCycle, (eventLifeCycle1, list) -&gt; {<a name="line.241"></a>
+<span class="sourceLineNo">241</span>        lifeCycleListeners.compute(eventLifeCycle, (unused, list) -&gt; {<a name="line.241"></a>
 <span class="sourceLineNo">242</span>            if (list == null)<a name="line.242"></a>
 <span class="sourceLineNo">243</span>                list = new ArrayList&lt;&gt;();<a name="line.243"></a>
 <span class="sourceLineNo">244</span>            list.add(cycleCallback);<a name="line.244"></a>
