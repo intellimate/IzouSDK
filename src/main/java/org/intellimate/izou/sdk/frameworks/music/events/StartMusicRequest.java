@@ -58,7 +58,7 @@ public class StartMusicRequest extends Event {
      * @return the optional StartMusicRequest
      */
     public static Optional<StartMusicRequest> createStartMusicRequest(Identification source, Identification target, TrackInfo trackInfo) {
-        return createStartMusicRequest(source, target, trackInfo, false);
+        return createStartMusicRequest(source, target, trackInfo, true);
     }
 
     /**
@@ -91,7 +91,7 @@ public class StartMusicRequest extends Event {
      * @return the optional StartMusicRequest
      */
     public static Optional<StartMusicRequest> createStartMusicRequest(Identification source, Identification target, Playlist playlist) {
-        return createStartMusicRequest(source, target, playlist, false);
+        return createStartMusicRequest(source, target, playlist, true);
     }
 
     /**
