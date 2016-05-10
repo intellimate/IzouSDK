@@ -30,14 +30,14 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
         this.propertiesPath = null;
         this.defaultPropertiesPath = null;
         this.assistant = new EventPropertiesAssistant(context, addOnID + ".EventPropertiesAssistant");
-        PluginWrapper plugin = getContext().getAddOn().getPlugin();
+        PluginWrapper plugin = getContext().getAddOns().getAddOn().getPlugin();
         if (plugin != null) {
             this.defaultPropertiesPath = getContext().getFiles().getLibLocation() +
-                    getContext().getAddOn().getPlugin().getPluginPath() + File.separator + "classes" + File.separator
-                    + "default_properties.txt";
+                    getContext().getAddOns().getAddOn().getPlugin().getPluginPath() + File.separator + "classes"
+                    + File.separator + "default_properties.txt";
         } else {
             //if we are debugging
-            this.defaultPropertiesPath = getContext().getAddOn().getClass().getClassLoader().
+            this.defaultPropertiesPath = getContext().getAddOns().getAddOn().getClass().getClassLoader().
                     getResource("default_properties.txt").getFile();
         }
         initProperties();
@@ -135,7 +135,7 @@ public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
      */
     public void initProperties() {
         propertiesPath = getContext().getFiles().getPropertiesLocation() + File.separator
-                + getContext().getAddOn().getID() + ".properties";
+                + getContext().getAddOns().getAddOn().getID() + ".properties";
 
         this.propertiesFile = new File(propertiesPath);
         if (!this.propertiesFile.exists()) try {
