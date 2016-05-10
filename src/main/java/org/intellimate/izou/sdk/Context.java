@@ -1,7 +1,6 @@
 package org.intellimate.izou.sdk;
 
 import org.apache.logging.log4j.spi.ExtendedLogger;
-import org.intellimate.izou.addon.AddOnModel;
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.identification.IllegalIDException;
@@ -41,7 +40,7 @@ public class Context implements org.intellimate.izou.system.Context {
         this.context = context;
         threadPool = new ThreadPoolImpl();
         contentGenerators = new ContentGeneratorsImpl();
-        propertiesAssistant = new PropertiesAssistant(this, getAddOn().getID());
+        propertiesAssistant = new PropertiesAssistant(this, getAddOns().getAddOn().getID());
     }
 
     /**
@@ -128,7 +127,8 @@ public class Context implements org.intellimate.izou.system.Context {
     }
 
     /**
-     * returns the API used to manage the ContentGenerators
+     * Returns the API used to manage the ContentGenerators.
+     *
      * @return ContentGenerator
      */
     public ContentGenerators getContentGenerators() {
@@ -136,13 +136,13 @@ public class Context implements org.intellimate.izou.system.Context {
     }
 
     /**
-     * gets addOn
+     * Returns the API used to manage the addOns.
      *
-     * @return the addOn
+     * @return The API used to manage the addOns.
      */
     @Override
-    public AddOnModel getAddOn() {
-        return context.getAddOn();
+    public AddOns getAddOns() {
+        return context.getAddOns();
     }
 
     private class ContentGeneratorsImpl implements ContentGenerators {
@@ -193,7 +193,7 @@ public class Context implements org.intellimate.izou.system.Context {
                 return executorService;
             } else {
                 try {
-                    executorService = getThreadPool(getAddOn());
+                    executorService = getThreadPool(getAddOns().getAddOn());
                 } catch (IllegalIDException e) {
                     getLogger().error("Unable to obtain ExecutorService", e);
                     return null;

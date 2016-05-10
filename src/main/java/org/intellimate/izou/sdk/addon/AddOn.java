@@ -4,10 +4,13 @@ import org.intellimate.izou.activator.ActivatorModel;
 import org.intellimate.izou.addon.AddOnModel;
 import org.intellimate.izou.events.EventsControllerModel;
 import org.intellimate.izou.identification.IllegalIDException;
+import org.intellimate.izou.output.OutputControllerModel;
 import org.intellimate.izou.output.OutputExtensionModel;
 import org.intellimate.izou.output.OutputPluginModel;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.contentgenerator.ContentGenerator;
+import org.intellimate.izou.sdk.output.OutputController;
+import org.intellimate.izou.sdk.output.OutputExtension;
 import org.intellimate.izou.sdk.util.ContextProvider;
 import org.intellimate.izou.sdk.util.Loggable;
 import org.intellimate.izou.sdk.util.LoggedExceptionCallback;
@@ -83,6 +86,17 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
             }
         }
 
+        OutputControllerModel[] outputControllerModels = registerOutputController();
+        if (outputControllerModels != null) {
+            for (OutputControllerModel outputController : outputControllerModels) {
+                try {
+                    getContext().getOutput().addOutputController(outputController);
+                } catch (IllegalIDException e) {
+                    context.getLogger().fatal("Illegal Id for Module: " + outputController.getID(), e);
+                }
+            }
+        }
+
         ActivatorModel[] activatorModels = registerActivator();
         getContext().getSystem().registerInitializedListener(() -> {
         if (activatorModels != null) {
@@ -131,11 +145,18 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
     public abstract OutputPluginModel[] registerOutputPlugin();
 
     /**
-     * Use this method to register (if needed) your Output.
+     * Use this method to register (if needed) your {@link OutputExtension}.
      *
      * @return Array containing Instances of OutputExtensions
      */
     public abstract OutputExtensionModel[] registerOutputExtension();
+
+    /**
+     * Use this method to register (if needed) your {@link OutputController}.
+     *
+     * @return Array containing Instances of OutputControllers
+     */
+    public abstract OutputControllerModel[] registerOutputController();
 
     /**
      * Internal initiation of addOn - fake constructor, comes before prepare

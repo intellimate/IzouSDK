@@ -37,7 +37,8 @@ public class EventListener {
     }
 
     /**
-     * create the EventListener
+     * Create the EventListener.
+     *
      * @param descriptor the descriptor of the Event you want to listen to
      * @param description the description of the descriptor
      * @param descriptorID an ID for the descriptor (Should contain no special characters, spaces etc.). Only String
@@ -68,6 +69,7 @@ public class EventListener {
 
     /**
      * Returns the descriptor of the Event you want to listen to
+     *
      * @return a String
      */
     public String getDescriptor() {
@@ -76,6 +78,7 @@ public class EventListener {
 
     /**
      * the description of the descriptor
+     *
      * @return a String
      */
     public String getDescription() {
@@ -83,7 +86,8 @@ public class EventListener {
     }
 
     /**
-     * an ID for the descriptor (Should contain no special characters, spaces etc.)
+     * An ID for the descriptor (Should contain no special characters, spaces etc.)
+     *
      * @return a String
      */
     public String getDescriptorID() {
