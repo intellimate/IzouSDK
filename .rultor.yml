@@ -19,9 +19,6 @@ release:
       - LeanderK
       - jundl77
   script: |-
-    git config --global user.email "Leander.Kurscheidt@gmx.de"
-    git config --global user.name "Leander Kurscheidt"
-    git config --global credential.helper 'cache --timeout 600'
-    mvn versions:set "-DnewVersion=${tag//\'}"
-    git commit -am "${tag//\'}"
-    mvn clean deploy --settings /home/r/settings.xml
+       mvn versions:set "-DnewVersion=${tag//\'}"
+       git commit -am "${tag//\'}"
+       mvn -Dmaven.test.skip=true clean deploy --settings /home/r/settings.xml
