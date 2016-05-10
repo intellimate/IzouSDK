@@ -14,9 +14,10 @@
     <properties>
         <plugin.id>org.intellimate.izou.sdk</plugin.id>
         <plugin.class>org.intellimate.izou.sdk.ZipFileManagerImpl</plugin.class>
-        <plugin.version>${project.version}</plugin.version>
         <plugin.provider>intellimate</plugin.provider>
         <plugin.dependencies>org.intellimate.izou</plugin.dependencies>
+        <server.id></server.id>
+
         <!-- github server corresponds to entry in ~/.m2/settings.xml -->
         <github.global.server>github</github.global.server>
         <log4j.version>2.1</log4j.version>
@@ -191,9 +192,12 @@
                         <manifestEntries>
                             <Plugin-Id>${plugin.id}</Plugin-Id>
                             <Plugin-Class>${plugin.class}</Plugin-Class>
-                            <Plugin-Version>${plugin.version}</Plugin-Version>
+                            <Plugin-Version>${project.version}</Plugin-Version>
                             <Plugin-Provider>${plugin.provider}</Plugin-Provider>
                             <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+                            <Server-ID>${server.id}</Server-ID>
+                            <SDK-Version>${project.version}</SDK-Version>
+                            <Artifact-ID>${artifactId}</Artifact-ID>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -203,8 +207,8 @@
                 <artifactId>github-release-plugin</artifactId>
                 <version>1.1.1</version>
                 <configuration>
-                    <releaseName>${plugin.version}</releaseName>
-                    <tag>${plugin.version}</tag>
+                    <releaseName>${project.version}</releaseName>
+                    <tag>${project.version}</tag>
                     <artifact>${project.build.directory}/${artifactId}-${version}.zip</artifact>
                 </configuration>
                 <executions>
