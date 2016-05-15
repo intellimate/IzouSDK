@@ -13,7 +13,9 @@ import java.util.function.Consumer;
 /**
  * Manages property files, and is also a {@link ReloadableFile}
  *
- * <p>Unlike most manager classes in Izou, the PropertiesManager is included in every {@code AddOn} instance</p>
+ * <p>
+ *     Unlike most manager classes in Izou, the PropertiesAssistant is included in every {@code AddOn} instance.
+ * </p>
  */
 public class PropertiesAssistant extends AddOnModule implements ReloadableFile {
     private String propertiesPath;
