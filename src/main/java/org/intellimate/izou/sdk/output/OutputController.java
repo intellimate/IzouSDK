@@ -1,6 +1,5 @@
 package org.intellimate.izou.sdk.output;
 
-import org.intellimate.izou.output.OutputControllerManager;
 import org.intellimate.izou.output.OutputControllerModel;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.util.AddOnModule;
@@ -23,8 +22,6 @@ import org.intellimate.izou.sdk.util.AddOnModule;
  * @version 1.0
  */
 public abstract class OutputController extends AddOnModule implements OutputControllerModel {
-    public static String controllerID = null;
-
     /**
      * Creates a new OutputController.
      *
@@ -33,16 +30,5 @@ public abstract class OutputController extends AddOnModule implements OutputCont
      */
     public OutputController(Context context, String id)  {
         super(context, id);
-        controllerID = id;
-    }
-
-    /**
-     * Gets the controllerID of this OutputController. It can be used to retrieve the OutputController from
-     * the {@link OutputControllerManager}.
-     *
-     * @return The controllerID of this OutputController.
-     */
-    public static String getControllerID() {
-        return controllerID;
     }
 }
