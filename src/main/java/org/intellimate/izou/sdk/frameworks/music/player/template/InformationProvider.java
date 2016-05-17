@@ -43,7 +43,7 @@ public class InformationProvider extends AddOnModule implements MusicResourceGen
     @Override
     public List<? extends ResourceModel> announceResources() {
         List<ResourceModel> list = new ArrayList<>();
-        IdentificationManager.getInstance().getIdentification(this)
+        IdentificationManagerM.getInstance().getIdentification(this)
                 .ifPresent(id -> {
                     list.add(new BroadcasterAvailablePlaylists(id));
                     list.add(new BroadcasterPlaylist(id));
@@ -82,7 +82,7 @@ public class InformationProvider extends AddOnModule implements MusicResourceGen
                     return Optional.empty();
                 }
                 Playlist playlist = commandHandler.getPlaylistFromName((String) hashMap.get(BroadcasterPlaylist.RESOURCE_ID));
-                Optional<BroadcasterPlaylist> BroadcasterPlaylistResource = IdentificationManager.getInstance()
+                Optional<BroadcasterPlaylist> BroadcasterPlaylistResource = IdentificationManagerM.getInstance()
                         .getIdentification(this)
                         .map(id -> BroadcasterPlaylist.createPlaylistAnswer(id, playlist));
                 if (!BroadcasterPlaylistResource.isPresent()) {
@@ -102,7 +102,7 @@ public class InformationProvider extends AddOnModule implements MusicResourceGen
             return Optional.empty();
         } else {
             List<String> playlists = commandHandler.getAvailablePlaylists();
-            Optional<BroadcasterAvailablePlaylists> BroadcasterPlaylistResource = IdentificationManager.getInstance()
+            Optional<BroadcasterAvailablePlaylists> BroadcasterPlaylistResource = IdentificationManagerM.getInstance()
                     .getIdentification(this)
                     .map(id -> new BroadcasterAvailablePlaylists(id, playlists));
             if (!BroadcasterPlaylistResource.isPresent()) {

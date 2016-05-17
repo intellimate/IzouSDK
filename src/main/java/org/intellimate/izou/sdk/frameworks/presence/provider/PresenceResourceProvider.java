@@ -2,6 +2,7 @@ package org.intellimate.izou.sdk.frameworks.presence.provider;
 
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.frameworks.common.resources.ResourcesProviderBase;
 import org.intellimate.izou.sdk.frameworks.presence.resources.PresenceResource;
@@ -19,7 +20,7 @@ public interface PresenceResourceProvider extends ResourcesProviderBase, Presenc
     @Override
     default List<? extends ResourceModel> announceResources() {
         List<ResourceModel> resources = new ArrayList<>();
-        IdentificationManager.getInstance().getIdentification(this)
+        IdentificationManagerM.getInstance().getIdentification(this)
                 .ifPresent(id -> {
                     resources.add(new PresenceResource(id));
                 });
@@ -46,7 +47,7 @@ public interface PresenceResourceProvider extends ResourcesProviderBase, Presenc
      * @return the resource
      */
     default Optional<PresenceResource> createPresenceResource() {
-        return IdentificationManager.getInstance()
+        return IdentificationManagerM.getInstance()
                 .getIdentification(this)
                 .map(id -> new PresenceResource(id, new Presence(getLevel(), isPresent(), isStrict(), isKnown())));
     }

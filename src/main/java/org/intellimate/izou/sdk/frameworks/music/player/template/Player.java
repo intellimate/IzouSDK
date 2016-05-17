@@ -501,14 +501,14 @@ public abstract class Player<T> extends OutputPlugin<T> implements MusicProvider
             //composes a new Function which appends the Volume to the result
             getStartMusicRequest = getStartMusicRequest.andThen(
                     VolumeResource.getVolume(eventModel)
-                    .flatMap(volume -> IdentificationManager.getInstance().getIdentification(this)
+                    .flatMap(volume -> IdentificationManagerM.getInstance().getIdentification(this)
                             .map(identification -> new VolumeResource(identification, volume)))
                     .map(resource -> (Function<Optional<StartMusicRequest>, Optional<StartMusicRequest>>) opt ->
                                     opt.map(event -> (StartMusicRequest) event.addResource(resource))
                     )
                     .orElse(Function.identity())::apply);
 
-            IdentificationManager.getInstance().getIdentification(this)
+            IdentificationManagerM.getInstance().getIdentification(this)
                     .flatMap(getStartMusicRequest::apply)
                     .ifPresent(this::fire);
         } else {

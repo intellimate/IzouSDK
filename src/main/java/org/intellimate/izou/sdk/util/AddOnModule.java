@@ -2,6 +2,7 @@ package org.intellimate.izou.sdk.util;
 
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.sdk.Context;
 
 /**
@@ -22,7 +23,7 @@ public abstract class AddOnModule implements ContextProvider, Loggable, LoggedEx
     public AddOnModule(Context context, String ID) {
         this.context = context;
         this.ID = ID;
-        if(!IdentificationManager.getInstance().registerIdentification(this)) {
+        if(!IdentificationManagerM.getInstance().registerIdentification(this)) {
             context.getLogger().fatal("Failed to register with identification manager " + getID());
         }
     }

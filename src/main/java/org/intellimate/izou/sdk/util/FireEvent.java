@@ -3,6 +3,7 @@ package org.intellimate.izou.sdk.util;
 import org.intellimate.izou.events.MultipleEventsException;
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.identification.IllegalIDException;
 import org.intellimate.izou.sdk.events.Event;
 
@@ -53,7 +54,7 @@ public interface FireEvent extends ContextProvider, Identifiable {
      * @return true if fired, false if unable
      */
     default boolean fire(String type, List<String> descriptors, int retry) {
-        Optional<Event> event = IdentificationManager.getInstance().getIdentification(this)
+        Optional<Event> event = IdentificationManagerM.getInstance().getIdentification(this)
                 .flatMap(id -> Event.createEvent(type, id, descriptors));
         if (!event.isPresent()) {
             getContext().getLogger().error("unable to obtain ID");

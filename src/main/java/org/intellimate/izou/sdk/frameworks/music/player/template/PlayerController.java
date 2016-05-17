@@ -2,6 +2,7 @@ package org.intellimate.izou.sdk.frameworks.music.player.template;
 
 import org.intellimate.izou.identification.Identification;
 import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.activator.Activator;
 import org.intellimate.izou.sdk.frameworks.music.events.PlayerCommand;
@@ -59,9 +60,9 @@ public abstract class PlayerController extends Activator {
      * @param trackInfo the track to play
      */
     public void startPlaying(TrackInfo trackInfo) {
-        Optional<Identification> ownIdentification = IdentificationManager.getInstance()
+        Optional<Identification> ownIdentification = IdentificationManagerM.getInstance()
                 .getIdentification(this);
-        Optional<Identification> playerIdentification = IdentificationManager.getInstance()
+        Optional<Identification> playerIdentification = IdentificationManagerM.getInstance()
                 .getIdentification(player);
         if (!ownIdentification.isPresent() || !playerIdentification.isPresent()) {
             error("unable to obtain identification");
@@ -77,9 +78,9 @@ public abstract class PlayerController extends Activator {
      * @param playlist the playlist to play
      */
     public void startPlaying(Playlist playlist) {
-        Optional<Identification> ownIdentification = IdentificationManager.getInstance()
+        Optional<Identification> ownIdentification = IdentificationManagerM.getInstance()
                 .getIdentification(this);
-        Optional<Identification> playerIdentification = IdentificationManager.getInstance()
+        Optional<Identification> playerIdentification = IdentificationManagerM.getInstance()
                 .getIdentification(player);
         if (!ownIdentification.isPresent() || !playerIdentification.isPresent()) {
             error("unable to obtain identification");
@@ -94,9 +95,9 @@ public abstract class PlayerController extends Activator {
      * stops the playing of the music
      */
     public void stopPlaying() {
-        Optional<Identification> ownIdentification = IdentificationManager.getInstance()
+        Optional<Identification> ownIdentification = IdentificationManagerM.getInstance()
                 .getIdentification(this);
-        Optional<Identification> playerIdentification = IdentificationManager.getInstance()
+        Optional<Identification> playerIdentification = IdentificationManagerM.getInstance()
                 .getIdentification(player);
         if (!ownIdentification.isPresent()|| !playerIdentification.isPresent()) {
             error("unable to obtain id");
@@ -115,9 +116,9 @@ public abstract class PlayerController extends Activator {
      * @param volume the volume, or null if not needed
      */
     public void command(String command, Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
-        Optional<Identification> ownIdentification = IdentificationManager.getInstance()
+        Optional<Identification> ownIdentification = IdentificationManagerM.getInstance()
                 .getIdentification(this);
-        Optional<Identification> playerIdentification = IdentificationManager.getInstance()
+        Optional<Identification> playerIdentification = IdentificationManagerM.getInstance()
                 .getIdentification(player);
         if (!ownIdentification.isPresent()|| !playerIdentification.isPresent()) {
             error("unable to obtain id");

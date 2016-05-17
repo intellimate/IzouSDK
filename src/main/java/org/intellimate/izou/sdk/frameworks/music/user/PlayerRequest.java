@@ -136,21 +136,21 @@ public class PlayerRequest {
     @SuppressWarnings("unused")
     public List<ResourceModel> resourcesForExisting() {
         List<ResourceModel> resourceModels = new ArrayList<>();
-        IdentificationManager.getInstance().getIdentification(identifiable)
+        IdentificationManagerM.getInstance().getIdentification(identifiable)
                 .map(id -> new MusicUsageResource(id, true))
                 .ifPresent(resourceModels::add);
         if (volume != null) {
-            IdentificationManager.getInstance().getIdentification(identifiable)
+            IdentificationManagerM.getInstance().getIdentification(identifiable)
                     .map(id -> new VolumeResource(id, volume))
                     .ifPresent(resourceModels::add);
         }
         if (playlist != null) {
-            IdentificationManager.getInstance().getIdentification(identifiable)
+            IdentificationManagerM.getInstance().getIdentification(identifiable)
                     .map(id -> new PlaylistResource(id, playlist))
                     .ifPresent(resourceModels::add);
         }
         if (trackInfo != null) {
-            IdentificationManager.getInstance().getIdentification(identifiable)
+            IdentificationManagerM.getInstance().getIdentification(identifiable)
                     .map(id -> new TrackInfoResource(id, trackInfo))
                     .ifPresent(resourceModels::add);
         }
