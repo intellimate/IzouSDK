@@ -12,11 +12,6 @@ import ro.fortsoft.pf4j.PluginWrapper;
 @Extension
 public class ZipFileManagerImpl extends ZipFileManager {
     /**
-     * Wrapper of the plugin.
-     */
-    private PluginWrapper wrapper;
-
-    /**
      * Constructor to be used by plugin manager for plugin instantiation.
      * Your plugins have to provide constructor with this exact signature to
      * be successfully loaded by manager.
