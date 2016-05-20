@@ -1,7 +1,7 @@
 package org.intellimate.izou.sdk.frameworks.music.player;
 
 import org.intellimate.izou.identification.Identification;
-import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.sdk.events.Event;
 import org.intellimate.izou.sdk.frameworks.common.resources.SelectorResource;
 import org.intellimate.izou.sdk.frameworks.music.events.PlayerError;

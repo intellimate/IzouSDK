@@ -1,7 +1,7 @@
 package org.intellimate.izou.sdk.frameworks.music.player;
 
 import org.intellimate.izou.events.EventModel;
-import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.frameworks.music.resources.*;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.output.PermanentSoundResources;

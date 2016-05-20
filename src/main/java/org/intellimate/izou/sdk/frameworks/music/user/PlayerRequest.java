@@ -2,7 +2,7 @@ package org.intellimate.izou.sdk.frameworks.music.user;
 
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
-import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.frameworks.music.Capabilities;

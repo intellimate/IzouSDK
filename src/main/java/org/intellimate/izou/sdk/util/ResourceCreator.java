@@ -2,7 +2,7 @@ package org.intellimate.izou.sdk.util;
 
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
-import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.sdk.resource.Resource;
 
 import java.util.ArrayList;

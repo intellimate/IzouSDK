@@ -3,7 +3,7 @@ package org.intellimate.izou.sdk.frameworks.presence.provider.template;
 import org.intellimate.izou.events.EventLifeCycle;
 import org.intellimate.izou.events.EventListenerModel;
 import org.intellimate.izou.events.EventModel;
-import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.activator.Activator;
 import org.intellimate.izou.sdk.events.CommonEvents;

@@ -1,7 +1,7 @@
 package org.intellimate.izou.sdk.frameworks.permanentSoundOutput.output;
 
 import org.intellimate.izou.identification.Identifiable;
-import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.EndedEvent;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.events.StartEvent;
 import org.intellimate.izou.sdk.util.ContextProvider;

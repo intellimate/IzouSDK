@@ -2,7 +2,7 @@ package org.intellimate.izou.sdk.contentgenerator;
 
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identifiable;
-import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.sdk.events.CommonEvents;
 import org.intellimate.izou.sdk.events.Event;
 
@@ -53,7 +53,8 @@ public class EventListener {
 
         if (!descriptorID.matches("[\\w\\-_]+"))
             throw new IllegalArgumentException("descriptorID: " + descriptorID + " contains illegal characters");
-        return IdentificationManagerM.getInstance().getIdentification(identifiable)
+        return
+                IdentificationManagerM.getInstance().getIdentification(identifiable)
                 .flatMap(id -> Event.createEvent(CommonEvents.Type.NOTIFICATION_TYPE, id, Collections.singletonList(descriptor)))
                 .map(event -> new EventListener(event, descriptor, description, descriptorID));
     }

@@ -1,12 +1,13 @@
 package org.intellimate.izou.sdk.frameworks.music.player.template;
 
 import org.intellimate.izou.events.EventModel;
-import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.frameworks.music.Capabilities;
 import org.intellimate.izou.sdk.frameworks.music.player.*;
-import org.intellimate.izou.sdk.frameworks.music.resources.*;
+import org.intellimate.izou.sdk.frameworks.music.resources.BroadcasterAvailablePlaylists;
+import org.intellimate.izou.sdk.frameworks.music.resources.BroadcasterPlaylist;
 import org.intellimate.izou.sdk.util.AddOnModule;
 
 import java.util.ArrayList;

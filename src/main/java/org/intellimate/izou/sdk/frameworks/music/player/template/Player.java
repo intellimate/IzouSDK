@@ -4,7 +4,7 @@ import org.intellimate.izou.events.EventListenerModel;
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.Identifiable;
 import org.intellimate.izou.identification.Identification;
-import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.resource.ResourceBuilderModel;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.Context;

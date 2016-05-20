@@ -1,6 +1,6 @@
 package org.intellimate.izou.sdk.frameworks.presence.provider;
 
-import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.sdk.frameworks.presence.events.LeavingEvent;
 import org.intellimate.izou.sdk.frameworks.presence.events.PresenceEvent;
 import org.intellimate.izou.sdk.util.FireEvent;
