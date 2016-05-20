@@ -6,7 +6,7 @@
 
     <groupId>org.intellimate.izou</groupId>
     <artifactId>sdk</artifactId>
-    <version>0.17.1</version>
+    <version>0.18.1</version>
     <name>IzouSDK</name>
     <description>the sdk used to program for izou</description>
     <url>https://github.com/intellimate/IzouSDK</url>
