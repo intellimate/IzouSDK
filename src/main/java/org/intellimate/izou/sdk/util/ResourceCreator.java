@@ -61,7 +61,7 @@ public interface ResourceCreator extends ContextProvider, Identifiable {
             getContext().getLogger().error("resource id is null or empty");
             return Optional.empty();
         }
-        Optional<Resource<T>> generated = IdentificationManager.getInstance().getIdentification(this)
+        Optional<Resource<T>> generated = IdentificationManagerM.getInstance().getIdentification(this)
                 .map(idProvider -> new Resource<>(id, idProvider, t, consumer));
         if (!generated.isPresent())
             getContext().getLogger().error("unable to generate Resource");

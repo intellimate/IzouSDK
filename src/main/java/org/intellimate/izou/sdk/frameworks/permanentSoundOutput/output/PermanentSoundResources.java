@@ -2,6 +2,7 @@ package org.intellimate.izou.sdk.frameworks.permanentSoundOutput.output;
 
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.frameworks.common.resources.ResourcesProviderBase;
 import org.intellimate.izou.sdk.frameworks.permanentSoundOutput.resource.UsingSoundResource;
@@ -21,7 +22,7 @@ public interface PermanentSoundResources extends ResourcesProviderBase, Permanen
     @Override
     default List<? extends ResourceModel> announceResources() {
         List<ResourceModel> resources = new ArrayList<>();
-        IdentificationManager.getInstance().getIdentification(this)
+        IdentificationManagerM.getInstance().getIdentification(this)
                 .map(UsingSoundResource::new)
                 .ifPresent(resources::add);
         return resources;
@@ -56,7 +57,7 @@ public interface PermanentSoundResources extends ResourcesProviderBase, Permanen
      * @return a list with (when no error happens) one resource
      */
     default Optional<UsingSoundResource> createUsingSoundResource() {
-        return IdentificationManager.getInstance()
+        return IdentificationManagerM.getInstance()
                 .getIdentification(this)
                 .map(UsingSoundResource::new);
     }

@@ -53,7 +53,7 @@ public class EventListener {
 
         if (!descriptorID.matches("[\\w\\-_]+"))
             throw new IllegalArgumentException("descriptorID: " + descriptorID + " contains illegal characters");
-        return IdentificationManager.getInstance().getIdentification(identifiable)
+        return IdentificationManagerM.getInstance().getIdentification(identifiable)
                 .flatMap(id -> Event.createEvent(CommonEvents.Type.NOTIFICATION_TYPE, id, Collections.singletonList(descriptor)))
                 .map(event -> new EventListener(event, descriptor, description, descriptorID));
     }

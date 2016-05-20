@@ -38,11 +38,11 @@ public interface MusicHelper extends PermanentSoundHelper {
      * @param isUsingJava true if using java, false if not (and for example a C-library)
      */
     default void startedSound(Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume, boolean isUsingJava) {
-        Optional<Event> startEvent = IdentificationManager.getInstance().getIdentification(this)
+        Optional<Event> startEvent = IdentificationManagerM.getInstance().getIdentification(this)
                 .flatMap(PlayerUpdate::createPlayerUpdate)
                 .map(event -> event.addDescriptor(StartEvent.ID))
                 .map(event -> isUsingJava ? event : event.addDescriptor(StartEvent.IS_USING_NON_JAVA_OUTPUT));
-        Optional<Identification> id = IdentificationManager.getInstance().getIdentification(this);
+        Optional<Identification> id = IdentificationManagerM.getInstance().getIdentification(this);
         if (!startEvent.isPresent() || !id.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerUpdate");
         } else {
@@ -68,7 +68,7 @@ public interface MusicHelper extends PermanentSoundHelper {
      * @param message the message
      */
     default void playerError(String message) {
-        Optional<PlayerError> playerError = IdentificationManager.getInstance().getIdentification(this)
+        Optional<PlayerError> playerError = IdentificationManagerM.getInstance().getIdentification(this)
                 .flatMap(id -> PlayerError.createMusicPlayerError(id, message));
         if (!playerError.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerError");
@@ -83,9 +83,9 @@ public interface MusicHelper extends PermanentSoundHelper {
      * @param target the one who caused the error
      */
     default void playerError(String message, Identification target) {
-        Optional<PlayerError> playerError = IdentificationManager.getInstance().getIdentification(this)
+        Optional<PlayerError> playerError = IdentificationManagerM.getInstance().getIdentification(this)
                 .flatMap(id -> PlayerError.createMusicPlayerError(id, message));
-        Optional<Identification> id = IdentificationManager.getInstance().getIdentification(this);
+        Optional<Identification> id = IdentificationManagerM.getInstance().getIdentification(this);
         if (!playerError.isPresent() || !id.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerError");
         } else {
@@ -102,9 +102,9 @@ public interface MusicHelper extends PermanentSoundHelper {
      * @param volume the optional volume
      */
     default void updatePlayInfo(Playlist playlist, Progress progress, TrackInfo trackInfo, Volume volume) {
-        Optional<PlayerUpdate> updateEvent = IdentificationManager.getInstance().getIdentification(this)
+        Optional<PlayerUpdate> updateEvent = IdentificationManagerM.getInstance().getIdentification(this)
                 .flatMap(PlayerUpdate::createPlayerUpdate);
-        Optional<Identification> id = IdentificationManager.getInstance().getIdentification(this);
+        Optional<Identification> id = IdentificationManagerM.getInstance().getIdentification(this);
         if (!updateEvent.isPresent() || !id.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerUpdate");
         } else {
@@ -163,9 +163,9 @@ public interface MusicHelper extends PermanentSoundHelper {
     default void updateStateInfo(PlaybackState playbackState) {
         if (playbackState == null)
             return;
-        Optional<PlayerUpdate> updateEvent = IdentificationManager.getInstance().getIdentification(this)
+        Optional<PlayerUpdate> updateEvent = IdentificationManagerM.getInstance().getIdentification(this)
                 .flatMap(PlayerUpdate::createPlayerUpdate);
-        Optional<Identification> id = IdentificationManager.getInstance().getIdentification(this);
+        Optional<Identification> id = IdentificationManagerM.getInstance().getIdentification(this);
         if (!updateEvent.isPresent() || !id.isPresent()) {
             getContext().getLogger().error("unable to fire PlayerUpdate");
         } else {

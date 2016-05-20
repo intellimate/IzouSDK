@@ -1,9 +1,6 @@
 package org.intellimate.izou.sdk.util;
 
-import org.intellimate.izou.identification.Identifiable;
-import org.intellimate.izou.identification.Identification;
-import org.intellimate.izou.identification.IdentificationManager;
-import org.intellimate.izou.identification.IllegalIDException;
+import org.intellimate.izou.identification.*;
 import org.intellimate.izou.resource.ResourceModel;
 import org.intellimate.izou.sdk.resource.Resource;
 
@@ -47,7 +44,7 @@ public interface ResourceUser extends ContextProvider, Identifiable {
      * @return an Optional containing a future of a list of results
      */
     default Optional<CompletableFuture<List<ResourceModel>>> generateResource(String resourceID, Identification provider) {
-        return IdentificationManager.getInstance()
+        return IdentificationManagerM.getInstance()
                 .getIdentification(this)
                 .map(id -> new Resource(resourceID, provider, id))
                 .flatMap(resource -> {

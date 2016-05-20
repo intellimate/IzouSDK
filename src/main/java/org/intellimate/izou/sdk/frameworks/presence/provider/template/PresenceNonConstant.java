@@ -83,7 +83,7 @@ public abstract class PresenceNonConstant extends Activator implements PresenceR
         boolean known = !fireUnknownIfNotPresent || present;
         boolean firstPresent = (!strict && !present) || (strict && !strictPresent);
         long lastSeen = this.lastSeen.until(LocalDateTime.now(), ChronoUnit.SECONDS);
-        Optional<Event> presenceEvent = IdentificationManager.getInstance()
+        Optional<Event> presenceEvent = IdentificationManagerM.getInstance()
                 .getIdentification(this)
                 .flatMap(id -> PresenceEvent.createPresenceEvent(id, strict, known, firstPresent, descriptors, lastSeen))
                 .map(event -> event.addEventLifeCycleListener(EventLifeCycle.APPROVED, lifeCycle -> {

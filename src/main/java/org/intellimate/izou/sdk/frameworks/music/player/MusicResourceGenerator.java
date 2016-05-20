@@ -23,7 +23,7 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
     @Override
     default List<? extends ResourceModel> announceResources() {
         List<ResourceModel> list = new ArrayList<>();
-        IdentificationManager.getInstance().getIdentification(this)
+        IdentificationManagerM.getInstance().getIdentification(this)
                 .ifPresent(id -> {
                     list.add(new CapabilitiesResource(id));
                     list.add(new NowPlayingResource(id));
@@ -66,7 +66,7 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
             getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "PlaybackState: returned null");
             return Optional.empty();
         }
-        Optional<PlaybackStateResource> playbackStateResource = IdentificationManager.getInstance()
+        Optional<PlaybackStateResource> playbackStateResource = IdentificationManagerM.getInstance()
                 .getIdentification(this)
                 .map(id -> new PlaybackStateResource(id, getPlaybackState()));
         if (!playbackStateResource.isPresent()) {
@@ -84,7 +84,7 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
             getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "VolumeResource: returned null");
             return Optional.empty();
         }
-        Optional<VolumeResource> playerResource = IdentificationManager.getInstance()
+        Optional<VolumeResource> playerResource = IdentificationManagerM.getInstance()
                 .getIdentification(this)
                 .map(id -> new VolumeResource(id, getVolume()));
         if (!playerResource.isPresent()) {
@@ -105,7 +105,7 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
             getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "TrackInfo: returned null");
             return Optional.empty();
         } else {
-            Optional<TrackInfoResource> nowPlayingResource = IdentificationManager.getInstance()
+            Optional<TrackInfoResource> nowPlayingResource = IdentificationManagerM.getInstance()
                     .getIdentification(this)
                     .map(id -> new TrackInfoResource(id, getCurrentPlaylist().getCurrent()));
             if (!nowPlayingResource.isPresent()) {
@@ -127,7 +127,7 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
             getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "ProgressResource: returned null");
             return Optional.empty();
         } else {
-            Optional<ProgressResource> nowPlayingResource = IdentificationManager.getInstance()
+            Optional<ProgressResource> nowPlayingResource = IdentificationManagerM.getInstance()
                     .getIdentification(this)
                     .map(id -> new ProgressResource(id, getCurrentProgress()));
             if (!nowPlayingResource.isPresent()) {
@@ -142,7 +142,7 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
      * @return the Resource
      */
     default Optional<? extends ResourceModel> createPlayerResource() {
-        Optional<PlayerResource> playerResource = IdentificationManager.getInstance()
+        Optional<PlayerResource> playerResource = IdentificationManagerM.getInstance()
                 .getIdentification(this)
                 .map(PlayerResource::new);
         if (!playerResource.isPresent()) {
@@ -163,7 +163,7 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
             getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "NowPlayingResource: returned null");
             return Optional.empty();
         } else {
-            Optional<NowPlayingResource> nowPlayingResource = IdentificationManager.getInstance()
+            Optional<NowPlayingResource> nowPlayingResource = IdentificationManagerM.getInstance()
                     .getIdentification(this)
                     .map(id -> new NowPlayingResource(id, getCurrentPlaylist()));
             if (!nowPlayingResource.isPresent()) {
@@ -182,7 +182,7 @@ public interface MusicResourceGenerator extends PermanentSoundResources, MusicPr
             getContext().getLogger().error(PROVIDE_RESOURCE_ERROR_GENERATING + "Capabilities: returned null");
             return Optional.empty();
         }
-        return IdentificationManager.getInstance().getIdentification(this)
+        return IdentificationManagerM.getInstance().getIdentification(this)
                 .map(id -> new CapabilitiesResource(id, getCapabilities()));
     }
 }

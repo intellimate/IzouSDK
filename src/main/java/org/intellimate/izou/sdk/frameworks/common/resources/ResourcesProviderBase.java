@@ -2,6 +2,7 @@ package org.intellimate.izou.sdk.frameworks.common.resources;
 
 import org.intellimate.izou.events.EventModel;
 import org.intellimate.izou.identification.IdentificationManager;
+import org.intellimate.izou.identification.IdentificationManagerM;
 import org.intellimate.izou.identification.IllegalIDException;
 import org.intellimate.izou.resource.ResourceBuilderModel;
 import org.intellimate.izou.resource.ResourceModel;
@@ -35,7 +36,7 @@ public interface ResourcesProviderBase extends ResourceBuilderModel {
     @Override
     default List<? extends ResourceModel> announceResources() {
         List<ResourceModel> resources = new ArrayList<>();
-        IdentificationManager.getInstance().getIdentification(this)
+        IdentificationManagerM.getInstance().getIdentification(this)
                 .map(UsingSoundResource::new)
                 .ifPresent(resources::add);
         return resources;

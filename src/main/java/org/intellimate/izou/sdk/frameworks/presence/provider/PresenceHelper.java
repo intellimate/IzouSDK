@@ -29,7 +29,7 @@ public interface PresenceHelper extends PresenceProvider, FireEvent {
      * @param known whether it is highly likely that the user cause the event and not a random person
      */
     default void firePresence(List<String> descriptors, boolean known) {
-        Optional<PresenceEvent> startEvent = IdentificationManager.getInstance().getIdentification(this)
+        Optional<PresenceEvent> startEvent = IdentificationManagerM.getInstance().getIdentification(this)
                 .flatMap(id -> PresenceEvent.createPresenceEvent(id, isStrict(), known, isFirstEncountering(), descriptors));
         if (!startEvent.isPresent()) {
             getContext().getLogger().error("unable to fire startEvent");
@@ -42,7 +42,7 @@ public interface PresenceHelper extends PresenceProvider, FireEvent {
      * fires the leaving-Event
      */
     default void fireLeaving() {
-        Optional<LeavingEvent> startEvent = IdentificationManager.getInstance().getIdentification(this)
+        Optional<LeavingEvent> startEvent = IdentificationManagerM.getInstance().getIdentification(this)
                 .flatMap(id -> LeavingEvent.createLeavingEvent(id, isStrict(), new ArrayList<>()));
         if (!startEvent.isPresent()) {
             getContext().getLogger().error("unable to fire startEvent");
