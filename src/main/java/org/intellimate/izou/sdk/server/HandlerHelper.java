@@ -16,6 +16,7 @@ public interface HandlerHelper {
      * @param route the route to add to the link, e.g. apps/1
      * @return a Link
      */
+    @SuppressWarnings("unused")
     default String constructLink(String route) {
         return getContext().getIzouServerURL().orElse("locahost:80")+"/"+route;
     }
@@ -28,6 +29,16 @@ public interface HandlerHelper {
      */
     default Response stringResponse(String message, int status) {
         return new Response(status, new HashMap<>(), "text", message.getBytes(Charset.forName("UTF-8")));
+    }
+
+    /**
+     * removes the start from the url
+     * @param start the start to remove
+     * @param url the url to check
+     * @return
+     */
+    default String sliceUrl(String start, String url) {
+
     }
 
     /**

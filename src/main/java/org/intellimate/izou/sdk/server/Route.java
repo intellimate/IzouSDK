@@ -3,13 +3,18 @@ package org.intellimate.izou.sdk.server;
 import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.util.AddOnModule;
 import org.intellimate.izou.sdk.util.FireEvent;
+import org.intellimate.izou.system.context.System;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * a route in the router
@@ -25,6 +30,7 @@ public class Route extends AddOnModule implements HandlerHelper, FireEvent {
     private final List<Handler> handlers = new ArrayList<>();
     private final Context context;
     private final String addOnPackageName;
+    private final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
     public Route(Context context, String route, String addOnPackageName) {
         super(context, addOnPackageName+"."+route);
@@ -39,15 +45,15 @@ public class Route extends AddOnModule implements HandlerHelper, FireEvent {
      * @param request the request
      * @return the request
      */
-    Optional<Response> handle(org.intellimate.izou.server.Request request) {
+    Optional<Response> handle(Request request) {
         Matcher matcher = pattern.matcher(request.getUrl());
         if (matcher.matches()) {
-            Request internalRequest = new Request(request, matcher);
+            Request internalRequest = request.setMatcher(matcher);
             return handlers.stream()
                     .map(handler -> handler.handle(internalRequest))
                     .filter(Optional::isPresent)
                     .findAny()
-                    .orElseThrow(NotFoundException::new);
+                    .orElseThrow(() -> new NotFoundException(request));
         } else {
             return Optional.empty();
         }
@@ -107,6 +113,41 @@ public class Route extends AddOnModule implements HandlerHelper, FireEvent {
      */
     public void delete(Function<Request, Response> handleFunction) {
         handlers.add(new DefaultHandler(context, addOnPackageName, route, Method.DELETE, handleFunction));
+    }
+
+    /**
+     * serves the files at path for the get-requests, this method allows querying subdirectories.
+     * @param path the path (must be a directory)
+     */
+    public void files(String path) {
+        files(path, true);
+    }
+
+    /**
+     * serves the files at path for the get-requests
+     * @param path the path (must be a directory)
+     * @param subdirectory whether to allow querying subdirectories
+     */
+    public void files(String path, boolean subdirectory) {
+        handlers.add(new DefaultHandler(context, addOnPackageName, route, Method.GET, request -> {
+            String[] split = request.getShortUrl().split("\\\\");
+            if (!subdirectory && split.length != 1) {
+                throw new NotFoundException(request.getUrl() + " not found");
+            }
+            String subpath = Arrays.stream(split).collect(Collectors.joining(File.separator));
+            File file = new File(path + File.separator + subpath);
+            if (file.exists()) {
+                throw new NotFoundException(request.getUrl() + " not found");
+            }
+            String contentType = mimetypesFileTypeMap.getContentType(file);
+            FileInputStream fileInputStream;
+            try {
+                fileInputStream = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                throw new NotFoundException(request.getUrl() + " not found");
+            }
+            return new Response(200, new HashMap<>(), contentType, file.length(), fileInputStream);
+        }));
     }
 
     /**

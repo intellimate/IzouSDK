@@ -1,13 +1,14 @@
 package org.intellimate.izou.sdk.server;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 import org.intellimate.izou.sdk.Context;
-import org.intellimate.izou.server.*;
 import org.intellimate.izou.server.Request;
+import org.intellimate.server.proto.ErrorResponse;
 
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * a simple router
@@ -19,6 +20,7 @@ public class Router implements HandlerHelper {
     private List<Route> routes = new ArrayList<>();
     private Map<Class<? extends Exception>, BiFunction<Request, ? extends Exception, Response>> exceptionHandlers = new HashMap<>();
     private final Context context;
+    private static JsonFormat.Printer PRINTER = JsonFormat.printer().includingDefaultValueFields();
 
     /**
      * creates a new Router
@@ -27,13 +29,29 @@ public class Router implements HandlerHelper {
     public Router(Context context, String addOnPackageName) {
         this.context = context;
         this.addOnPackageName = addOnPackageName;
+
+        exception(InternalServerErrorException.class, (request, e) -> {
+            getContext().getLogger().error("an internal error occurred while handling " + request.getUrl(), e);
+            return ErrorResponse.newBuilder().setCode("an internal error occurred").setDetail(e.getMessage()).build();
+        }, 500);
+
+        exception(NotFoundException.class, (request, e) -> {
+            getContext().getLogger().debug("not found " + request.getUrl(), e);
+            return ErrorResponse.newBuilder().setCode("not found").setDetail(e.getMessage()).build();
+        }, 404);
+
+        exception(BadRequestException.class, (request, e) -> {
+            getContext().getLogger().error("bad request " + request.getUrl(), e);
+            return ErrorResponse.newBuilder().setCode("bad request").setDetail(e.getMessage()).build();
+        }, 400);
     }
 
     public Response handle(org.intellimate.izou.server.Request request) {
+        org.intellimate.izou.sdk.server.Request internalRequest = new org.intellimate.izou.sdk.server.Request(request, null);
         Response response = routes.stream()
                 .map(route -> {
                     try {
-                        return route.handle(request);
+                        return route.handle(internalRequest);
                     } catch (Exception e) {
                         return Optional.of(handleException(e, request));
                     }
@@ -80,7 +98,9 @@ public class Router implements HandlerHelper {
     }
 
     /**
-     * adds a new route
+     * adds a new route.
+     * <p>
+     * Every route starts with a {@code /}! Example {@code /assets/new}.
      * @param regex the regex-route to match
      * @param consumer the consumer used to initialize the route
      */
@@ -97,4 +117,23 @@ public class Router implements HandlerHelper {
     public <T extends Exception> void exception(Class<T> clazz, BiFunction<Request, T, Response> handleFunction) {
         exceptionHandlers.put(clazz, handleFunction);
     }
+
+    /**
+     * registers an Exception to catch and handle with the standard error-response
+     * @param handleFunction the function to call when an exception was triggered
+     */
+    public <T extends Exception> void exception(Class<T> clazz, BiFunction<Request, T, ErrorResponse> handleFunction, int status) {
+        exception(clazz, (request, t) -> {
+            ErrorResponse errorResponse = handleFunction.apply(request, t);
+            String response = null;
+            try {
+                response = PRINTER.print(errorResponse);
+            } catch (InvalidProtocolBufferException e) {
+                getContext().getLogger().debug("unable to print error-message", e);
+                return new Response(status, new HashMap<>(), "text/plain", "unable to print error-message, " + e.getMessage());
+            }
+            return new Response(status, new HashMap<>(), "application/json", response);
+        });
+    }
+
 }

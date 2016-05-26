@@ -1,11 +1,11 @@
 package org.intellimate.izou.sdk.server;
 
 /**
- * represents a 404 NotFound
+ * represents an BadRequest (400)
  * @author LeanderK
  * @version 1.0
  */
-public class NotFoundException extends RuntimeException {
+public class BadRequestException extends RuntimeException {
     /**
      * Constructs a new runtime exception with the specified detail message.
      * The cause is not initialized, and may subsequently be initialized by a
@@ -14,19 +14,8 @@ public class NotFoundException extends RuntimeException {
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public NotFoundException(String message) {
+    public BadRequestException(String message) {
         super(message);
-    }
-
-    /**
-     * Constructs a new runtime exception with the specified detail message.
-     * The cause is not initialized, and may subsequently be initialized by a
-     * call to {@link #initCause}.
-     *
-     * @param request the request not found
-     */
-    public NotFoundException(Request request) {
-        super(request.getUrl() + " not found");
     }
 
     /**
@@ -43,7 +32,7 @@ public class NotFoundException extends RuntimeException {
      *                unknown.)
      * @since 1.4
      */
-    public NotFoundException(String message, Throwable cause) {
+    public BadRequestException(String message, Throwable cause) {
         super(message, cause);
     }
 }
