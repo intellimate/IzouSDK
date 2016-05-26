@@ -1,10 +1,10 @@
 package org.intellimate.izou.sdk.server;
 
+import org.intellimate.izou.identification.AddOnInformation;
 import org.intellimate.izou.sdk.Context;
-import org.intellimate.izou.sdk.util.ContextProvider;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Optional;
 
 /**
  * @author LeanderK
@@ -17,8 +17,43 @@ public interface HandlerHelper {
      * @return a Link
      */
     @SuppressWarnings("unused")
-    default String constructLink(String route) {
+    default String constructLinkToServer(String route) {
         return getContext().getIzouServerURL().orElse("locahost:80")+"/"+route;
+    }
+
+    /**
+     * constructs a link, falling back to localhost port 80 if no valid izou-server link was found
+     * @param route the route to add to the link, e.g. apps/1
+     * @return a Link
+     */
+    @SuppressWarnings("unused")
+    default String constructLink(String route) {
+        String id = getContext().getAddOns().getAddOn().getID();
+        Optional<AddOnInformation> addOnInformation = getContext().getAddOns().getAddOnInformation(id);
+        return getContext().getIzouServerURL().orElse("locahost:80")+"/"+route;
+    }
+
+    /**
+     * constructs a link, falling back to localhost port 80 if no valid izou-server link was found
+     * @param addOnInformation the addon to link to
+     * @param route the route to add to the link, e.g. apps/1
+     * @return a Link
+     */
+    @SuppressWarnings("unused")
+    default String constructLinkToAddon(AddOnInformation addOnInformation, String route) {
+        //TODO getIzouServerURL() when implemented!
+        String base = getContext().getIzouServerURL().orElse("locahost:80") + "/users/1/izou/1/instance/";
+        String urlWithAddon;
+        Optional<Integer> serverID = addOnInformation.getServerID();
+        if (serverID.isPresent()) {
+            urlWithAddon = base + "apps/" + serverID.get();
+        } else {
+            urlWithAddon = base + "apps/dev/" + addOnInformation.getName();
+        }
+        if (!route.startsWith("/")) {
+            urlWithAddon = urlWithAddon + "/";
+        }
+        return urlWithAddon + route;
     }
 
     /**
@@ -28,17 +63,7 @@ public interface HandlerHelper {
      * @return the response
      */
     default Response stringResponse(String message, int status) {
-        return new Response(status, new HashMap<>(), "text", message.getBytes(Charset.forName("UTF-8")));
-    }
-
-    /**
-     * removes the start from the url
-     * @param start the start to remove
-     * @param url the url to check
-     * @return
-     */
-    default String sliceUrl(String start, String url) {
-
+        return new Response(status, new HashMap<>(), "text/plain", message);
     }
 
     /**
