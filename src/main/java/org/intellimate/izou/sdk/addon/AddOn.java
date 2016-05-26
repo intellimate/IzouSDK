@@ -11,10 +11,15 @@ import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.contentgenerator.ContentGenerator;
 import org.intellimate.izou.sdk.output.OutputController;
 import org.intellimate.izou.sdk.output.OutputExtension;
+import org.intellimate.izou.sdk.server.Response;
+import org.intellimate.izou.sdk.server.Router;
 import org.intellimate.izou.sdk.util.ContextProvider;
 import org.intellimate.izou.sdk.util.Loggable;
 import org.intellimate.izou.sdk.util.LoggedExceptionCallback;
+import org.intellimate.izou.server.Request;
 import ro.fortsoft.pf4j.PluginWrapper;
+
+import static com.sun.xml.internal.ws.api.message.Packet.Status.Response;
 
 /**
  * All AddOns must extend this Class.
@@ -26,6 +31,7 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
     private final String addOnID;
     private Context context;
     private PluginWrapper plugin;
+    private Router router;
 
     /**
      * The default constructor for AddOns
@@ -188,6 +194,29 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
     @Override
     public PluginWrapper getPlugin() {
         return plugin;
+    }
+
+    /**
+     * sets the router to use when handling requests
+     * @param router the router to use
+     */
+    @SuppressWarnings("unused")
+    protected void setRouter(Router router) {
+        this.router = router;
+    }
+
+    /**
+     * this method handles the HTTP-Requests from the server.
+     * <p>
+     * this method should not be overridden, to change behaviour please user setRouter.
+     * <p>
+     *
+     * @param request the request to process
+     * @return the response
+     */
+    @Override
+    public org.intellimate.izou.server.Response handleRequest(Request request) {
+        return router.handle(request);
     }
 
     /**
