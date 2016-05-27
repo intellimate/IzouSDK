@@ -37,19 +37,21 @@ public interface HandlerHelper {
      */
     @SuppressWarnings("unused")
     default String constructLinkToServer(String route) {
-        return getContext().getIzouServerURL().orElse("locahost:80")+"/"+route;
-    }
-
-    /**
-     * constructs a link, falling back to localhost port 80 if no valid izou-server link was found
-     * @param route the route to add to the link, e.g. apps/1
-     * @return a Link
-     */
-    @SuppressWarnings("unused")
-    default String constructLink(String route) {
         String id = getContext().getAddOns().getAddOn().getID();
         Optional<AddOnInformation> addOnInformation = getContext().getAddOns().getAddOnInformation(id);
-        return getContext().getIzouServerURL().orElse("locahost:80")+"/"+route;
+        String base = getContext().getServerInformation()
+                .getIzouServerURL()
+                .map(url -> {
+                    if (url.endsWith("/")) {
+                        return url.substring(0, url.length() - 1);
+                    } else {
+                        return url;
+                    }
+                }).orElse("locahost:80");
+        if (!route.startsWith("/")) {
+            base = base + "/";
+        }
+        return base + route;
     }
 
     /**
@@ -60,8 +62,34 @@ public interface HandlerHelper {
      */
     @SuppressWarnings("unused")
     default String constructLinkToAddon(AddOnInformation addOnInformation, String route) {
-        //TODO getIzouServerURL() when implemented!
-        String base = getContext().getIzouServerURL().orElse("locahost:80") + "/users/1/izou/1/instance/";
+        String base = getContext().getServerInformation()
+                .getIzouServerURL()
+                .map(url -> {
+                    if (url.endsWith("/")) {
+                        return url.substring(0, url.length() - 1);
+                    } else {
+                        return url;
+                    }
+                })
+                .flatMap(url ->
+                        getContext().getServerInformation().getIzouRoute()
+                                .map(izouRoute1 -> {
+                                    if (izouRoute1.startsWith("/")) {
+                                        return izouRoute1;
+                                    } else {
+                                        return "/" + izouRoute1;
+                                    }
+                                })
+                                .map(izouRoute1 -> url + izouRoute1)
+                )
+                .map(url -> {
+                    if (url.endsWith("/")) {
+                        return url.substring(0, url.length() - 1);
+                    } else {
+                        return url;
+                    }
+                })
+                .orElse("locahost:80/users/1/izou/1/instance/");
         String urlWithAddon;
         Optional<Integer> serverID = addOnInformation.getServerID();
         if (serverID.isPresent()) {
