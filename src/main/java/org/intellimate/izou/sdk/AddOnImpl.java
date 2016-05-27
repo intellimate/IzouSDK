@@ -9,12 +9,14 @@ import org.intellimate.izou.output.OutputPluginModel;
 import org.intellimate.izou.sdk.addon.AddOn;
 import org.intellimate.izou.sdk.contentgenerator.ContentGenerator;
 import org.intellimate.izou.sdk.server.SDKRouter;
+import ro.fortsoft.pf4j.Extension;
 
 /**
  * @author LeanderK
  * @version 1.0
  */
-@SuppressWarnings("WeakerAccess")
+@Extension
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class AddOnImpl extends AddOn {
     public AddOnImpl() {
         super(AddOnImpl.class.getCanonicalName());
