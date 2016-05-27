@@ -13,6 +13,7 @@ import org.intellimate.izou.sdk.output.OutputController;
 import org.intellimate.izou.sdk.output.OutputExtension;
 import org.intellimate.izou.sdk.server.Response;
 import org.intellimate.izou.sdk.server.Router;
+import org.intellimate.izou.sdk.server.properties.PropertiesRouter;
 import org.intellimate.izou.sdk.util.ContextProvider;
 import org.intellimate.izou.sdk.util.Loggable;
 import org.intellimate.izou.sdk.util.LoggedExceptionCallback;
@@ -47,6 +48,7 @@ public abstract class AddOn implements AddOnModel, ContextProvider, Loggable, Lo
      */
     @Override
     public void register() {
+        this.router = new PropertiesRouter(getContext());
         prepare();
         ContentGenerator[] contentGenerators = registerContentGenerator();
         if (contentGenerators != null) {
