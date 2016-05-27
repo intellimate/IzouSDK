@@ -3,14 +3,33 @@ package org.intellimate.izou.sdk.server;
 import org.intellimate.izou.identification.AddOnInformation;
 import org.intellimate.izou.sdk.Context;
 
-import java.util.HashMap;
-import java.util.Optional;
+import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 /**
  * @author LeanderK
  * @version 1.0
  */
 public interface HandlerHelper {
+    MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
+
+    /**
+     * creates a permanent 308 redirect
+     * @param url the url to redirecto to
+     * @return a redirect
+     */
+    default Response createRedirect(String url) {
+        Map<String, List<String>> header = new HashMap<>();
+        LinkedList<String> list = new LinkedList<>();
+        list.add(url);
+        header.put("Location", list);
+        String body = "This page is located <a href=\""+url+"\">here</a>.";
+        return new Response(308, header, "text/html", body);
+    }
+
     /**
      * constructs a link, falling back to localhost port 80 if no valid izou-server link was found
      * @param route the route to add to the link, e.g. apps/1
@@ -80,5 +99,26 @@ public interface HandlerHelper {
         if (response == null  || !response.isValidResponse()) {
             throw new InternalServerErrorException("App returned illegal response");
         }
+    }
+
+    /**
+     * sends the file, or throws an {@link NotFoundException} if not existing
+     * @param request the request to answer
+     * @param file the file to send
+     * @return an response
+     */
+    default Response sendFile(Request request, File file) throws NotFoundException {
+        if (file.exists()) {
+            throw new NotFoundException(request.getUrl() + " not found");
+        }
+
+        String contentType = mimetypesFileTypeMap.getContentType(file);
+        FileInputStream fileInputStream;
+        try {
+            fileInputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            throw new NotFoundException(request.getUrl() + " not found");
+        }
+        return new Response(200, new HashMap<>(), contentType, file.length(), fileInputStream);
     }
 }
