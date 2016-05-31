@@ -14,6 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static org.aspectj.weaver.tools.cache.SimpleCacheFactory.path;
+
 /**
  * a route in the router
  * @author LeanderK
@@ -173,6 +175,14 @@ public class Route extends AddOnModule implements HandlerHelper, FireEvent {
     @SuppressWarnings("unused")
     public void deleteInternal(Function<Request, Response> handleFunction) {
         handlers.add(new DefaultHandler(context, addOnPackageName, route, Method.DELETE, true, handleFunction));
+    }
+
+    /**
+     * handles all the options-Requests on the route
+     * @param handleFunction the function to use for the options-requests
+     */
+    public void options(Function<Request, Response> handleFunction) {
+        handlers.add(new DefaultHandler(context, addOnPackageName, route, Method.OPTIONS, true, handleFunction));
     }
 
     /**

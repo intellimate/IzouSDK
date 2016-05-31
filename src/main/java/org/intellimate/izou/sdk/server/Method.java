@@ -8,5 +8,5 @@ package org.intellimate.izou.sdk.server;
 //TODO add missing
 @SuppressWarnings("WeakerAccess")
 public enum Method {
-    GET, POST, PUT, PATCH, DELETE
+    GET, POST, PUT, PATCH, DELETE, OPTIONS
 }
