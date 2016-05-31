@@ -11,7 +11,6 @@ import org.intellimate.izou.sdk.Context;
 import org.intellimate.izou.sdk.contentgenerator.ContentGenerator;
 import org.intellimate.izou.sdk.output.OutputController;
 import org.intellimate.izou.sdk.output.OutputExtension;
-import org.intellimate.izou.sdk.server.Response;
 import org.intellimate.izou.sdk.server.Router;
 import org.intellimate.izou.sdk.server.properties.PropertiesRouter;
 import org.intellimate.izou.sdk.util.ContextProvider;
@@ -19,8 +18,6 @@ import org.intellimate.izou.sdk.util.Loggable;
 import org.intellimate.izou.sdk.util.LoggedExceptionCallback;
 import org.intellimate.izou.server.Request;
 import ro.fortsoft.pf4j.PluginWrapper;
-
-import static com.sun.xml.internal.ws.api.message.Packet.Status.Response;
 
 /**
  * All AddOns must extend this Class.
