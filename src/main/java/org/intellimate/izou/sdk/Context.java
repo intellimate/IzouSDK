@@ -145,6 +145,16 @@ public class Context implements org.intellimate.izou.system.Context {
         return context.getAddOns();
     }
 
+    /**
+     * Returns the API, which contains information bout to the server and the connection
+     *
+     * @return ServerInformation
+     */
+    @Override
+    public ServerInformation getServerInformation() {
+        return context.getServerInformation();
+    }
+
     private class ContentGeneratorsImpl implements ContentGenerators {
 
         /**
