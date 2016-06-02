@@ -29,7 +29,7 @@ public class SDKRouter extends Router {
         super(context);
 
         cfg = new Configuration(new Version(2,3,24));
-        cfg.setClassForTemplateLoading(SDKRouter.class, "server.freemarker");
+        cfg.setClassForTemplateLoading(SDKRouter.class, "server/freemarker");
         cfg.setDefaultEncoding("UTF-8");
         cfg.setLocale(Locale.US);
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
@@ -48,7 +48,7 @@ public class SDKRouter extends Router {
     }
 
     private Response getResponse(Request request) {
-        URL resource = SDKRouter.class.getResource("greetings.html");
+        URL resource = getClass().getClassLoader().getResource("server/static/greetings.html");
         try {
             File file = new File(resource.toURI());
             return sendFile(request, file);
@@ -74,7 +74,7 @@ public class SDKRouter extends Router {
         String urlDescription = constructLinkToAddon(addOnInformation, "/description");
 
         Map<String, Object> input = new HashMap<String, Object>();
-        input.put("app_name", addOnInformation.getName());
+        input.put("app_name", addOnInformation.getArtifactID());
         input.put("url_properties", urlProperties);
         input.put("url_description", urlDescription);
         input.put("token", token);

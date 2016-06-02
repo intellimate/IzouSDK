@@ -84,10 +84,13 @@ public class Request implements org.intellimate.izou.server.Request {
             withOutTrailingSlash = withoutQuery;
         }
         String shortString;
-        if (withOutTrailingSlash.startsWith("apps/dev")) {
-            shortString = withOutTrailingSlash.replaceFirst("apps/dev/\\w+", "");
+        if (withOutTrailingSlash.startsWith("/apps/dev")) {
+            shortString = withOutTrailingSlash.replaceFirst("/apps/dev/\\w+", "");
         } else {
-            shortString = withOutTrailingSlash.replaceFirst("apps/\\d+", "");
+            shortString = withOutTrailingSlash.replaceFirst("/apps/\\d+", "");
+        }
+        if (shortString.isEmpty()) {
+            shortString = "/";
         }
         return shortString;
     }

@@ -4,7 +4,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
 import com.google.protobuf.util.JsonFormat;
 import org.intellimate.izou.sdk.Context;
-import org.intellimate.izou.server.Request;
 import org.intellimate.server.proto.ErrorResponse;
 
 import java.util.*;
@@ -32,17 +31,17 @@ public abstract class Router implements HandlerHelper {
         this.addOnPackageName = getClass().getPackage().toString();
 
         exception(InternalServerErrorException.class, (request, e) -> {
-            getContext().getLogger().error("an internal error occurred while handling " + request.getUrl(), e);
+            getContext().getLogger().error("an internal error occurred while handling " + request.getShortUrl(), e);
             return ErrorResponse.newBuilder().setCode("an internal error occurred").setDetail(e.getMessage()).build();
         }, 500);
 
         exception(NotFoundException.class, (request, e) -> {
-            getContext().getLogger().debug("not found " + request.getUrl(), e);
+            getContext().getLogger().debug("not found " + request.getShortUrl(), e);
             return ErrorResponse.newBuilder().setCode("not found").setDetail(e.getMessage()).build();
         }, 404);
 
         exception(BadRequestException.class, (request, e) -> {
-            getContext().getLogger().error("bad request " + request.getUrl(), e);
+            getContext().getLogger().error("bad request " + request.getShortUrl(), e);
             return ErrorResponse.newBuilder().setCode("bad request").setDetail(e.getMessage()).build();
         }, 400);
     }
@@ -54,13 +53,19 @@ public abstract class Router implements HandlerHelper {
                     try {
                         return route.handle(internalRequest);
                     } catch (Exception e) {
-                        return Optional.of(handleException(e, request));
+                        return Optional.of(handleException(e, internalRequest));
                     }
                 })
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .findAny()
-                .orElseGet(() -> stringResponse("no matching routes found", 404));
+                .orElseGet(() -> {
+                    ErrorResponse message = ErrorResponse.newBuilder()
+                            .setCode("not found")
+                            .setDetail("no matching route for: " + internalRequest.getShortUrl())
+                            .build();
+                    return constructMessageResponse(message, 404);
+                });
         sanityCheck(response);
         return response;
     }
@@ -70,7 +75,7 @@ public abstract class Router implements HandlerHelper {
      * @param e the exception
      * @return a response
      */
-    private Response handleException(Exception e, org.intellimate.izou.server.Request request) {
+    private Response handleException(Exception e, Request request) {
         Response response = exceptionHandlers.entrySet().stream()
                 .filter(entry -> entry.getKey().isAssignableFrom(e.getClass()))
                 .map(entry -> {
