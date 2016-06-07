@@ -95,7 +95,7 @@ public interface HandlerHelper {
         if (serverID.isPresent()) {
             urlWithAddon = base + "apps/" + serverID.get();
         } else {
-            urlWithAddon = base + "apps/dev/" + addOnInformation.getName();
+            urlWithAddon = base + "apps/dev/" + addOnInformation.getArtifactID();
         }
         if (!route.startsWith("/")) {
             urlWithAddon = urlWithAddon + "/";
