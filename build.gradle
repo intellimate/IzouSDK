@@ -118,7 +118,7 @@ task plugin(type: Zip) {
         }
     }
     from (configurations.compile) {
-        into ('libs/')
+        into ('lib/')
         exclude { allExcluded.contains(it.file.name) }
         exclude(allExcluded)
     }
@@ -130,9 +130,6 @@ task plugin(type: Zip) {
     }
     from (new File(project.buildDir, 'tmp/jar/')) {
         into ('classes/META-INF/')
-    }
-    doLast {
-        println nexusUsername
     }
 }
 
