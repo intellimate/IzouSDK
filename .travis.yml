@@ -1,0 +1,22 @@
+language: java
+jdk:
+- oraclejdk8
+before_cache:
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+deploy:
+  provider: script
+  script: ci/deploy.sh
+  on:
+    branch: master
+branches:
+  except:
+  - gh-pages
+dd:
+- openssl aes-256-cbc -K $encrypted_c0073d2c294f_key -iv $encrypted_c0073d2c294f_iv
+  -in ci/gradle.properties.enc -out gradle.properties -d
+- openssl aes-256-cbc -K $encrypted_a724ed19665a_key -iv $encrypted_a724ed19665a_iv
+  -in ci/secring.gpg.enc -out ci/secring.gpg -d

@@ -1,0 +1,136 @@
+import java.util.stream.Collectors
+
+group 'org.intellimate.izou'
+version '0.19.0'
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'com.bmuschko.nexus'
+apply plugin: 'distribution'
+apply plugin: 'io.codearte.nexus-staging'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+mainClassName = 'org.intellimate.izou.Main'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compile 'org.intellimate.izou:izou:1.16.5'
+    compile 'commons-lang:commons-lang:2.+'
+    compile 'org.freemarker:freemarker:2.3.24-incubating'
+    testCompile 'org.mockito:mockito-core:1.+'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+
+
+def String projectName = 'IzouSDK';
+def String pluginClass = 'org.intellimate.izou.sdk.ZipFileManagerImpl';
+def String provider = 'intellimate';
+def List<String> dependencies = [];
+def String serverId = '1';
+def String repoURL = 'https://github.com/intellimate/IzouSDK';
+
+jar {
+    baseName = projectName
+    manifest {
+        attributes 'Plugin-Class' : pluginClass,
+                'Plugin-Id' : group + "." + project.name,
+                'Plugin-Version' : project.version,
+                'Plugin-Provider' : provider,
+                'Plugin-Dependencies' : dependencies.stream().collect(Collectors.joining(",")),
+                'Server-ID': serverId,
+                'SDK-Version' : project.version,
+                'Artifact-ID' : project.name
+    }
+}
+
+modifyPom {
+    project {
+        name projectName
+        description 'the sdk used to program for izou'
+        url 'https://github.com/intellimate/IzouSDK'
+
+        scm {
+            url 'https://github.com/intellimate/IzouSDK'
+            connection 'scm:git:git@github.com:intellimate/IzouSDK.git'
+            developerConnection 'scm:git:git@github.com:intellimate/IzouSDK.git'
+        }
+
+        licenses {
+            license {
+                name 'TThe Apache License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+    }
+}
+
+nexus {
+    sign = true
+}
+
+task release() {
+    description = 'Release artifacts to nexus'
+    dependsOn 'uploadArchives', 'closeAndPromoteRepository'
+    doLast {
+        println "Released $version"
+    }
+}
+
+task plugin(type: Zip) {
+    baseName = project.name
+    version = project.version
+    def allExcluded = [];
+    doFirst {
+        def excluded = ["org.intellimate.izou"];
+        excluded.addAll(dependencies);
+        def recursiveAdd
+        recursiveAdd = { dep ->
+            allExcluded.add("${dep.module.id.name}-${dep.module.id.version}.jar".toString())
+            dep.children.each { childResolvedDep ->
+                if(dep in childResolvedDep.getParents() && childResolvedDep.getConfiguration() == 'compile'){
+                    recursiveAdd(childResolvedDep);
+                }
+            }
+        }
+
+        configurations.compile.resolvedConfiguration.firstLevelModuleDependencies.each { dep ->
+            if (excluded.contains(dep.module.id.group)) {
+                recursiveAdd(dep)
+            }
+        }
+    }
+    from (configurations.compile) {
+        into ('lib/')
+        exclude { allExcluded.contains(it.file.name) }
+        exclude(allExcluded)
+    }
+    from (sourceSets.main.output.classesDir) {
+        into ('classes/')
+    }
+    from (sourceSets.main.resources) {
+        into ('classes/')
+    }
+    from (new File(project.buildDir, 'tmp/jar/')) {
+        into ('classes/META-INF/')
+    }
+}
+
+plugin.dependsOn jar
