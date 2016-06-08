@@ -7,6 +7,7 @@ import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -135,9 +136,23 @@ public interface HandlerHelper {
      * @param file the file to send
      * @return an response
      */
+    default Response sendFile(Request request, URL file) throws NotFoundException {
+        String path = file.getFile();
+        if (path == null) {
+            throw new InternalServerErrorException("requested file for url: " + request.getUrl() + " not found");
+        }
+        return sendFile(request, new File(path));
+    }
+
+    /**
+     * sends the file, or throws an {@link NotFoundException} if not existing
+     * @param request the request to answer
+     * @param file the file to send
+     * @return an response
+     */
     default Response sendFile(Request request, File file) throws NotFoundException {
-        if (file.exists()) {
-            throw new NotFoundException(request.getUrl() + " not found");
+        if (!file.exists()) {
+            throw new InternalServerErrorException("requested file for url: " + request.getUrl() + " not found");
         }
 
         String contentType = mimetypesFileTypeMap.getContentType(file);

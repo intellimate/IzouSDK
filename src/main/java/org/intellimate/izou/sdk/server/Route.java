@@ -37,11 +37,7 @@ public class Route extends AddOnModule implements HandlerHelper, FireEvent {
     public Route(Context context, String route, String addOnPackageName, boolean internal) {
         super(context, addOnPackageName+"."+route);
         this.context = context;
-        String realRoute = route;
-        if (route.equals("/")) {
-            realRoute = "";
-        }
-        this.route = realRoute;
+        this.route = route;
         this.pattern = Pattern.compile(route);
         this.addOnPackageName = addOnPackageName;
         this.internal = internal;

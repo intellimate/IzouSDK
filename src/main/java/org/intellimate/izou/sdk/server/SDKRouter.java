@@ -49,12 +49,7 @@ public class SDKRouter extends Router {
 
     private Response getResponse(Request request) {
         URL resource = getClass().getClassLoader().getResource("server/static/greetings.html");
-        try {
-            File file = new File(resource.toURI());
-            return sendFile(request, file);
-        } catch (URISyntaxException e) {
-            throw new InternalServerErrorException("Unable to open file", e);
-        }
+        return sendFile(request, resource);
     }
 
     private Response getHtmlBaseFile(Request request) {
